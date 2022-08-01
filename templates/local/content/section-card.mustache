@@ -1,0 +1,52 @@
+<div class="card dashboard-card
+     role="listitem"
+     data-sectionid="{{num}}"
+     data-sectionreturnid="{{sectionreturnid}}"
+     data-for="section"
+     data-id="{{id}}"
+     data-number="{{num}}">
+
+    {{#header}}
+        <a href="{{{url}}}" title="{{{name}}}">
+            {{#image}}
+                <div class="card-img-top"
+                     style="background: url('{{{image}}}') center/cover"></div>
+            {{/image}}
+            {{^image}}
+                <div class="card-img-top"
+                     style="background: url('//via.placeholder.com/640x360') center/cover"></div>
+            {{/image}}
+        </a>
+    {{/header}}
+
+    <div class="card-body">
+        {{#header}}
+            <div class="d-flex flex-row flex-nowrap">
+                <h5 class="card-title">
+                    <a href="{{{url}}}" title="{{{name}}}">{{{name}}}</a>
+                </h5>
+                {{$ core_courseformat/local/content/section/badges }}
+                    <div class="flex-fill ml-1">
+                        {{> core_courseformat/local/content/section/badges }}
+                    </div>
+                {{/ core_courseformat/local/content/section/badges }}
+            </div>
+        {{/header}}
+        {{#summary}}
+            {{#summarytext}}
+                {{{summarytext}}}
+            {{/summarytext}}
+        {{/summary}}
+    </div>
+
+    {{#availability}}
+        {{#hasavailability}}
+            <div class="card-footer">
+                {{$ core_courseformat/local/content/section/availability }}
+                    {{> core_courseformat/local/content/section/availability }}
+                {{/ core_courseformat/local/content/section/availability }}
+            </div>
+        {{/hasavailability}}
+    {{/availability}}
+
+</div>
