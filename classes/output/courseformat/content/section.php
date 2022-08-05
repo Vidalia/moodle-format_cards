@@ -146,7 +146,11 @@ class section extends section_base {
             try {
                 $areaFiles = $fileStorage->get_area_files($context->id,
                     'format_cards',
-                    FORMAT_CARDS_FILEAREA_IMAGE);
+                    FORMAT_CARDS_FILEAREA_IMAGE,
+                    false,
+                    'itemid, filepath, filename',
+                    false
+                );
             } catch (coding_exception $e) {
                 return [];
             }
