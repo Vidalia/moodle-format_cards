@@ -29,7 +29,6 @@ use format_cards\forms\cardimage;
 global $CFG, $PAGE, $OUTPUT;
 require_once __DIR__ . "/../../../config.php";
 require_once "$CFG->dirroot/course/format/lib.php";
-require_once "$CFG->libdir/gdlib.php";
 require_once "$CFG->libdir/classes/output/notification.php";
 
 $courseid = required_param('course', PARAM_INT);

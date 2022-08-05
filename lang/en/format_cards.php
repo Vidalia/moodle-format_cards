@@ -28,4 +28,5 @@ $string['form:course:importgridimages_help'] = 'Copy across the images used for 
 $string['editimage'] = 'Edit image';
 $string['editimagefor'] = 'Edit image for {$a}';
 $string['editimage:resizefailed'] = 'We couldn\'t resize the image, so the course might take a little longer to load than usual. You can try re-saving the image later, or resize the image yourself and upload it.';
+$string['editimage:imported'] = 'Successfully imported {$a} image(s) from the grid format';
 $string['privacy:metadata'] = 'The Card format plugin does not store any personal data.';

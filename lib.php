@@ -23,6 +23,8 @@
 
 global $CFG;
 
+use core\output\notification;
+
 require_once "$CFG->dirroot/course/format/topics/lib.php";
 
 define('FORMAT_CARDS_FILEAREA_IMAGE', 'image');
@@ -81,18 +83,104 @@ class format_cards extends format_topics {
             ]
         ];
 
+        return $options;
+    }
+
+    public function create_edit_form_elements(&$mform, $forsection = false)
+    {
+        $elements = parent::create_edit_form_elements($mform, $forsection);
+
         if($this->course_has_grid_images()) {
-            $options['importgridimages'] = [
-                'default' => !$this->course_has_card_images(),
-                'type' => PARAM_BOOL,
-                'label' => new lang_string('form:course:importgridimages', 'format_cards'),
-                'help' => 'form:course:importgridimages',
-                'help_component' => 'format_cards',
-                'element_type' => 'checkbox'
-            ];
+            $elements[] = $mform->addElement('checkbox', 'importgridimages', get_string('form:course:importgridimages', 'format_cards'));
+            $mform->addHelpButton('importgridimages', 'form:course:importgridimages', 'format_cards');
         }
 
-        return $options;
+        return $elements;
+    }
+
+    public function update_course_format_options($data, $oldcourse = null) {
+        global $DB;
+
+        $changes = parent::update_course_format_options($data, $oldcourse);
+
+        if(!$data->importgridimages || !$this->course_has_grid_images())
+            return $changes;
+
+        // This is a pseudo-element
+        $data->importgridimages = false;
+
+        $gridImages = $DB->get_records('format_grid_icon', [ 'courseid' => $this->courseid ]);
+
+        $fileStorage = get_file_storage();
+        $courseContext = context_course::instance($this->courseid);
+        $existingImages = $fileStorage->get_area_files(
+            $courseContext->id,
+            'format_cards',
+            FORMAT_CARDS_FILEAREA_IMAGE,
+            false,
+            'itemid, filepath, filename',
+            false
+        );
+
+        $added = 0;
+        $displayedResizeError = false;
+
+        foreach($gridImages as $gridImage) {
+            if(!$gridImage->image)
+                continue;
+
+            $gridImageFile = $fileStorage->get_file(
+                $courseContext->id,
+                'course',
+                'section',
+                $gridImage->sectionid,
+                '/gridimage/',
+                "{$gridImage->displayedimageindex}_$gridImage->image"
+            );
+
+            if(!$gridImageFile) {
+                debugging("Couldn't get grid format image {$gridImage->displayedimageindex}_$gridImage->image", DEBUG_DEVELOPER);
+                continue;
+            }
+
+            try {
+                $newFile = $fileStorage->create_file_from_storedfile([
+                    'contextid' => $courseContext->id,
+                    'component' => 'format_cards',
+                    'filearea' => FORMAT_CARDS_FILEAREA_IMAGE,
+                    'filepath' => '/'
+                ], $gridImageFile);
+
+                $added++;
+            } catch (file_exception $e) {
+                continue;
+            }
+
+            if(!$newFile) {
+                debugging("Failed to create new format_cards image from grid for section $gridImage->sectionid", DEBUG_DEVELOPER);
+                continue;
+            }
+
+            $existingImagesForSection = array_filter($existingImages, function($file) use ($gridImageFile) {
+                return $file->sectionid == $file->get_itemid();
+            });
+
+            try {
+                $this->resize_card_image($gridImage->sectionid);
+            } catch (moodle_exception $e) {
+                if(!$displayedResizeError) {
+                    \core\notification::add(get_string('editimage:resizefailed', 'format_cards'), notification::NOTIFY_WARNING);
+                    $displayedResizeError = true;
+                }
+            }
+
+            foreach($existingImagesForSection as $existingSectionImage) {
+                $existingSectionImage->delete();
+            }
+
+        }
+
+        \core\notification::add(get_string('editimage:imported', 'format_cards', $added), notification::NOTIFY_SUCCESS);
     }
 
 
@@ -126,7 +214,7 @@ class format_cards extends format_topics {
         if(!empty($options['navigation']))
             return null;
 
-        $base = new moodle_url("/course/view.php", [ 'id' => $this->course->id ]);
+        $base = new moodle_url("/course/view.php", [ 'id' => $this->get_course()->id ]);
 
         if(!$section)
             return $base;
@@ -177,6 +265,10 @@ class format_cards extends format_topics {
      * @return void
      */
     public function resize_card_image($section) {
+        global $CFG;
+
+        require_once "$CFG->libdir/gdlib.php";
+
         if(is_object($section))
             $section = $section->section;
 
@@ -197,8 +289,10 @@ class format_cards extends format_topics {
             return $image->get_itemid() == $section && !empty($image->get_mimetype());
         });
 
+        //echo "<pre>" . json_encode($originalImage, JSON_PRETTY_PRINT) . "</pre>";
+
         if(empty($originalImage))
-            throw new moodle_exception('failedtogetimage', 'format_cards');
+            return;
 
         /** @var stored_file $originalImage */
         $originalImage = reset($originalImage);
