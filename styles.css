@@ -1,3 +1,7 @@
-.course-content .cards .card-img-top {
+.format-cards .course-content .card-deck .card-img-top {
   aspect-ratio: 16 / 9;
+}
+
+.format-cards .course-content .card-deck .card.hiddenfromstudents .card-img-top {
+  filter: blur(1px) grayscale(80%);
 }

@@ -1,5 +1,6 @@
-<div class="card dashboard-card
+<div class="card dashboard-card{{#hiddenfromstudents}} hiddenfromstudents{{/hiddenfromstudents}}"
      role="listitem"
+     aria-labelledby="section-{{num}}-title"
      data-sectionid="{{num}}"
      data-sectionreturnid="{{sectionreturnid}}"
      data-for="section"
@@ -10,10 +11,12 @@
         <a href="{{{url}}}" title="{{{name}}}">
             {{#image}}
                 <div class="card-img-top"
+                     role="presentation"
                      style="background: url('{{{image}}}') center/cover"></div>
             {{/image}}
             {{^image}}
                 <div class="card-img-top"
+                     role="presentation"
                      style="background: url('//via.placeholder.com/640x360') center/cover"></div>
             {{/image}}
         </a>
@@ -22,7 +25,8 @@
     <div class="card-body">
         {{#header}}
             <div class="d-flex flex-row flex-nowrap">
-                <h5 class="card-title">
+                <h5 id="section-{{num}}-title"
+                    class="card-title">
                     <a href="{{{url}}}" title="{{{name}}}">{{{name}}}</a>
                 </h5>
                 {{$ core_courseformat/local/content/section/badges }}
@@ -41,7 +45,7 @@
 
     {{#availability}}
         {{#hasavailability}}
-            <div class="card-footer">
+            <div class="card-footer small">
                 {{$ core_courseformat/local/content/section/availability }}
                     {{> core_courseformat/local/content/section/availability }}
                 {{/ core_courseformat/local/content/section/availability }}
