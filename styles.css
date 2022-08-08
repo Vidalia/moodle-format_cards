@@ -1,7 +1,30 @@
+.format-cards .course-content .card-deck .card,
 .format-cards .course-content .card-deck .card-img-top {
   aspect-ratio: 16 / 9;
 }
 
+.format-cards .empty-placeholder-image-lg {
+  height: 5rem;
+}
+
+.format-cards .single-section .course-section {
+  border: none;
+}
+
+.format-cards .course-content .single-section .section-navigation {
+  margin-bottom: unset;
+}
+
+.format-cards .course-content .card-deck .card .card-img-top {
+  transition: 0.4s filter ease-in-out;
+}
+
+.format-cards .course-content .card-deck .card:hover .card-img-top {
+  filter: brightness(110%);
+}
 .format-cards .course-content .card-deck .card.hiddenfromstudents .card-img-top {
   filter: blur(1px) grayscale(80%);
+}
+.format-cards .course-content .card-deck .card.hiddenfromstudents:hover .card-img-top {
+  filter: grayscale(75%);
 }

@@ -61,6 +61,10 @@ class content extends content_base {
 
         $data = parent::export_for_template($output);
 
+        // Rather than rolling our own empty placeholder, we can just re-use the "no courses" template
+        // from block_myoverview and change the text to be "No activities" instead
+        $data->nocoursesimg = $output->image_url('courses', 'block_myoverview')->out();
+
         if(!$singleSection)
             return $data;
 

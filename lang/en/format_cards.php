@@ -15,6 +15,7 @@ $string['page-course-view-topics'] = 'Any course main page in topics format';
 $string['page-course-view-topics-x'] = 'Any course page in topics format';
 $string['hidefromothers'] = 'Hide card';
 $string['showfromothers'] = 'Show card';
+$string['noactivities'] = 'No activities';
 
 $string['section:default'] = 'Card {$a}';
 
