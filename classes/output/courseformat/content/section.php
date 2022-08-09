@@ -97,7 +97,7 @@ class section extends section_base {
         if(!empty($data->summary->summarytext)) {
             $data->summary->summarytext = shorten_text(
                 content_to_text($data->summary->summarytext, $this->section->summaryformat),
-                40,
+                250,
                 true,
                 '&hellip;');
         }

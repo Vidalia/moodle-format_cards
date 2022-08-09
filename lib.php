@@ -299,7 +299,7 @@ class format_cards extends format_topics {
 
         $tempFilepath = $originalImage->copy_content_to_temp('format_cards', 'sectionimage_');
 
-        $resized = resize_image($tempFilepath, null, 360, false);
+        $resized = resize_image($tempFilepath, null, 500, false);
 
         if(!$resized)
             throw new moodle_exception('failedtoresize', 'format_cards');

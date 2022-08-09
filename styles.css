@@ -1,6 +1,45 @@
-.format-cards .course-content .card-deck .card,
-.format-cards .course-content .card-deck .card-img-top {
-  aspect-ratio: 16 / 9;
+.format-cards .course-content .card-deck .card {
+  aspect-ratio: 5 / 7;
+}
+
+.format-cards .course-content .card-deck .card .card-main-content {
+  position: relative;
+  height: 100%
+}
+
+.format-cards .course-content .card-deck .card .card-main-content .card-img-top {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+.format-cards .course-content .card-deck .card .card-header .card-title,
+.format-cards .course-content .card-deck .card .card-header a,
+.format-cards .course-content .card-deck .card .card-header .summary {
+  color: #fff !important;
+}
+
+.format-cards .course-content .card-deck .card .card-header .summary {
+  display: inline-block;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 4;
+  overflow: hidden;
+  max-height: 6rem;
+  line-height: 1.5rem;
+  text-overflow: ellipsis;
+  font-weight: normal;
+}
+
+
+.format-cards .course-content .card-deck .card .card-header {
+  background: transparent;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
 }
 
 .format-cards .empty-placeholder-image-lg {

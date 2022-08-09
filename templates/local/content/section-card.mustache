@@ -7,40 +7,33 @@
      data-id="{{id}}"
      data-number="{{num}}">
 
-    {{#header}}
-        <a href="{{{url}}}" title="{{{name}}}">
-            {{#image}}
-                <div class="card-img-top"
-                     role="presentation"
-                     style="background: url('{{{image}}}') center/cover"></div>
-            {{/image}}
-            {{^image}}
-                <div class="card-img-top"
-                     role="presentation"
-                     style="background: url('//via.placeholder.com/640x360') center/cover"></div>
-            {{/image}}
-        </a>
-    {{/header}}
-
-    <div class="card-body">
+    <div class="card-main-content">
         {{#header}}
-            <div class="d-flex flex-row flex-nowrap">
-                <h5 id="section-{{num}}-title"
-                    class="card-title">
-                    <a href="{{{url}}}" title="{{{name}}}">{{{name}}}</a>
-                </h5>
-                {{$ core_courseformat/local/content/section/badges }}
-                    <div class="flex-fill ml-1">
+            <a href="{{{url}}}" title="{{{name}}}">
+                <div class="card-img-top"
+                     role="presentation"
+                     style="background: linear-gradient(180deg, rgba(0,0,0,0), rgba(0,0,0,0.75) 75%), url('{{#image}}{{{image}}}{{/image}}{{^image}}//via.placeholder.com/640x360{{/image}}') center/cover">
+                </div>
+            </a>
+            <a href="{{{url}}}" title="{{{name}}}">
+                <div class="card-header">
+                    {{$ core_courseformat/local/content/section/badges }}
                         {{> core_courseformat/local/content/section/badges }}
-                    </div>
-                {{/ core_courseformat/local/content/section/badges }}
-            </div>
+                    {{/ core_courseformat/local/content/section/badges }}
+                    <h3 id="section-{{num}}-title"
+                        class="card-title mt-2">
+                        {{{name}}}
+                    </h3>
+                    {{#summary}}
+                        {{#summarytext}}
+                            <span class="summary">
+                                {{{summarytext}}}
+                            </span>
+                        {{/summarytext}}
+                    {{/summary}}
+                </div>
+            </a>
         {{/header}}
-        {{#summary}}
-            {{#summarytext}}
-                {{{summarytext}}}
-            {{/summarytext}}
-        {{/summary}}
     </div>
 
     {{#availability}}
