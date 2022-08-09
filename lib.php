@@ -289,8 +289,6 @@ class format_cards extends format_topics {
             return $image->get_itemid() == $section && !empty($image->get_mimetype());
         });
 
-        //echo "<pre>" . json_encode($originalImage, JSON_PRETTY_PRINT) . "</pre>";
-
         if(empty($originalImage))
             return;
 
