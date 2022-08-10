@@ -39,7 +39,9 @@ require_login($courseid, false);
 $format = course_get_format($courseid);
 $course = $format->get_course();
 
-$context = context_course::instance($courseid);
+$context = context_course::instance($course->id);
+require_capability('moodle/course:update', $context);
+
 $url = new moodle_url('/course/format/cards/editimage.php', [ 'course' => $courseid, 'section' => $sectionid ]);
 
 $PAGE->set_title(get_string('editimagefor', 'format_cards', get_section_name($course, $sectionid)));
