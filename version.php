@@ -31,5 +31,4 @@ $plugin->component = 'format_cards';    // Full name of the plugin (used for dia
 $plugin->release = "v1.0";
 $plugin->dependencies = [
   "format_topics" => 2022041900
-]
-$plugin->supported = [ 40 ];
+];
