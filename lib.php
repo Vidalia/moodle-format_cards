@@ -30,6 +30,8 @@ require_once "$CFG->dirroot/course/format/topics/lib.php";
 define('FORMAT_CARDS_FILEAREA_IMAGE', 'image');
 define('FORMAT_CARDS_SECTION0_COURSEPAGE', 0);
 define('FORMAT_CARDS_SECTION0_ALLPAGES', 1);
+define('FORMAT_CARDS_ORIENTATION_VERTICAL', 0);
+define('FORMAT_CARDS_ORIENTATION_HORIZONTAL', 1);
 
 /**
  * Course format main class
@@ -79,6 +81,19 @@ class format_cards extends format_topics {
                 [
                     FORMAT_CARDS_SECTION0_COURSEPAGE => new lang_string('form:course:section0:coursepage', 'format_cards'),
                     FORMAT_CARDS_SECTION0_ALLPAGES => new lang_string('form:course:section0:allpages', 'format_cards')
+                ]
+            ]
+        ];
+
+        $options['cardorientation'] = [
+            'default' => FORMAT_CARDS_ORIENTATION_VERTICAL,
+            'type' => PARAM_INT,
+            'label' => new lang_string('form:course:cardorientation', 'format_cards'),
+            'element_type' => 'select',
+            'element_attributes' => [
+                [
+                    FORMAT_CARDS_ORIENTATION_VERTICAL => new lang_string('form:course:cardorientation:vertical', 'format_cards'),
+                    FORMAT_CARDS_ORIENTATION_HORIZONTAL => new lang_string('form:course:cardorientation:horizontal', 'format_cards')
                 ]
             ]
         ];

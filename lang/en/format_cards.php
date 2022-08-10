@@ -23,6 +23,9 @@ $string['form:course:section0'] = 'General section';
 $string['form:course:section0_help'] = 'The general section is the first section in your course, which usually contains the course\'s announcements page. You can choose to have this visible either only on the course\'s main page, on top of the card deck, or visible on the main page and each individual section page.';
 $string['form:course:section0:coursepage'] = 'Only show on the main course page';
 $string['form:course:section0:allpages'] = 'Show on all pages, including individual sections';
+$string['form:course:cardorientation'] = 'Card orientation';
+$string['form:course:cardorientation:vertical'] = 'Vertical';
+$string['form:course:cardorientation:horizontal'] = 'Horizontal';
 $string['form:course:importgridimages'] = 'Import images from grid format';
 $string['form:course:importgridimages_help'] = 'Copy across the images used for grid tiles and use them as images for each card';
 

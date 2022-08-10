@@ -1,10 +1,19 @@
 .format-cards .course-content .card-deck .card {
   aspect-ratio: 5 / 7;
+  border: none;
+}
+.format-cards .course-content .card-deck .card.card-horizontal {
+  aspect-ratio: 7 / 5;
+}
+
+.format-cards .course-content .card-deck .card.highlighted {
+  box-shadow: 0 0 5px var(--primary, #0f6cbf);
 }
 
 .format-cards .course-content .card-deck .card .card-main-content {
   position: relative;
-  height: 100%
+  flex-grow: 1;
+  overflow: hidden;
 }
 
 .format-cards .course-content .card-deck .card .card-main-content .card-img-top {
@@ -13,6 +22,11 @@
   bottom: 0;
   left: 0;
   right: 0;
+  transition: transform .4s;
+}
+
+.format-cards .course-content .card-deck .card:hover .card-main-content .card-img-top {
+  transform: scale(1.1);
 }
 
 .format-cards .course-content .card-deck .card .card-header .card-title,
@@ -33,6 +47,10 @@
   font-weight: normal;
 }
 
+.format-cards .course-content .card-deck .card.card-horizontal .card-header .summary {
+  -webkit-line-clamp: 2;
+  max-height: 3rem;
+}
 
 .format-cards .course-content .card-deck .card .card-header {
   background: transparent;

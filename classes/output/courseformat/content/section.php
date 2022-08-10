@@ -60,6 +60,10 @@ class section extends section_base {
         // Grab the default template data
         $course = $this->format->get_course();
         $data = parent::export_for_template($output);
+        $data->classes = [];
+
+        if($data->hiddenfromstudents)
+            $data->classes[] = "hiddenfromstudents";
 
         // On the course main page, display this section as a card unless the
         // user is currently editing the page. Section #0 should never be
@@ -84,6 +88,8 @@ class section extends section_base {
 
         // Cards may be highlighted
         $data->highlighted = $course->marker == $this->section->section;
+        if($data->highlighted)
+            $data->classes[] = "highlighted";
 
         // Don't show the "insert new topic" button after every section in editing mode
         $data->insertafter = false;
@@ -92,6 +98,9 @@ class section extends section_base {
             if($isSingleSectionPage) $data->header = false;
             return $data;
         }
+
+        if($this->format->get_format_options()['cardorientation'] == FORMAT_CARDS_ORIENTATION_HORIZONTAL)
+            $data->classes[] = "card-horizontal";
 
         // Shorten the card's summary text, if applicable
         if(!empty($data->summary->summarytext)) {
