@@ -99,7 +99,7 @@ class section extends section_base {
             return $data;
         }
 
-        if($this->format->get_format_options()['cardorientation'] == FORMAT_CARDS_ORIENTATION_HORIZONTAL)
+        if($this->format->get_format_option('cardorientation') == FORMAT_CARDS_ORIENTATION_HORIZONTAL)
             $data->classes[] = "card-horizontal";
 
         // Shorten the card's summary text, if applicable
@@ -174,7 +174,7 @@ class section extends section_base {
         return self::$images[$course->id];
     }
 
-    /**
+    /**|
      * Fetch the image file for a given section
      * @param section_info $section
      * @return stored_file|null
@@ -182,8 +182,8 @@ class section extends section_base {
     public function get_section_image(section_info $section): ?stored_file {
         $images = $this->get_section_images();
 
-        if(array_key_exists($section->section, $images))
-            return $images[$section->section];
+        if(array_key_exists($section->id, $images))
+            return $images[$section->id];
 
         return null;
     }

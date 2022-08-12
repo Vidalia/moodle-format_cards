@@ -26,13 +26,13 @@
 use core\output\notification;
 use format_cards\forms\cardimage;
 
-global $CFG, $PAGE, $OUTPUT;
+global $DB, $CFG, $PAGE, $OUTPUT;
 require_once __DIR__ . "/../../../config.php";
 require_once "$CFG->dirroot/course/format/lib.php";
 require_once "$CFG->libdir/classes/output/notification.php";
 
 $courseid = required_param('course', PARAM_INT);
-$sectionid = required_param('section', PARAM_INT);
+$sectionnum = required_param('section', PARAM_INT);
 
 require_login($courseid, false);
 
@@ -42,17 +42,17 @@ $course = $format->get_course();
 $context = context_course::instance($course->id);
 require_capability('moodle/course:update', $context);
 
-$url = new moodle_url('/course/format/cards/editimage.php', [ 'course' => $courseid, 'section' => $sectionid ]);
+$url = new moodle_url('/course/format/cards/editimage.php', [ 'course' => $courseid, 'section' => $sectionnum ]);
 
-$PAGE->set_title(get_string('editimagefor', 'format_cards', get_section_name($course, $sectionid)));
-$PAGE->set_heading(get_string('editimagefor', 'format_cards', get_section_name($course, $sectionid)));
+$PAGE->set_title(get_string('editimagefor', 'format_cards', get_section_name($course, $sectionnum)));
+$PAGE->set_heading(get_string('editimagefor', 'format_cards', get_section_name($course, $sectionnum)));
 $PAGE->set_context($context);
 $PAGE->set_url($url);
 $PAGE->add_body_class('limitedwidth');
 
 $PAGE->navbar->add(
-    get_section_name($course, $sectionid),
-    course_get_url($course, $sectionid)
+    get_section_name($course, $sectionnum),
+    course_get_url($course, $sectionnum)
 );
 
 $PAGE->navbar->add(
@@ -62,12 +62,14 @@ $PAGE->navbar->add(
 $form = new cardimage($url);
 $draftImageId = file_get_submitted_draft_itemid('image');
 
+$sectionId = $DB->get_field('course_sections', 'id', [ 'course' => $courseid, 'section' => $sectionnum ]);
+
 file_prepare_draft_area(
     $draftImageId,
     $context->id,
     'format_cards',
     FORMAT_CARDS_FILEAREA_IMAGE,
-    $sectionid
+    $sectionId
 );
 
 if($form->is_cancelled()) {
@@ -80,12 +82,12 @@ if($data = $form->get_data()) {
         $context->id,
         'format_cards',
         FORMAT_CARDS_FILEAREA_IMAGE,
-        $sectionid
+        $sectionId
     );
 
     if($format instanceof format_cards) {
         try {
-            $format->resize_card_image($sectionid);
+            $format->resize_card_image($sectionId);
         } catch (moodle_exception $e) {
             redirect(course_get_url($courseid), get_string('editimage:resizefailed', 'format_cards'), null, notification::NOTIFY_WARNING);
         }

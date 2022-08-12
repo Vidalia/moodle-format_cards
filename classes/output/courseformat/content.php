@@ -59,6 +59,8 @@ class content extends content_base {
         // Is this a single section page?
         $singleSection = $this->format->get_section_number();
 
+        $this->hasaddsection = true;
+
         $data = parent::export_for_template($output);
 
         // Rather than rolling our own empty placeholder, we can just re-use the "no courses" template
@@ -68,7 +70,7 @@ class content extends content_base {
         if(!$singleSection)
             return $data;
 
-        if($this->format->get_format_options()['section0'] == FORMAT_CARDS_SECTION0_COURSEPAGE)
+        if($this->format->get_format_option('section0') == FORMAT_CARDS_SECTION0_COURSEPAGE)
             $data->initialsection = '';
 
         return $data;

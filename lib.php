@@ -28,10 +28,11 @@ use core\output\notification;
 require_once "$CFG->dirroot/course/format/topics/lib.php";
 
 define('FORMAT_CARDS_FILEAREA_IMAGE', 'image');
-define('FORMAT_CARDS_SECTION0_COURSEPAGE', 0);
-define('FORMAT_CARDS_SECTION0_ALLPAGES', 1);
-define('FORMAT_CARDS_ORIENTATION_VERTICAL', 0);
-define('FORMAT_CARDS_ORIENTATION_HORIZONTAL', 1);
+define('FORMAT_CARDS_USEDEFAULT', 0);
+define('FORMAT_CARDS_SECTION0_COURSEPAGE', 1);
+define('FORMAT_CARDS_SECTION0_ALLPAGES', 2);
+define('FORMAT_CARDS_ORIENTATION_VERTICAL', 1);
+define('FORMAT_CARDS_ORIENTATION_HORIZONTAL', 2);
 
 /**
  * Course format main class
@@ -55,6 +56,10 @@ class format_cards extends format_topics {
         return $course;
     }
 
+    /**
+     * Support indentation
+     * @return bool
+     */
     public function uses_indentation(): bool {
         return true;
     }
@@ -67,42 +72,62 @@ class format_cards extends format_topics {
     public function course_format_options($foreditform = false) {
         $options = parent::course_format_options($foreditform);
 
+        $defaults = get_config('format_cards');
+
         // We always show one section per page
         $options['coursedisplay']['default'] = COURSE_DISPLAY_MULTIPAGE;
 
+        $section0Options = [
+            FORMAT_CARDS_SECTION0_COURSEPAGE => new lang_string('form:course:section0:coursepage', 'format_cards'),
+            FORMAT_CARDS_SECTION0_ALLPAGES => new lang_string('form:course:section0:allpages', 'format_cards')
+        ];
+
         $options['section0'] = [
-            'default' => FORMAT_CARDS_SECTION0_COURSEPAGE,
+            'default' => FORMAT_CARDS_USEDEFAULT,
             'type' => PARAM_INT,
             'label' => new lang_string('form:course:section0', 'format_cards'),
             'help' => 'form:course:section0',
             'help_component' => 'format_cards',
             'element_type' => 'select',
             'element_attributes' => [
-                [
-                    FORMAT_CARDS_SECTION0_COURSEPAGE => new lang_string('form:course:section0:coursepage', 'format_cards'),
-                    FORMAT_CARDS_SECTION0_ALLPAGES => new lang_string('form:course:section0:allpages', 'format_cards')
-                ]
-            ]
+                array_merge(
+                    [ FORMAT_CARDS_USEDEFAULT => new lang_string('form:course:usedefault', 'format_cards', $section0Options[$defaults->section0]) ],
+                    $section0Options
+                )
+            ],
+        ];
+
+        $cardOrientationOptions = [
+            FORMAT_CARDS_ORIENTATION_VERTICAL => new lang_string('form:course:cardorientation:vertical', 'format_cards'),
+            FORMAT_CARDS_ORIENTATION_HORIZONTAL => new lang_string('form:course:cardorientation:horizontal', 'format_cards')
         ];
 
         $options['cardorientation'] = [
-            'default' => FORMAT_CARDS_ORIENTATION_VERTICAL,
+            'default' => FORMAT_CARDS_USEDEFAULT,
             'type' => PARAM_INT,
             'label' => new lang_string('form:course:cardorientation', 'format_cards'),
             'element_type' => 'select',
             'element_attributes' => [
-                [
-                    FORMAT_CARDS_ORIENTATION_VERTICAL => new lang_string('form:course:cardorientation:vertical', 'format_cards'),
-                    FORMAT_CARDS_ORIENTATION_HORIZONTAL => new lang_string('form:course:cardorientation:horizontal', 'format_cards')
-                ]
+                array_merge(
+                    [ FORMAT_CARDS_USEDEFAULT => new lang_string('form:course:usedefault', 'format_cards', $cardOrientationOptions[$defaults->cardorientation]) ],
+                    $cardOrientationOptions
+                )
             ]
         ];
 
         return $options;
     }
 
-    public function create_edit_form_elements(&$mform, $forsection = false)
-    {
+    /**
+     * Append the "importgridimages" checkbox directly to the form.
+     * We do this rather than using {@see self::course_format_options()} to prevent "importgridimages" being saved
+     * as an actual option.
+     * @param MoodleQuickForm $mform The form
+     * @param bool $forsection
+     * @return array
+     * @throws coding_exception
+     */
+    public function create_edit_form_elements(&$mform, $forsection = false): array {
         $elements = parent::create_edit_form_elements($mform, $forsection);
 
         if($this->course_has_grid_images()) {
@@ -113,6 +138,16 @@ class format_cards extends format_topics {
         return $elements;
     }
 
+    /**
+     * Update course format options from form data.
+     * Primarily just calls the parent method to do the actual saving, but additionally
+     * imports images from format_grid if selected
+     * @param $data
+     * @param $oldcourse
+     * @return bool
+     * @throws coding_exception
+     * @throws dml_exception
+     */
     public function update_course_format_options($data, $oldcourse = null) {
         global $DB;
 
@@ -121,7 +156,7 @@ class format_cards extends format_topics {
         if(!$data->importgridimages || !$this->course_has_grid_images())
             return $changes;
 
-        // This is a pseudo-element
+        // This is a pseudo-element. Set it to false here so that we don't save it in the database
         $data->importgridimages = false;
 
         $gridImages = $DB->get_records('format_grid_icon', [ 'courseid' => $this->courseid ]);
@@ -163,10 +198,12 @@ class format_cards extends format_topics {
                     'contextid' => $courseContext->id,
                     'component' => 'format_cards',
                     'filearea' => FORMAT_CARDS_FILEAREA_IMAGE,
+                    'itemid' => $gridImage->sectionid,
                     'filepath' => '/'
                 ], $gridImageFile);
 
                 $added++;
+                $changes = true;
             } catch (file_exception $e) {
                 continue;
             }
@@ -176,8 +213,8 @@ class format_cards extends format_topics {
                 continue;
             }
 
-            $existingImagesForSection = array_filter($existingImages, function($file) use ($gridImageFile) {
-                return $file->sectionid == $file->get_itemid();
+            $existingImagesForSection = array_filter($existingImages, function($file) use ($gridImage) {
+                return $gridImage->sectionid == $file->get_itemid();
             });
 
             try {
@@ -196,8 +233,31 @@ class format_cards extends format_topics {
         }
 
         \core\notification::add(get_string('editimage:imported', 'format_cards', $added), notification::NOTIFY_SUCCESS);
+        return $changes;
     }
 
+    /**
+     * Fetch a format option from the settings. If it's one of the options that can have an admin provided default,
+     * use that unless it's been overridden for this course
+     * @param string $name Option key
+     * @param null|int|section_info|stdClass $section The section this option applies to, or 0 for the whole course
+     * @return mixed The option's valie
+     * @throws dml_exception
+     */
+    public function get_format_option(string $name, $section = null) {
+        $options = $this->get_format_options($section);
+        $defaults = get_config('format_cards');
+        
+        $value = $options[$name];
+
+        if(!object_property_exists($defaults, $name))
+            return $value;
+
+        if($value != FORMAT_CARDS_USEDEFAULT)
+            return $value;
+
+        return $defaults->$name;
+    }
 
     /**
      * Returns the default display name for a section which doesn't have
@@ -243,16 +303,25 @@ class format_cards extends format_topics {
     }
 
     /**
+     * If this course previously used format_grid, check to see if there are any images
+     * that we might want to import
      * @return bool True if the course had images for format_grid sections
      */
-    public function course_has_grid_images() {
+    public function course_has_grid_images(): bool {
         global $DB;
 
         // Definitely no images if format_grid isn't installed
         if(!in_array('grid', get_sorted_course_formats()))
             return false;
 
-        return $DB->record_exists('format_grid_icon', [ 'courseid' => $this->get_course()->id ]);
+        $course = $this->get_course();
+        if(!$course)
+            return false;
+
+        if(!isset($course->id))
+            return false;
+
+        return $DB->record_exists('format_grid_icon', [ 'courseid' => $course->id ]);
     }
 
     /**
@@ -285,7 +354,7 @@ class format_cards extends format_topics {
         require_once "$CFG->libdir/gdlib.php";
 
         if(is_object($section))
-            $section = $section->section;
+            $section = $section->id;
 
         $course = $this->get_course();
         $context = context_course::instance($course->id);
