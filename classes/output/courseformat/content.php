@@ -27,6 +27,7 @@ namespace format_cards\output\courseformat;
 use coding_exception;
 use format_topics\output\courseformat\content as content_base;
 use renderer_base;
+use stdClass;
 
 /**
  * Course content renderer
@@ -41,6 +42,7 @@ class content extends content_base {
     /**
      * If the user is editing the page, just use the default renderer for format_topics
      * Otherwise, override the renderer to add our own sections onto the page
+     *
      * @param renderer_base $renderer
      * @return string
      * @throws coding_exception
@@ -54,6 +56,12 @@ class content extends content_base {
         return "format_cards/local/content";
     }
 
+    /**
+     * Export template data
+     *
+     * @param renderer_base $output
+     * @return stdClass|object
+     */
     public function export_for_template(renderer_base $output) {
 
         // Is this a single section page?

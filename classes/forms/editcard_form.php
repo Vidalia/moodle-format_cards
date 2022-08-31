@@ -23,6 +23,7 @@
 
 namespace format_cards\forms;
 
+use editsection_form;
 use moodleform;
 
 global $CFG;
@@ -37,16 +38,21 @@ require_once "$CFG->libdir/formslib.php";
  * @author      John Maydew <jdmayd@essex.ac.uk>
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class cardimage extends moodleform {
+class editcard_form extends editsection_form {
 
     public function definition() {
 
         $form = $this->_form;
+        
+        parent::definition();
+
+        $form->addElement('header', 'cardimage', get_string('editimage', 'format_cards'));
+        $form->setExpanded('cardimage', true);
 
         $form->addElement(
             'filemanager',
             'image',
-            'Image',
+            get_string('image', 'format_cards'),
             null,
             [
                 'subdirs' => 0,

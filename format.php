@@ -23,13 +23,12 @@
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-
 defined('MOODLE_INTERNAL') || die();
 
 global $CFG, $PAGE;
 
-require_once($CFG->libdir.'/filelib.php');
-require_once($CFG->libdir.'/completionlib.php');
+require_once "$CFG->libdir/filelib.php";
+require_once "$CFG->libdir/completionlib.php";
 
 // Horrible backwards compatible parameter aliasing.
 if ($topic = optional_param('topic', 0, PARAM_INT)) {
