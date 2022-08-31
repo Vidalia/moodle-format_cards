@@ -24,11 +24,11 @@
 namespace format_cards\forms;
 
 use editsection_form;
-use moodleform;
 
 global $CFG;
 
 require_once "$CFG->libdir/formslib.php";
+require_once "$CFG->dirroot/course/editsection_form.php";
 
 /**
  * Moodle form for managing a section's image
