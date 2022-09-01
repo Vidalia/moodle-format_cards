@@ -15,6 +15,8 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
+ * Course content renderer
+ *
  * @package     format_cards
  * @copyright   2022 University of Essex
  * @author      John Maydew <jdmayd@essex.ac.uk>
@@ -22,7 +24,6 @@
  */
 
 namespace format_cards\output\courseformat;
-
 
 use coding_exception;
 use format_topics\output\courseformat\content as content_base;
@@ -50,8 +51,9 @@ class content extends content_base {
     public function get_template_name(renderer_base $renderer): string {
         global $PAGE;
 
-        if($PAGE->user_is_editing())
+        if ($PAGE->user_is_editing()) {
             return parent::get_template_name($renderer);
+        }
 
         return "format_cards/local/content";
     }
@@ -65,21 +67,23 @@ class content extends content_base {
     public function export_for_template(renderer_base $output) {
 
         // Is this a single section page?
-        $singleSection = $this->format->get_section_number();
+        $singlesection = $this->format->get_section_number();
 
         $this->hasaddsection = true;
 
         $data = parent::export_for_template($output);
 
         // Rather than rolling our own empty placeholder, we can just re-use the "no courses" template
-        // from block_myoverview and change the text to be "No activities" instead
+        // from block_myoverview and change the text to be "No activities" instead.
         $data->nocoursesimg = $output->image_url('courses', 'block_myoverview')->out();
 
-        if(!$singleSection)
+        if (!$singlesection) {
             return $data;
+        }
 
-        if($this->format->get_format_option('section0') == FORMAT_CARDS_SECTION0_COURSEPAGE)
+        if ($this->format->get_format_option('section0') == FORMAT_CARDS_SECTION0_COURSEPAGE) {
             $data->initialsection = '';
+        }
 
         return $data;
     }

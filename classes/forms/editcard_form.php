@@ -15,6 +15,8 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
+ * Moodle form for editing a section
+ *
  * @package     format_cards
  * @copyright   2022 University of Essex
  * @author      John Maydew <jdmayd@essex.ac.uk>
@@ -23,15 +25,18 @@
 
 namespace format_cards\forms;
 
+use coding_exception;
 use editsection_form;
+
+defined('MOODLE_INTERNAL') || die();
 
 global $CFG;
 
-require_once "$CFG->libdir/formslib.php";
-require_once "$CFG->dirroot/course/editsection_form.php";
+require_once("$CFG->libdir/formslib.php");
+require_once("$CFG->dirroot/course/editsection_form.php");
 
 /**
- * Moodle form for managing a section's image
+ * Moodle form for editing a section
  *
  * @package     format_cards
  * @copyright   2022 University of Essex
@@ -40,11 +45,16 @@ require_once "$CFG->dirroot/course/editsection_form.php";
  */
 class editcard_form extends editsection_form {
 
+    /**
+     * Expands the editsection_form by adding an image editing section to the end
+     *
+     * @return void
+     * @throws coding_exception
+     */
     public function definition() {
+        parent::definition();
 
         $form = $this->_form;
-        
-        parent::definition();
 
         $form->addElement('header', 'cardimage', get_string('editimage', 'format_cards'));
         $form->setExpanded('cardimage', true);

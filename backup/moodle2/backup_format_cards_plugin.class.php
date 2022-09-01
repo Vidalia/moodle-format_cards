@@ -34,12 +34,12 @@ class backup_format_cards_plugin extends backup_format_plugin {
 
         $plugin = $this->get_plugin_element(null, $this->get_format_condition(), 'cards');
 
-        // Create a nested element under each backed up section, this is just a dummy container
+        // Create a nested element under each backed up section, this is just a dummy container.
         $wrapper = new backup_nested_element('cards', [ 'id' ], [ 'section' ]);
         $wrapper->set_source_table('course_sections', [ 'id' => backup::VAR_SECTIONID ]);
 
         // Annotate files in the format_cards/image filearea for this course's context ID
-        // The itemid doesn't get mapped to the new section id, if it changes
+        // The itemid doesn't get mapped to the new section id, if it changes.
         $wrapper->annotate_files(
             'format_cards',
             FORMAT_CARDS_FILEAREA_IMAGE,

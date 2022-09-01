@@ -14,6 +14,15 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+/**
+ * Class for rendering a course module within the format
+ *
+ * @package     format_cards
+ * @copyright   2022 University of Essex
+ * @author      John Maydew <jdmayd@essex.ac.uk>
+ * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
 namespace format_cards\output\courseformat\content;
 
 use core_courseformat\output\local\content\cm as cm_base;
@@ -21,6 +30,9 @@ use renderer_base;
 use stdClass;
 
 /**
+ * Extended class for rendering a course module within the course
+ * Adds an 'indent' key to be used by some themes
+ *
  * @package     format_cards
  * @copyright   2022 University of Essex
  * @author      John Maydew <jdmayd@essex.ac.uk>
@@ -35,7 +47,7 @@ class cm extends cm_base {
     protected function add_format_data(stdClass &$data, array $haspartials, renderer_base $output): bool {
         $result = parent::add_format_data($data, $haspartials, $output);
 
-        if(!empty($this->mod->indent)) {
+        if (!empty($this->mod->indent)) {
             $data->indent = min($this->mod->indent, 7);
             $result = true;
         }

@@ -37,11 +37,13 @@ class restore_format_cards_plugin extends restore_format_plugin {
     }
 
     /**
+     * Dummy method
+     *
      * @param mixed $data
      * @return void
      */
     public function process_cards($data) {
-        // no-op
+        // No-op.
     }
 
     /**
@@ -59,44 +61,49 @@ class restore_format_cards_plugin extends restore_format_plugin {
         global $DB;
         $data = $this->connectionpoint->get_data();
 
-        if(!isset($data['path'])
+        if (!isset($data['path'])
             || $data['path'] != "/section"
-            || !isset($data['tags']['id']))
+            || !isset($data['tags']['id'])) {
             return;
+        }
 
-        $oldSectionId = $data['tags']['id'];
-        $oldSectionNum = $data['tags']['number'];
+        $oldsectionid = $data['tags']['id'];
+        $oldsectionnum = $data['tags']['number'];
 
-        $newCourseId = $this->step->get_task()->get_courseid();
-        $newSectionId = $DB->get_field('course_sections', 'id', [
-            'course' => $newCourseId,
-            'section' => $oldSectionNum
+        $newcourseid = $this->step->get_task()->get_courseid();
+        $newsectionid = $DB->get_field('course_sections', 'id', [
+            'course' => $newcourseid,
+            'section' => $oldsectionnum
         ]);
 
-        if(!$newSectionId)
+        if (!$newsectionid) {
             return;
+        }
 
-        self::move_section_image($newCourseId, $oldSectionId, $newSectionId);
+        self::move_section_image($newcourseid, $oldsectionid, $newsectionid);
     }
 
     /**
      * Given a course ID and the ID of the restored section, move any restored card images to the
      * correct section
      *
-     * @throws stored_file_creation_exception
-     * @throws file_exception
+     * @param int $newcourseid ID of the new course
+     * @param int $oldsectionid ID of the old section that was backed up
+     * @param int $newsectionid ID of the new section we're moving the image to
      * @throws coding_exception
+     * @throws file_exception
+     * @throws stored_file_creation_exception
      */
-    private static function move_section_image(int $newCourseId, int $oldSectionId, int $newSectionId) {
-        $fileStorage = get_file_storage();
-        $context = context_course::instance($newCourseId);
+    private static function move_section_image(int $newcourseid, int $oldsectionid, int $newsectionid) {
+        $filestorage = get_file_storage();
+        $context = context_course::instance($newcourseid);
 
         // Did we copy an image for the new section?
-        $restoredImage = $fileStorage->get_area_files(
+        $restoredimage = $filestorage->get_area_files(
             $context->id,
             'format_cards',
             FORMAT_CARDS_FILEAREA_IMAGE,
-            $oldSectionId,
+            $oldsectionid,
             'itemid, filepath, filename',
             false,
             0,
@@ -104,18 +111,19 @@ class restore_format_cards_plugin extends restore_format_plugin {
             1
         );
 
-        // Nothing to do if no images were restored
-        if(empty($restoredImage))
+        // Nothing to do if no images were restored.
+        if (empty($restoredimage)) {
             return;
+        }
 
-        $restoredImage = reset($restoredImage);
+        $restoredimage = reset($restoredimage);
 
         // Are there any existing images for this new section?
-        $existingImage = $fileStorage->get_area_files(
+        $existingimage = $filestorage->get_area_files(
             $context->id,
             'format_cards',
             FORMAT_CARDS_FILEAREA_IMAGE,
-            $newSectionId,
+            $newsectionid,
             'itemid, filepath, filename',
             false,
             0,
@@ -123,47 +131,47 @@ class restore_format_cards_plugin extends restore_format_plugin {
             1
         );
 
-        // If there's an existing image, we need to remove it first
-        if(!empty($existingImage)) {
-            $existingImage = reset($existingImage);
+        // If there's an existing image, we need to remove it first.
+        if (!empty($existingimage)) {
+            $existingimage = reset($existingimage);
 
             // If this is the same ID we're restoring into the same course,
-            // do don't delete anything
-            if($restoredImage->get_id() == $existingImage->get_id())
+            // don't delete anything.
+            if ($restoredimage->get_id() == $existingimage->get_id()) {
                 return;
+            }
 
             // If the IDs are different but the content is the same, delete all the restored
-            //
-            if($restoredImage->get_contenthash() == $existingImage->get_contenthash()) {
-                $fileStorage->delete_area_files($context->id,
+            // images and just leave it.
+            if ($restoredimage->get_contenthash() == $existingimage->get_contenthash()) {
+                $filestorage->delete_area_files($context->id,
                     'format_cards',
                     FORMAT_CARDS_FILEAREA_IMAGE,
-                    $oldSectionId
+                    $oldsectionid
                 );
                 return;
             }
 
-            $existingImage->delete();
+            $existingimage->delete();
         }
 
-        $movedImage = $fileStorage->create_file_from_storedfile(
+        $movedimage = $filestorage->create_file_from_storedfile(
             [
-                'itemid' => $newSectionId
+                'itemid' => $newsectionid
             ],
-            $restoredImage
+            $restoredimage
         );
 
-        // If the section IDs are the same, just delete the extra image we restored
-        if($oldSectionId == $newSectionId) {
-            $restoredImage->delete();
-        }
-        // Otherwise, delete all file records for the old section we restored to
-        // keep things tidy
-        else {
-            $fileStorage->delete_area_files($context->id,
+        // If the section IDs are the same, just delete the extra image we restored.
+        if ($oldsectionid == $newsectionid) {
+            $restoredimage->delete();
+        } else {
+            // Otherwise, delete all file records for the old section we restored to
+            // keep things tidy.
+            $filestorage->delete_area_files($context->id,
                 'format_cards',
                 FORMAT_CARDS_FILEAREA_IMAGE,
-                $oldSectionId
+                $oldsectionid
             );
         }
     }

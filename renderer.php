@@ -15,12 +15,11 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Legacy file to aviod exceptions when formats require it.
+ * Legacy file to avoid exceptions when formats require it.
  *
- * @deprecated since Moodle 4.0 MDL-72656
- * @package    format_topics
- * @copyright  2021 Ferran Recio <ferran@moodle.com>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @deprecated  since Moodle 4.0 MDL-72656
+ * @package     format_cards
+ * @copyright   2022 University of Essex
+ * @author      John Maydew <jdmayd@essex.ac.uk>
+ * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-defined('MOODLE_INTERNAL') || die();

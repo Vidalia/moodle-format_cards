@@ -15,6 +15,8 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
+ * Administrative settings
+ *
  * @package     format_cards
  * @copyright   2022 University of Essex
  * @author      John Maydew <jdmayd@essex.ac.uk>
@@ -25,9 +27,9 @@ defined('MOODLE_INTERNAL') || die();
 
 global $ADMIN, $CFG;
 
-require_once "$CFG->dirroot/course/format/cards/lib.php";
+require_once("$CFG->dirroot/course/format/cards/lib.php");
 
-if($hassiteconfig) {
+if ($hassiteconfig) {
     $settings = new admin_settingpage(
         'format_cards',
         get_string('settings:name', 'format_cards')
