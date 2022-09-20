@@ -329,7 +329,7 @@ class format_cards extends format_topics {
                 $this->resize_card_image($gridimage->sectionid);
             } catch (moodle_exception $e) {
                 if (!$hasdisplayedresizeerror) {
-                    notification::add(get_string('editimage:resizefailed', 'format_cards'), notification::NOTIFY_WARNING);
+                    notification::add(get_string('editimage:resizefailed', 'format_cards'), notification::WARNING);
                     $hasdisplayedresizeerror = true;
                 }
             }
