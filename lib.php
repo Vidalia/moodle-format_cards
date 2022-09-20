@@ -243,7 +243,11 @@ class format_cards extends format_topics {
         // so it doesn't get saved into the database.
         $data->importgridimages = false;
 
-        $gridimages = $DB->get_records('format_grid_icon', [ 'courseid' => $this->courseid ]);
+        $manager = $DB->get_manager();
+
+        $gridimages = $manager->table_exists('format_grid_icon')
+            ? $DB->get_records('format_grid_icon', [ 'courseid' => $this->courseid ])
+            : $DB->get_records('format_grid_image', [ 'courseid' => $this->courseid ]);
 
         $storage = get_file_storage();
         $context = context_course::instance($this->courseid);
@@ -264,14 +268,33 @@ class format_cards extends format_topics {
                 continue;
             }
 
-            $gridimagefile = $storage->get_file(
-                $context->id,
-                'course',
-                'section',
-                $gridimage->sectionid,
-                '/gridimage/',
-                "{$gridimage->displayedimageindex}_$gridimage->image"
-            );
+            // New course format db layout for format_grid.
+            if (object_property_exists($gridimage, 'contenthash')) {
+                $gridimagefiles = $storage->get_area_files(
+                    $context->id,
+                    'format_grid',
+                    'sectionimage',
+                    $gridimage->sectionid,
+                    'itemid, filepath, filename',
+                    false
+                );
+
+                if (empty($gridimagefiles)) {
+                    debugging("No images for section {$gridimage->sectionid}");
+                    continue;
+                }
+
+                $gridimagefile = reset($gridimagefiles);
+            } else {
+                $gridimagefile = $storage->get_file(
+                    $context->id,
+                    'course',
+                    'section',
+                    $gridimage->sectionid,
+                    '/gridimage/',
+                    "{$gridimage->displayedimageindex}_$gridimage->image"
+                );
+            }
 
             if (!$gridimagefile) {
                 debugging("Couldn't get grid format image {$gridimage->displayedimageindex}_$gridimage->image", DEBUG_DEVELOPER);
@@ -424,7 +447,13 @@ class format_cards extends format_topics {
             return false;
         }
 
-        return $DB->record_exists('format_grid_icon', [ 'courseid' => $course->id ]);
+        $manager = $DB->get_manager();
+
+        if ($manager->table_exists('format_grid_icon')) {
+            return $DB->record_exists('format_grid_icon', [ 'courseid' => $course->id ]);
+        }
+
+        return $DB->record_exists('format_grid_image', [ 'courseid' => $course->id ]);
     }
 
     /**
@@ -481,14 +510,13 @@ class format_cards extends format_topics {
             'itemid, filepath, filename',
             false
         );
-        $originalimage = reset($images);
 
         if (empty($originalimage)) {
             return;
         }
 
         /** @var stored_file $originalimage */
-        $originalimage = reset($originalimage);
+        $originalimage = reset($images);
 
         $tempfilepath = $originalimage->copy_content_to_temp('format_cards', 'sectionimage_');
 
