@@ -229,6 +229,7 @@ class format_cards extends format_topics {
      * @return bool
      * @throws coding_exception
      * @throws dml_exception
+     * @throws ddl_exception
      */
     public function update_course_format_options($data, $oldcourse = null) {
         global $DB;
