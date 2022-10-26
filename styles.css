@@ -1,9 +1,13 @@
 .format-cards .course-content .card-deck .card {
     aspect-ratio: 5 / 7;
     border: none;
+
+    max-width: 325px;
 }
 .format-cards .course-content .card-deck .card.card-horizontal {
     aspect-ratio: 7 / 5;
+
+    max-width: 450px;
 }
 
 .format-cards .course-content .card-deck .card.highlighted {
@@ -84,4 +88,12 @@
 }
 .format-cards .course-content .card-deck .card.hiddenfromstudents:hover .card-img-top {
    filter: grayscale(75%);
+}
+
+@media (max-width: 576px) {
+    .format-cards .course-content .card-deck.cards {
+        display: flex;
+        flex-flow: column;
+        align-items: center;
+    }
 }
