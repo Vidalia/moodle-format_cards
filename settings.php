@@ -59,4 +59,14 @@ if ($hassiteconfig) {
             FORMAT_CARDS_ORIENTATION_HORIZONTAL => get_string('form:course:cardorientation:horizontal', 'format_cards')
         ]
     ));
+
+    $settings->add(new admin_setting_configselect('format_cards/showsummary',
+        get_string('form:course:showsummary', 'format_cards'),
+        '',
+        FORMAT_CARDS_SHOWSUMMARY_SHOW,
+        [
+            FORMAT_CARDS_SHOWSUMMARY_SHOW => get_string('form:course:showsummary:show', 'format_cards'),
+            FORMAT_CARDS_SHOWSUMMARY_HIDE => get_string('form:course:showsummary:hide', 'format_cards')
+        ]
+    ));
 }

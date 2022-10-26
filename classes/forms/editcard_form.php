@@ -27,6 +27,7 @@ namespace format_cards\forms;
 
 use coding_exception;
 use editsection_form;
+use lang_string;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -56,8 +57,8 @@ class editcard_form extends editsection_form {
 
         $form = $this->_form;
 
-        $form->addElement('header', 'cardimage', get_string('editimage', 'format_cards'));
-        $form->setExpanded('cardimage', true);
+        $form->addElement('header', 'cardimage', get_string('editcard', 'format_cards'));
+        $form->setExpanded('cardimage');
 
         $form->addElement(
             'filemanager',

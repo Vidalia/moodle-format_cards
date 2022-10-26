@@ -56,9 +56,13 @@ $string['form:course:cardorientation:vertical'] = 'Vertical';
 $string['form:course:cardorientation:horizontal'] = 'Horizontal';
 $string['form:course:importgridimages'] = 'Import images from grid format';
 $string['form:course:importgridimages_help'] = 'Copy across the images used for grid tiles and use them as images for each card';
+$string['form:course:showsummary'] = 'Section summary';
+$string['form:course:showsummary:show'] = 'Shown';
+$string['form:course:showsummary:hide'] = 'Hidden';
+$string['form:course:showsummary_help'] = 'Whether to show the section summary on cards';
 
 $string['image'] = 'Image';
-$string['editimage'] = 'Edit image';
+$string['editcard'] = 'Edit card';
 $string['editimage:resizefailed'] = 'Failed to resize the selected image. The card will use the image at it\'s original size. You can try re-uploading the image later.';
 $string['editimage:imported'] = 'Successfully imported {$a} image(s) from the grid format';
 $string['privacy:metadata'] = 'The Card format plugin does not store any personal data.';
