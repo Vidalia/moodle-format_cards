@@ -87,6 +87,11 @@ if ($options['course-format']) {
 
 $courses = $DB->get_records_select('course', implode(' AND ', $select), $params);
 
+$progress = new progress_bar();
+$progress->create();
+$i = 0;
+$count = count($courses);
+
 foreach ($courses as $course) {
     $course->format = 'cards';
     $course->section0 = FORMAT_CARDS_USEDEFAULT;
@@ -95,10 +100,10 @@ foreach ($courses as $course) {
 
     try {
         update_course($course);
-        mtrace("Updated format for $course->shortname");
+        $progress->update(++$i, $count, "Updated format for $course->shortname");
     } catch (moodle_exception $e) {
-        mtrace("Failed to update format for $course->shortname");
         mtrace($e->getMessage());
         mtrace($e->getTraceAsString());
+        $progress->update(++$i, $count, "Failed to update format for $course->shortname");
     }
 }

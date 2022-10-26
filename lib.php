@@ -192,6 +192,52 @@ class format_cards extends format_topics {
         return $changes;
     }
 
+    /**
+     * When a section is deleted successfully, make sure we also delete
+     * the card image
+     *
+     * @param $section
+     * @param bool $forcedeleteifnotempty
+     * @return bool
+     * @throws coding_exception
+     * @throws dml_exception
+     */
+    public function delete_section($section, $forcedeleteifnotempty = false) {
+        if (!parent::delete_section($section, $forcedeleteifnotempty)) {
+            return false;
+        }
+
+        global $DB;
+
+        $sectionid = $DB->get_field('course_sections',
+            'id',
+            [
+                'courseid' => $this->get_courseid(),
+                'section' => $section
+            ],
+            IGNORE_MISSING
+        );
+
+        if (!$sectionid) {
+            return true;
+        }
+
+        $filestorage = get_file_storage();
+        $context = context_course::instance($this->get_courseid());
+        $images = $filestorage->get_area_files(
+            $context->id,
+            'format_cards',
+            FORMAT_CARDS_FILEAREA_IMAGE,
+            $sectionid
+        );
+
+        foreach ($images as $image) {
+            $image->delete();
+        }
+
+        return true;
+    }
+
 
     /**
      * Append the "importgridimages" checkbox directly to the form.
