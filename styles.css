@@ -18,6 +18,7 @@
     position: relative;
     flex-grow: 1;
     overflow: hidden;
+    border-radius: .5em;
 }
 
 .format-cards .course-content .card-deck .card .card-main-content .card-img-top {
@@ -54,14 +55,21 @@
 .format-cards .course-content .card-deck .card.card-horizontal .card-header .summary {
    -webkit-line-clamp: 2;
    max-height: 3rem;
+   margin-top: .25rem;
 }
 
 .format-cards .course-content .card-deck .card .card-header {
-   background: transparent;
+   background: linear-gradient(180deg, rgba(0,0,0,0), rgba(0,0,0,0.65) 1rem);
    position: absolute;
    bottom: 0;
    left: 0;
    right: 0;
+   padding-top: 1rem;
+   border: 0;
+}
+
+.format-cards .course-content .card-deck .card .card-header .card-title {
+    margin: 0;
 }
 
 .format-cards .empty-placeholder-image-lg {
