@@ -34,6 +34,18 @@
     transform: scale(1.1);
 }
 
+.format-cards .course-content .card-deck .card .card-header {
+    background: rgba(0,0,0,0.6);
+    border: 0;
+}
+.format-cards .course-content .card-deck .card.card-horizontal .card-header {
+    padding-top: 0;
+}
+
+.format-cards .course-content .card-deck .card .card-header .card-title {
+    margin: 0;
+}
+
 .format-cards .course-content .card-deck .card .card-header .card-title,
 .format-cards .course-content .card-deck .card .card-header a,
 .format-cards .course-content .card-deck .card .card-header .summary {
@@ -58,18 +70,22 @@
    margin-top: .25rem;
 }
 
-.format-cards .course-content .card-deck .card .card-header {
-   background: linear-gradient(180deg, rgba(0,0,0,0), rgba(0,0,0,0.65) 1rem);
-   position: absolute;
-   bottom: 0;
-   left: 0;
-   right: 0;
-   padding-top: 1rem;
-   border: 0;
+.format-cards .course-content .card-deck .card .card-overlay {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
 }
 
-.format-cards .course-content .card-deck .card .card-header .card-title {
-    margin: 0;
+.format-cards .course-content .card-deck .card .card-overlay .card-header-fade {
+    flex: 1;
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0) 60%, rgba(0, 0, 0, 0.6));
+}
+.format-cards .course-content .card-deck .card.card-horizontal .card-overlay .card-header-fade {
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0) 70%, rgba(0, 0, 0, 0.6));
 }
 
 .format-cards .empty-placeholder-image-lg {

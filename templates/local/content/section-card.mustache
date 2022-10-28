@@ -14,23 +14,24 @@
                      role="presentation"
                      {{#image}}style="background: url('{{{image}}}') center/cover"{{/image}}>
                 </div>
-            </a>
-            <a href="{{{url}}}" title="{{{name}}}">
-                <div class="card-header">
-                    {{$ core_courseformat/local/content/section/badges }}
-                        {{> core_courseformat/local/content/section/badges }}
-                    {{/ core_courseformat/local/content/section/badges }}
-                    <h3 id="section-{{num}}-title"
-                        class="card-title">
-                        {{{name}}}
-                    </h3>
-                    {{#summary}}
-                        {{#summarytext}}
-                            <span class="summary">
-                                {{{summarytext}}}
-                            </span>
-                        {{/summarytext}}
-                    {{/summary}}
+                <div class="card-overlay">
+                    <div class="card-header-fade"></div>
+                    <div class="card-header">
+                        {{$ core_courseformat/local/content/section/badges }}
+                            {{> core_courseformat/local/content/section/badges }}
+                        {{/ core_courseformat/local/content/section/badges }}
+                        <h3 id="section-{{num}}-title"
+                            class="card-title">
+                            {{{name}}}
+                        </h3>
+                        {{#summary}}
+                            {{#summarytext}}
+                                <span class="summary">
+                                    {{{summarytext}}}
+                                </span>
+                            {{/summarytext}}
+                        {{/summary}}
+                    </div>
                 </div>
             </a>
         {{/header}}
