@@ -1,9 +1,13 @@
 .format-cards .course-content .card-deck .card {
     aspect-ratio: 5 / 7;
     border: none;
+
+    max-width: 325px;
 }
 .format-cards .course-content .card-deck .card.card-horizontal {
     aspect-ratio: 7 / 5;
+
+    max-width: 450px;
 }
 
 .format-cards .course-content .card-deck .card.highlighted {
@@ -14,6 +18,7 @@
     position: relative;
     flex-grow: 1;
     overflow: hidden;
+    border-radius: .5em;
 }
 
 .format-cards .course-content .card-deck .card .card-main-content .card-img-top {
@@ -27,6 +32,18 @@
 
 .format-cards .course-content .card-deck .card:hover .card-main-content .card-img-top {
     transform: scale(1.1);
+}
+
+.format-cards .course-content .card-deck .card .card-header {
+    background: rgba(0,0,0,0.6);
+    border: 0;
+}
+.format-cards .course-content .card-deck .card.card-horizontal .card-header {
+    padding-top: 0;
+}
+
+.format-cards .course-content .card-deck .card .card-header .card-title {
+    margin: 0;
 }
 
 .format-cards .course-content .card-deck .card .card-header .card-title,
@@ -50,14 +67,25 @@
 .format-cards .course-content .card-deck .card.card-horizontal .card-header .summary {
    -webkit-line-clamp: 2;
    max-height: 3rem;
+   margin-top: .25rem;
 }
 
-.format-cards .course-content .card-deck .card .card-header {
-   background: transparent;
-   position: absolute;
-   bottom: 0;
-   left: 0;
-   right: 0;
+.format-cards .course-content .card-deck .card .card-overlay {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+}
+
+.format-cards .course-content .card-deck .card .card-overlay .card-header-fade {
+    flex: 1;
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0) 60%, rgba(0, 0, 0, 0.6));
+}
+.format-cards .course-content .card-deck .card.card-horizontal .card-overlay .card-header-fade {
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0) 70%, rgba(0, 0, 0, 0.6));
 }
 
 .format-cards .empty-placeholder-image-lg {
@@ -84,4 +112,12 @@
 }
 .format-cards .course-content .card-deck .card.hiddenfromstudents:hover .card-img-top {
    filter: grayscale(75%);
+}
+
+@media (max-width: 576px) {
+    .format-cards .course-content .card-deck.cards {
+        display: flex;
+        flex-flow: column;
+        align-items: center;
+    }
 }

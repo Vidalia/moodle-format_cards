@@ -113,11 +113,21 @@ class section extends section_base {
 
         // Shorten the card's summary text, if applicable.
         if (!empty($data->summary->summarytext)) {
-            $data->summary->summarytext = shorten_text(
-                content_to_text($data->summary->summarytext, $this->section->summaryformat),
-                250,
-                true,
-                '&hellip;');
+            if ($this->format->get_format_option('showsummary', $this->section) == FORMAT_CARDS_SHOWSUMMARY_SHOW) {
+                if ($this->section->summaryformat == FORMAT_MARKDOWN) {
+                    $data->summary->summarytext = markdown_to_html($data->summary->summarytext);
+                }
+                $data->summary->summarytext = shorten_text(
+                    strip_tags(
+                        $data->summary->summarytext,
+                        '<b><i><u><strong><em><a>'
+                    ),
+                    250,
+                    true,
+                    '&hellip;');
+            } else {
+                $data->summary->summarytext = '';
+            }
         }
 
         // Try and fetch the image.

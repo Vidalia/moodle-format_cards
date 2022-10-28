@@ -194,11 +194,13 @@
             {{$ core_courseformat/local/content/section }}
                 {{> core_courseformat/local/content/section }}
             {{/ core_courseformat/local/content/section }}
-            {{^hascms}}
-                {{< core_course/no-courses}}
-                    {{$nocoursestring}}{{#str}} noactivities, format_cards {{/str}}{{/nocoursestring}}
-                {{/core_course/no-courses}}
-            {{/hascms}}
+            {{#cmlist}}
+                {{^hascms}}
+                    {{< core_course/no-courses}}
+                        {{$nocoursestring}}{{#str}} noactivities, format_cards {{/str}}{{/nocoursestring}}
+                    {{/core_course/no-courses}}
+                {{/hascms}}
+            {{/cmlist}}
         {{/singlesection}}
         </ul>
         {{#sectionselector}}

@@ -39,6 +39,8 @@ define('FORMAT_CARDS_SECTION0_COURSEPAGE', 1);
 define('FORMAT_CARDS_SECTION0_ALLPAGES', 2);
 define('FORMAT_CARDS_ORIENTATION_VERTICAL', 1);
 define('FORMAT_CARDS_ORIENTATION_HORIZONTAL', 2);
+define('FORMAT_CARDS_SHOWSUMMARY_SHOW', 1);
+define('FORMAT_CARDS_SHOWSUMMARY_HIDE', 2);
 
 /**
  * Course format main class
@@ -127,6 +129,68 @@ class format_cards extends format_topics {
             ]
         ];
 
+        $summaryoptions = [
+            FORMAT_CARDS_SHOWSUMMARY_SHOW => new lang_string('form:course:showsummary:show', 'format_cards'),
+            FORMAT_CARDS_SHOWSUMMARY_HIDE => new lang_string('form:course:showsummary:hide', 'format_cards')
+        ];
+
+        $options['showsummary'] = [
+            'default' => FORMAT_CARDS_USEDEFAULT,
+            'type' => PARAM_INT,
+            'label' => new lang_string('form:course:showsummary', 'format_cards'),
+            'element_type' => 'select',
+            'element_attributes' => [
+                array_merge(
+                    [
+                        FORMAT_CARDS_USEDEFAULT => new lang_string(
+                            'form:course:usedefault',
+                            'format_cards',
+                            $summaryoptions[$defaults->showsummary]
+                        )
+                    ],
+                    $summaryoptions
+                )
+            ]
+        ];
+
+        return $options;
+    }
+
+    /**
+     * Users should be able to specify per-section whether the summary is visible or not
+     *
+     * @param $foreditform
+     * @return array
+     * @throws dml_exception
+     */
+    public function section_format_options($foreditform = false) {
+        $options = parent::section_format_options($foreditform);
+
+        $defaultshowsummary = $this->get_format_option('showsummary');
+        $summaryoptions = [
+            FORMAT_CARDS_SHOWSUMMARY_SHOW => new lang_string('form:course:showsummary:show', 'format_cards'),
+            FORMAT_CARDS_SHOWSUMMARY_HIDE => new lang_string('form:course:showsummary:hide', 'format_cards')
+        ];
+
+        $options['showsummary'] = [
+            'default' => FORMAT_CARDS_USEDEFAULT,
+            'type' => PARAM_INT,
+            'label' => new lang_string('form:course:showsummary', 'format_cards'),
+            'element_type' => 'select',
+            'element_attributes' => [
+                array_merge(
+                    [
+                        FORMAT_CARDS_USEDEFAULT => new lang_string(
+                            'form:course:usedefault',
+                            'format_cards',
+                            $summaryoptions[$defaultshowsummary]
+                        )
+                    ],
+                    $summaryoptions
+                )
+            ]
+        ];
+
         return $options;
     }
 
@@ -190,6 +254,52 @@ class format_cards extends format_topics {
         }
 
         return $changes;
+    }
+
+    /**
+     * When a section is deleted successfully, make sure we also delete
+     * the card image
+     *
+     * @param $section
+     * @param bool $forcedeleteifnotempty
+     * @return bool
+     * @throws coding_exception
+     * @throws dml_exception
+     */
+    public function delete_section($section, $forcedeleteifnotempty = false) {
+        if (!parent::delete_section($section, $forcedeleteifnotempty)) {
+            return false;
+        }
+
+        global $DB;
+
+        $sectionid = $DB->get_field('course_sections',
+            'id',
+            [
+                'courseid' => $this->get_courseid(),
+                'section' => $section
+            ],
+            IGNORE_MISSING
+        );
+
+        if (!$sectionid) {
+            return true;
+        }
+
+        $filestorage = get_file_storage();
+        $context = context_course::instance($this->get_courseid());
+        $images = $filestorage->get_area_files(
+            $context->id,
+            'format_cards',
+            FORMAT_CARDS_FILEAREA_IMAGE,
+            $sectionid
+        );
+
+        foreach ($images as $image) {
+            $image->delete();
+        }
+
+        return true;
     }
 
 
@@ -370,6 +480,18 @@ class format_cards extends format_topics {
 
         if ($value != FORMAT_CARDS_USEDEFAULT) {
             return $value;
+        }
+
+        if (!is_null($section)) {
+            $coursedefaults = (object) $this->get_format_options();
+
+            if (!object_property_exists($coursedefaults, $name)) {
+                return $defaults->$name;
+            }
+
+            if ($coursedefaults->$name != FORMAT_CARDS_USEDEFAULT) {
+                return $coursedefaults->$name;
+            }
         }
 
         return $defaults->$name;

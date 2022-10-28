@@ -12,25 +12,26 @@
             <a href="{{{url}}}" title="{{{name}}}">
                 <div class="card-img-top"
                      role="presentation"
-                     style="background: linear-gradient(180deg, rgba(0,0,0,0), rgba(0,0,0,0.75) 75%), url('{{#image}}{{{image}}}{{/image}}{{^image}}//via.placeholder.com/640x360{{/image}}') center/cover">
+                     {{#image}}style="background: url('{{{image}}}') center/cover"{{/image}}>
                 </div>
-            </a>
-            <a href="{{{url}}}" title="{{{name}}}">
-                <div class="card-header">
-                    {{$ core_courseformat/local/content/section/badges }}
-                        {{> core_courseformat/local/content/section/badges }}
-                    {{/ core_courseformat/local/content/section/badges }}
-                    <h3 id="section-{{num}}-title"
-                        class="card-title mt-2">
-                        {{{name}}}
-                    </h3>
-                    {{#summary}}
-                        {{#summarytext}}
-                            <span class="summary">
-                                {{{summarytext}}}
-                            </span>
-                        {{/summarytext}}
-                    {{/summary}}
+                <div class="card-overlay">
+                    <div class="card-header-fade"></div>
+                    <div class="card-header">
+                        {{$ core_courseformat/local/content/section/badges }}
+                            {{> core_courseformat/local/content/section/badges }}
+                        {{/ core_courseformat/local/content/section/badges }}
+                        <h3 id="section-{{num}}-title"
+                            class="card-title">
+                            {{{name}}}
+                        </h3>
+                        {{#summary}}
+                            {{#summarytext}}
+                                <span class="summary">
+                                    {{{summarytext}}}
+                                </span>
+                            {{/summarytext}}
+                        {{/summary}}
+                    </div>
                 </div>
             </a>
         {{/header}}
