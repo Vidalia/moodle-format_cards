@@ -346,7 +346,9 @@ class format_cards extends format_topics {
 
         $changes = parent::update_course_format_options($data, $oldcourse);
 
-        if (!$data->importgridimages || !$this->course_has_grid_images()) {
+        if (object_property_exists($data, "importgridimages")
+            || !$data->importgridimages
+            || !$this->course_has_grid_images()) {
             return $changes;
         }
 

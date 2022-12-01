@@ -66,7 +66,8 @@ class section extends section_base {
         $data = parent::export_for_template($output);
         $data->classes = [];
 
-        if ($data->hiddenfromstudents) {
+        if (object_property_exists($data, "hiddenfromstudents")
+            && $data->hiddenfromstudents) {
             $data->classes[] = "hiddenfromstudents";
         }
 
@@ -79,6 +80,11 @@ class section extends section_base {
             && !$this->section->section == 0;
 
         $data->showascard = $showascard;
+
+        if (!isset($data->header)) {
+            $data->header = new stdClass;
+        }
+
         $data->header->headerdisplaymultipage = !$issinglesectionpage;
 
         // Need to add a clickable URL that points to the single_section page, not the
