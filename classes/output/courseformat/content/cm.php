@@ -31,7 +31,6 @@ use stdClass;
 
 /**
  * Extended class for rendering a course module within the course
- * Adds an 'indent' key to be used by some themes
  *
  * @package     format_cards
  * @copyright   2022 University of Essex
@@ -42,6 +41,11 @@ class cm extends cm_base {
 
     /**
      * Appends the indentation level of a course module to the template
+     *
+     * @param stdClass $data
+     * @param array $haspartials
+     * @param renderer_base $output
+     * @return bool
      * @see \core_courseformat\output\local\content\cm::add_format_data
      */
     protected function add_format_data(stdClass &$data, array $haspartials, renderer_base $output): bool {

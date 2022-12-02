@@ -14,22 +14,27 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+namespace format_cards\privacy;
+
+use core_privacy\local\metadata\null_provider;
+
 /**
- * Version details
+ * Privacy subsystem implementation for format_cards
  *
  * @package     format_cards
  * @copyright   2022 University of Essex
  * @author      John Maydew <jdmayd@essex.ac.uk>
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+class provider implements null_provider {
 
-defined('MOODLE_INTERNAL') || die();
-
-$plugin->version   = 2022120200;        // The current plugin version (Date: YYYYMMDDXX).
-$plugin->requires  = 2022041200;        // Requires this Moodle version.
-$plugin->component = 'format_cards';    // Full name of the plugin (used for diagnostics).
-$plugin->release = "v1.0.7";
-$plugin->maturity = MATURITY_STABLE;
-$plugin->dependencies = [
-  "format_topics" => 2022041900
-];
+    /**
+     * Get the language string identifier with the component's language
+     * file to explain why this plugin stores no data.
+     *
+     * @return  string
+     */
+    public static function get_reason(): string {
+        return 'privacy:metadata';
+    }
+}
