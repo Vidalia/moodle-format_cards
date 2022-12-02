@@ -35,7 +35,7 @@
 }
 
 .format-cards .course-content .card-deck .card .card-header {
-    background: rgba(0,0,0,0.6);
+    background: rgba(0, 0, 0, 0.6);
     border: 0;
 }
 .format-cards .course-content .card-deck .card.card-horizontal .card-header {
@@ -65,9 +65,9 @@
 }
 
 .format-cards .course-content .card-deck .card.card-horizontal .card-header .summary {
-   -webkit-line-clamp: 2;
-   max-height: 3rem;
-   margin-top: .25rem;
+    -webkit-line-clamp: 2;
+    max-height: 3rem;
+    margin-top: .25rem;
 }
 
 .format-cards .course-content .card-deck .card .card-overlay {
@@ -89,29 +89,29 @@
 }
 
 .format-cards .empty-placeholder-image-lg {
-   height: 5rem;
+    height: 5rem;
 }
 
 .format-cards .single-section .course-section {
-   border: none;
+    border: none;
 }
 
 .format-cards .course-content .single-section .section-navigation {
-   margin-bottom: unset;
+    margin-bottom: unset;
 }
 
 .format-cards .course-content .card-deck .card .card-img-top {
-   transition: 0.4s filter ease-in-out;
+    transition: 0.4s filter ease-in-out;
 }
 
 .format-cards .course-content .card-deck .card:hover .card-img-top {
-   filter: brightness(110%);
+    filter: brightness(110%);
 }
 .format-cards .course-content .card-deck .card.hiddenfromstudents .card-img-top {
-   filter: blur(1px) grayscale(80%);
+    filter: blur(1px) grayscale(80%);
 }
 .format-cards .course-content .card-deck .card.hiddenfromstudents:hover .card-img-top {
-   filter: grayscale(75%);
+    filter: grayscale(75%);
 }
 
 @media (max-width: 576px) {
