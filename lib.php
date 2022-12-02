@@ -163,7 +163,7 @@ class format_cards extends format_topics {
      * @return array
      * @throws dml_exception
      */
-    public function section_format_options(bool $foreditform = false) {
+    public function section_format_options($foreditform = false) {
         $options = parent::section_format_options($foreditform);
 
         $defaultshowsummary = $this->get_format_option('showsummary');
