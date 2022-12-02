@@ -120,4 +120,9 @@
         flex-flow: column;
         align-items: center;
     }
+
+    .format-cards .course-content .card-deck .card .card-header .card-title {
+        /** Try to make card titles responsive on smaller devices */
+        font-size: min(3rem, 16vw);
+    }
 }
