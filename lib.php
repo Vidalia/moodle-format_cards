@@ -159,11 +159,11 @@ class format_cards extends format_topics {
     /**
      * Users should be able to specify per-section whether the summary is visible or not
      *
-     * @param $foreditform
+     * @param bool $foreditform
      * @return array
      * @throws dml_exception
      */
-    public function section_format_options($foreditform = false) {
+    public function section_format_options(bool $foreditform = false) {
         $options = parent::section_format_options($foreditform);
 
         $defaultshowsummary = $this->get_format_option('showsummary');
@@ -266,7 +266,7 @@ class format_cards extends format_topics {
      * When a section is deleted successfully, make sure we also delete
      * the card image
      *
-     * @param $section
+     * @param int|stdClass|section_info $section
      * @param bool $forcedeleteifnotempty
      * @return bool
      * @throws coding_exception
@@ -680,9 +680,9 @@ class format_cards extends format_topics {
 /**
  * Allow for the section name to be edited in-place
  *
- * @param $itemtype
- * @param $itemid
- * @param $newvalue
+ * @param string $itemtype
+ * @param int $itemid
+ * @param mixed $newvalue
  * @return inplace_editable|void
  * @throws dml_exception
  */
@@ -701,17 +701,17 @@ function format_cards_inplace_editable($itemtype, $itemid, $newvalue) {
 /**
  * Serves files for format_cards
  *
- * @param $course
- * @param $coursemodule
- * @param $context
- * @param $filearea
- * @param $args
- * @param $forcedownload
+ * @param stdClass $course
+ * @param stdClass|null $coursemodule
+ * @param context $context
+ * @param string $filearea
+ * @param array $args
+ * @param bool$forcedownload
  * @param array $options
  * @return void
  * @throws coding_exception
  */
-function format_cards_pluginfile($course, $coursemodule, $context, $filearea, $args, $forcedownload, array $options = []) {
+function format_cards_pluginfile(stdClass $course, ?stdClass $coursemodule, context $context, string $filearea, array $args, $forcedownload, array $options = []) {
     if ($context->contextlevel != CONTEXT_COURSE && $context->contextlevel != CONTEXT_SYSTEM) {
         send_file_not_found();
     }
