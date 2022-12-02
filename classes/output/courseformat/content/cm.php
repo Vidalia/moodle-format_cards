@@ -41,7 +41,7 @@ class cm extends cm_base {
 
     /**
      * Appends the indentation level of a course module to the template
-     * 
+     *
      * @param stdClass $data
      * @param array $haspartials
      * @param renderer_base $output
