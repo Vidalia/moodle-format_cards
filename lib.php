@@ -234,6 +234,12 @@ class format_cards extends format_topics {
     public function update_section_format_options($data) {
         $changes = parent::update_section_format_options($data);
 
+        // Make sure we don't accidentally clobber any existing saved images if we get here
+        // from inplace_editable.
+        if (!array_key_exists('image', $data)) {
+            return $changes;
+        }
+
         file_save_draft_area_files(
             $data['image'],
             context_course::instance($this->get_courseid())->id,
