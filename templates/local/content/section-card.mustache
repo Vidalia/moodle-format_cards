@@ -36,7 +36,7 @@
     }
 }}
 <div class="card dashboard-card{{#classes}} {{.}}{{/classes}}"
-     role="button"
+     role="listitem"
      aria-labelledby="section-{{num}}-title"
      data-sectionid="{{num}}"
      data-sectionreturnid="{{sectionreturnid}}"
@@ -63,9 +63,9 @@
                         </h3>
                         {{#summary}}
                             {{#summarytext}}
-                                <span class="summary">
+                                <div class="summary">
                                     {{{summarytext}}}
-                                </span>
+                                </div>
                             {{/summarytext}}
                         {{/summary}}
                     </div>
