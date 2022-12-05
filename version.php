@@ -15,11 +15,22 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Legacy file to avoid exceptions when formats require it.
+ * Version details
  *
- * @deprecated  since Moodle 4.0 MDL-72656
  * @package     format_cards
  * @copyright   2022 University of Essex
  * @author      John Maydew <jdmayd@essex.ac.uk>
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+
+defined('MOODLE_INTERNAL') || die();
+
+$plugin->version   = 2022120200;        // The current plugin version (Date: YYYYMMDDXX).
+$plugin->requires  = 2022041200;        // Requires this Moodle version.
+$plugin->component = 'format_cards';    // Full name of the plugin (used for diagnostics).
+$plugin->release = "v1.0.7";
+$plugin->maturity = MATURITY_STABLE;
+$plugin->dependencies = [
+  "format_topics" => 2022041900
+];
+

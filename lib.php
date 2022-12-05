@@ -704,12 +704,18 @@ function format_cards_inplace_editable($itemtype, $itemid, $newvalue) {
  * @param context $context
  * @param string $filearea
  * @param array $args
- * @param bool$forcedownload
+ * @param bool $forcedownload
  * @param array $options
  * @return void
  * @throws coding_exception
  */
-function format_cards_pluginfile(stdClass $course, ?stdClass $coursemodule, context $context, string $filearea, array $args, $forcedownload, array $options = []) {
+function format_cards_pluginfile(stdClass $course,
+                                 ?stdClass $coursemodule,
+                                 context $context,
+                                 string $filearea,
+                                 array $args,
+                                 $forcedownload,
+                                 array $options = []) {
     if ($context->contextlevel != CONTEXT_COURSE && $context->contextlevel != CONTEXT_SYSTEM) {
         send_file_not_found();
     }
