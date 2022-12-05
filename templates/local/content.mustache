@@ -168,7 +168,9 @@
             {{/core_courseformat/local/content/section}}
         {{/initialsection}}
     </ul>
-    <div class="card-deck dashboard-card-deck {{format}}" data-for="course_sectionlist">
+    <div class="card-deck dashboard-card-deck {{format}}"
+         role="list"
+         data-for="course_sectionlist">
         {{#sections}}
             {{#showascard}}
                 {{$ format_cards/local/content/section-card }}

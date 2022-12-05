@@ -69,7 +69,7 @@ class content extends content_base {
         // Is this a single section page?
         $singlesection = $this->format->get_section_number();
 
-        $this->hasaddsection = true;
+        $this->hasaddsection = !$singlesection;
 
         $data = parent::export_for_template($output);
 

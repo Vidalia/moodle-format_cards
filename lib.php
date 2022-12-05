@@ -273,23 +273,14 @@ class format_cards extends format_topics {
      * @throws dml_exception
      */
     public function delete_section($section, $forcedeleteifnotempty = false) {
-        if (!parent::delete_section($section, $forcedeleteifnotempty)) {
-            return false;
-        }
-
         global $DB;
 
-        $sectionid = $DB->get_field('course_sections',
-            'id',
-            [
-                'courseid' => $this->get_courseid(),
-                'section' => $section
-            ],
-            IGNORE_MISSING
-        );
-
-        if (!$sectionid) {
-            return true;
+        if (!is_object($section)) {
+            $section = $DB->get_record('course_sections',
+                [
+                    'course' => $this->get_courseid(),
+                    'section' => $section
+                ]);
         }
 
         $filestorage = get_file_storage();
@@ -298,14 +289,14 @@ class format_cards extends format_topics {
             $context->id,
             'format_cards',
             FORMAT_CARDS_FILEAREA_IMAGE,
-            $sectionid
+            $section->id
         );
 
         foreach ($images as $image) {
             $image->delete();
         }
 
-        return true;
+        return parent::delete_section($section, $forcedeleteifnotempty);
     }
 
 
@@ -352,9 +343,7 @@ class format_cards extends format_topics {
 
         $changes = parent::update_course_format_options($data, $oldcourse);
 
-        if (object_property_exists($data, "importgridimages")
-            || !$data->importgridimages
-            || !$this->course_has_grid_images()) {
+        if (empty($data->importgridimages) || !$this->course_has_grid_images()) {
             return $changes;
         }
 
@@ -706,12 +695,18 @@ function format_cards_inplace_editable($itemtype, $itemid, $newvalue) {
  * @param context $context
  * @param string $filearea
  * @param array $args
- * @param bool$forcedownload
+ * @param bool $forcedownload
  * @param array $options
  * @return void
  * @throws coding_exception
  */
-function format_cards_pluginfile(stdClass $course, ?stdClass $coursemodule, context $context, string $filearea, array $args, $forcedownload, array $options = []) {
+function format_cards_pluginfile(stdClass $course,
+                                 ?stdClass $coursemodule,
+                                 context $context,
+                                 string $filearea,
+                                 array $args,
+                                 $forcedownload,
+                                 array $options = []) {
     if ($context->contextlevel != CONTEXT_COURSE && $context->contextlevel != CONTEXT_SYSTEM) {
         send_file_not_found();
     }
