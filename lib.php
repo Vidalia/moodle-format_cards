@@ -273,23 +273,14 @@ class format_cards extends format_topics {
      * @throws dml_exception
      */
     public function delete_section($section, $forcedeleteifnotempty = false) {
-        if (!parent::delete_section($section, $forcedeleteifnotempty)) {
-            return false;
-        }
-
         global $DB;
 
-        $sectionid = $DB->get_field('course_sections',
-            'id',
-            [
-                'courseid' => $this->get_courseid(),
-                'section' => $section
-            ],
-            IGNORE_MISSING
-        );
-
-        if (!$sectionid) {
-            return true;
+        if (!is_object($section)) {
+            $section = $DB->get_record('course_sections',
+                [
+                    'course' => $this->get_courseid(),
+                    'section' => $section
+                ]);
         }
 
         $filestorage = get_file_storage();
@@ -298,14 +289,14 @@ class format_cards extends format_topics {
             $context->id,
             'format_cards',
             FORMAT_CARDS_FILEAREA_IMAGE,
-            $sectionid
+            $section->id
         );
 
         foreach ($images as $image) {
             $image->delete();
         }
 
-        return true;
+        return parent::delete_section($section, $forcedeleteifnotempty);
     }
 
 
