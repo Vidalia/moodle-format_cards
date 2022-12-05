@@ -62,6 +62,7 @@ jobs:
         env:
           DB: ${{ matrix.database }}
           MOODLE_BRANCH: ${{ matrix.moodle-branch }}
+          IGNORE_NAMES: 'styles.css'
 
       - name: PHP Lint
         if: ${{ always() }}
