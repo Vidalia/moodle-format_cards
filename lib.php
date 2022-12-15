@@ -524,10 +524,6 @@ class format_cards extends format_topics {
      */
     public function get_view_url($section, $options = []) {
 
-        if (!empty($options['navigation'])) {
-            return null;
-        }
-
         $base = new moodle_url("/course/view.php", [ 'id' => $this->get_course()->id ]);
 
         if (!$section) {
