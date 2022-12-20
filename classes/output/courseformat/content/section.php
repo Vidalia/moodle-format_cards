@@ -179,6 +179,10 @@ class section extends section_base {
         $completioninfo = new completion_info($this->format->get_course());
         $modinfo = $this->section->modinfo;
 
+        if (!array_key_exists($this->section->section, $modinfo->sections)) {
+            return [];
+        }
+
         // List of course module IDs for this section.
         $sectioncmids = $modinfo->sections[$this->section->section];
 

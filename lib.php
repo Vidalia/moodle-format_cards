@@ -463,7 +463,11 @@ class format_cards extends format_topics {
         $options = $this->get_format_options($section);
         $defaults = get_config('format_cards');
 
-        $value = $options[$name];
+        if (array_key_exists($name, $options)) {
+            $value = $options[$name];
+        } else {
+            $value = $defaults->$name;
+        }
 
         if (!object_property_exists($defaults, $name)) {
             return $value;
