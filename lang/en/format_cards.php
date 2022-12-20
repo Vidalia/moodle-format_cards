@@ -41,6 +41,8 @@ $string['showfromothers'] = 'Show card';
 $string['noactivities'] = 'No activities';
 
 $string['section:default'] = 'Card {$a}';
+$string['section:completion:percentage'] = '{$a->percentage}%';
+$string['section:completion:count'] = '{$a->completed}/{$a->total}';
 
 $string['settings:name'] = 'Cards format settings';
 $string['settings:defaults'] = 'Defaults';
@@ -60,6 +62,13 @@ $string['form:course:showsummary'] = 'Section summary';
 $string['form:course:showsummary:show'] = 'Shown';
 $string['form:course:showsummary:hide'] = 'Hidden';
 $string['form:course:showsummary_help'] = 'Whether to show the section summary on cards';
+$string['form:course:showprogress'] = 'Section progress';
+$string['form:course:showprogress:description'] = 'Whether to display progress within each section on the card';
+$string['form:course:showprogress:show'] = 'Shown';
+$string['form:course:showprogress:hide'] = 'Hidden';
+$string['form:course:progressformat'] = 'Display progress as';
+$string['form:course:progressformat:count'] = 'A count of items';
+$string['form:course:progressformat:percentage'] = 'A percentage';
 
 $string['image'] = 'Image';
 $string['editcard'] = 'Edit card';

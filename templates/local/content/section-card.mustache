@@ -52,7 +52,11 @@
                      {{#image}}style="background: url('{{{image}}}') center/cover"{{/image}}>
                 </div>
                 <div class="card-overlay">
-                    <div class="card-header-fade"></div>
+                    <div class="card-header-fade">
+                        {{$ format_cards/local/content/completion }}
+                            {{> format_cards/local/content/completion }}
+                        {{/ format_cards/local/content/completion }}
+                    </div>
                     <div class="card-header">
                         {{$ core_courseformat/local/content/section/badges }}
                             {{> core_courseformat/local/content/section/badges }}

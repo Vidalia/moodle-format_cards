@@ -41,6 +41,10 @@ define('FORMAT_CARDS_ORIENTATION_VERTICAL', 1);
 define('FORMAT_CARDS_ORIENTATION_HORIZONTAL', 2);
 define('FORMAT_CARDS_SHOWSUMMARY_SHOW', 1);
 define('FORMAT_CARDS_SHOWSUMMARY_HIDE', 2);
+define('FORMAT_CARDS_SHOWPROGRESS_SHOW', 1);
+define('FORMAT_CARDS_SHOWPROGRESS_HIDE', 2);
+define('FORMAT_CARDS_PROGRESSFORMAT_COUNT', 1);
+define('FORMAT_CARDS_PROGRESSFORMAT_PERCENTAGE', 2);
 
 /**
  * Course format main class
@@ -81,77 +85,67 @@ class format_cards extends format_topics {
         // We always show one section per page.
         $options['coursedisplay']['default'] = COURSE_DISPLAY_MULTIPAGE;
 
+        $createselect = function (string $name, array $options, int $default, bool $hashelp = false): array {
+            $option = [
+                'default' => FORMAT_CARDS_USEDEFAULT,
+                'type' => PARAM_INT,
+                'label' => new lang_string("form:course:$name", 'format_cards'),
+                'element_type' => 'select',
+                'element_attributes' => [
+                    array_merge(
+                        [
+                            FORMAT_CARDS_USEDEFAULT => new lang_string(
+                                'form:course:usedefault',
+                                'format_cards',
+                                $options[$default])
+                        ],
+                        $options
+                    )
+                ],
+            ];
+
+            if ($hashelp) {
+                $option['help'] = "form:course:$name";
+                $option['help_component'] = 'format_cards';
+            }
+
+            return $option;
+        };
+
         $section0options = [
             FORMAT_CARDS_SECTION0_COURSEPAGE => new lang_string('form:course:section0:coursepage', 'format_cards'),
             FORMAT_CARDS_SECTION0_ALLPAGES => new lang_string('form:course:section0:allpages', 'format_cards')
         ];
 
-        $options['section0'] = [
-            'default' => FORMAT_CARDS_USEDEFAULT,
-            'type' => PARAM_INT,
-            'label' => new lang_string('form:course:section0', 'format_cards'),
-            'help' => 'form:course:section0',
-            'help_component' => 'format_cards',
-            'element_type' => 'select',
-            'element_attributes' => [
-                array_merge(
-                    [
-                        FORMAT_CARDS_USEDEFAULT => new lang_string(
-                            'form:course:usedefault',
-                            'format_cards',
-                            $section0options[$defaults->section0])
-                    ],
-                    $section0options
-                )
-            ],
-        ];
+        $options['section0'] = $createselect('section0', $section0options, $defaults->section0, true);
 
         $orientationoptions = [
             FORMAT_CARDS_ORIENTATION_VERTICAL => new lang_string('form:course:cardorientation:vertical', 'format_cards'),
             FORMAT_CARDS_ORIENTATION_HORIZONTAL => new lang_string('form:course:cardorientation:horizontal', 'format_cards')
         ];
 
-        $options['cardorientation'] = [
-            'default' => FORMAT_CARDS_USEDEFAULT,
-            'type' => PARAM_INT,
-            'label' => new lang_string('form:course:cardorientation', 'format_cards'),
-            'element_type' => 'select',
-            'element_attributes' => [
-                array_merge(
-                    [
-                        FORMAT_CARDS_USEDEFAULT => new lang_string(
-                            'form:course:usedefault',
-                            'format_cards',
-                            $orientationoptions[$defaults->cardorientation])
-                    ],
-                    $orientationoptions
-                )
-            ]
-        ];
+        $options['cardorientation'] = $createselect('cardorientation', $orientationoptions, $defaults->cardorientation);
 
         $summaryoptions = [
             FORMAT_CARDS_SHOWSUMMARY_SHOW => new lang_string('form:course:showsummary:show', 'format_cards'),
             FORMAT_CARDS_SHOWSUMMARY_HIDE => new lang_string('form:course:showsummary:hide', 'format_cards')
         ];
 
-        $options['showsummary'] = [
-            'default' => FORMAT_CARDS_USEDEFAULT,
-            'type' => PARAM_INT,
-            'label' => new lang_string('form:course:showsummary', 'format_cards'),
-            'element_type' => 'select',
-            'element_attributes' => [
-                array_merge(
-                    [
-                        FORMAT_CARDS_USEDEFAULT => new lang_string(
-                            'form:course:usedefault',
-                            'format_cards',
-                            $summaryoptions[$defaults->showsummary]
-                        )
-                    ],
-                    $summaryoptions
-                )
-            ]
+        $options['showsummary'] = $createselect('showsummary', $summaryoptions, $defaults->showsummary);
+
+        $showprogressoptions = [
+            FORMAT_CARDS_SHOWPROGRESS_SHOW => new lang_string('form:course:showprogress:show', 'format_cards'),
+            FORMAT_CARDS_SHOWPROGRESS_HIDE => new lang_string('form:course:showprogress:hide', 'format_cards')
         ];
+
+        $options['showprogress'] = $createselect('showprogress', $showprogressoptions, $defaults->showprogress);
+
+        $progressformatoptions = [
+            FORMAT_CARDS_PROGRESSFORMAT_COUNT => new lang_string('form:course:progressformat:count', 'format_cards'),
+            FORMAT_CARDS_PROGRESSFORMAT_PERCENTAGE => new lang_string('form:course:progressformat:percentage', 'format_cards')
+        ];
+
+        $options['progressformat'] = $createselect('progressformat', $progressformatoptions, $defaults->progressformat);
 
         return $options;
     }

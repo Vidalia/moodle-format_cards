@@ -88,6 +88,44 @@
     background: linear-gradient(180deg, rgba(0, 0, 0, 0) 70%, rgba(0, 0, 0, 0.6));
 }
 
+.format-cards .course-content .card-deck .card .card-header-fade .section-completion {
+    position: absolute;
+    right: 0;
+    top: 0;
+    margin: 0.5rem;
+    padding: 0.35rem;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 3.2rem;
+    height: 3.2rem;
+}
+
+.format-cards .course-content .card-deck .card .card-header-fade .section-completion svg {
+    position: absolute;
+    transform: rotate(-90deg);
+    width: 3rem;
+    height: 3rem;
+}
+
+.format-cards .course-content .card-deck .card .card-header-fade .section-completion svg circle.outer {
+    stroke: #e6e6e6;
+    stroke-width: 5;
+    fill: none;
+}
+
+.format-cards .course-content .card-deck .card .card-header-fade .section-completion svg circle.inner {
+    stroke: #357a32;
+    stroke-width: 5;
+    fill: none;
+    stroke-dasharray: 100;
+}
+
+.format-cards .course-content .card-deck .card .card-header-fade .section-completion svg circle.inner.complete {
+    stroke-dasharray: 0;
+}
+
 .format-cards .empty-placeholder-image-lg {
     height: 5rem;
 }

@@ -69,4 +69,24 @@ if ($hassiteconfig) {
             FORMAT_CARDS_SHOWSUMMARY_HIDE => get_string('form:course:showsummary:hide', 'format_cards')
         ]
     ));
+
+    $settings->add(new admin_setting_configselect('format_cards/showprogress',
+        get_string('form:course:showprogress', 'format_cards'),
+        '',
+        FORMAT_CARDS_SHOWPROGRESS_SHOW,
+        [
+            FORMAT_CARDS_SHOWPROGRESS_SHOW => get_string('form:course:showprogress:show', 'format_cards'),
+            FORMAT_CARDS_SHOWPROGRESS_HIDE => get_string('form:course:showprogress:hide', 'format_cards')
+        ]
+    ));
+
+    $settings->add(new admin_setting_configselect('format_cards/progressformat',
+        get_string('form:course:progressformat', 'format_cards'),
+        '',
+        FORMAT_CARDS_PROGRESSFORMAT_PERCENTAGE,
+        [
+            FORMAT_CARDS_PROGRESSFORMAT_COUNT => get_string('form:course:progressformat:count', 'format_cards'),
+            FORMAT_CARDS_PROGRESSFORMAT_PERCENTAGE => get_string('form:course:progressformat:percentage', 'format_cards')
+        ]
+    ));
 }

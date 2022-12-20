@@ -26,6 +26,7 @@
 namespace format_cards\output\courseformat\content;
 
 use coding_exception;
+use completion_info;
 use context_course;
 use core_geopattern;
 use format_topics\output\courseformat\content\section as section_base;
@@ -117,6 +118,11 @@ class section extends section_base {
             $data->classes[] = "card-horizontal";
         }
 
+        // Add completion data.
+        $completion = $this->get_section_completion();
+        $data->completion = $completion;
+        $data->hascompletion = !empty($completion);
+
         // Shorten the card's summary text, if applicable.
         if (!empty($data->summary->summarytext)) {
             if ($this->format->get_format_option('showsummary', $this->section) == FORMAT_CARDS_SHOWSUMMARY_SHOW) {
@@ -156,6 +162,75 @@ class section extends section_base {
         }
 
         return $data;
+    }
+
+    /**
+     * Grabs the completion info for this section
+     *
+     * @return array
+     */
+    public function get_section_completion(): array {
+
+        // Can't do anything if completion is disabled, or we're a guest user.
+        if (isguestuser() || !$this->format->get_course()->enablecompletion) {
+            return [];
+        }
+
+        $completioninfo = new completion_info($this->format->get_course());
+        $modinfo = $this->section->modinfo;
+
+        // List of course module IDs for this section.
+        $sectioncmids = $modinfo->sections[$this->section->section];
+
+        $total = 0;
+        $completed = 0;
+
+        // Iterate through all the course module ID's that appear in this section.
+        foreach ($sectioncmids as $cmid) {
+            $cminfo = $modinfo->cms[$cmid];
+
+            // Don't include the course module if it's not visible, or about to be deleted.
+            if (!$cminfo->uservisible || $cminfo->deletioninprogress) {
+                continue;
+            }
+
+            // Don't include the course module if completion tracking is disabled.
+            if ($completioninfo->is_enabled($cminfo) == COMPLETION_TRACKING_NONE) {
+                continue;
+            }
+
+            $total++;
+
+            // Finally, figure out if the user has completed this course module.
+            $completiondata = $completioninfo->get_data($cminfo, true);
+
+            if (in_array(
+                $completiondata->completionstate,
+                [ COMPLETION_COMPLETE, COMPLETION_COMPLETE_PASS ]
+            )) {
+                $completed++;
+            }
+        }
+
+        // Don't show completion data if there's nothing completable in this section.
+        if ($total == 0) {
+            return [];
+        }
+
+        $iscomplete = $total == $completed;
+        $progressformat = $this->format->get_format_option('progressformat', $this->section);
+        $percentage = round(($completed / $total) * 100);
+
+        return [
+            'total' => $total,
+            'completed' => $completed,
+            'percentage' => $percentage,
+            'dashoffset' => 100 - $percentage,
+            'iscomplete' => $iscomplete,
+            'hasprogress' => $completed > 0,
+            'showpercentage' => !$iscomplete && $progressformat == FORMAT_CARDS_PROGRESSFORMAT_PERCENTAGE,
+            'showcount' => !$iscomplete && $progressformat == FORMAT_CARDS_PROGRESSFORMAT_COUNT
+        ];
     }
 
     /**
