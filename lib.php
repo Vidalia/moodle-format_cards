@@ -317,6 +317,16 @@ class format_cards extends format_topics {
             $mform->addHelpButton('importgridimages', 'form:course:importgridimages', 'format_cards');
         }
 
+        $defaultshowprogress = get_config('format_cards', 'showprogress');
+        $hiddenvalues = [
+            FORMAT_CARDS_SHOWPROGRESS_HIDE
+        ];
+
+        if ($defaultshowprogress == FORMAT_CARDS_SHOWPROGRESS_HIDE) {
+            $hiddenvalues[] = FORMAT_CARDS_USEDEFAULT;
+        }
+        $mform->hideIf('progressformat', 'showprogress', 'in', $hiddenvalues);
+
         return $elements;
     }
 
