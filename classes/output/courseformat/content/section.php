@@ -25,14 +25,7 @@
 
 namespace format_cards\output\courseformat\content;
 
-<<<<<<< Updated upstream
-use coding_exception;
 use completion_info;
-use context_course;
-use core_geopattern;
-=======
-use completion_info;
->>>>>>> Stashed changes
 use format_topics\output\courseformat\content\section as section_base;
 use renderer_base;
 use stdClass;
@@ -124,7 +117,6 @@ class section extends section_base {
     }
 
     /**
-<<<<<<< Updated upstream
      * Grabs the completion info for this section
      *
      * @return array
@@ -195,148 +187,6 @@ class section extends section_base {
             'showpercentage' => !$iscomplete && $progressformat == FORMAT_CARDS_PROGRESSFORMAT_PERCENTAGE,
             'showcount' => !$iscomplete && $progressformat == FORMAT_CARDS_PROGRESSFORMAT_COUNT
         ];
-    }
-
-    /**
-=======
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-     * Generates a semi-random colour based on the course's ID
-     *
-     * @see \block_myoverview\output\courses_view::coursecolor()
-     * @return string
-     */
-    public function get_course_colour(): string {
-        // The colour palette is hardcoded for now. It would make sense to combine it with theme settings.
-        $basecolours = [
-            '#81ecec', '#74b9ff', '#a29bfe', '#dfe6e9', '#00b894',
-            '#0984e3', '#b2bec3', '#fdcb6e', '#fd79a8', '#6c5ce7'
-        ];
-
-        return $basecolours[$this->format->get_course()->id % 10];
-    }
-
-    /**
-     * Fetch all the section images for the current course
-     *
-     * @return stored_file[] Array of image files
-     */
-    public function get_section_images(): array {
-
-        $course = $this->format->get_course();
-
-        if (!array_key_exists($course->id, self::$images)) {
-            $context = context_course::instance($course->id);
-            $filestorage = get_file_storage();
-
-            try {
-                $files = $filestorage->get_area_files($context->id,
-                    'format_cards',
-                    FORMAT_CARDS_FILEAREA_IMAGE,
-                    false,
-                    'itemid, filepath, filename',
-                    false
-                );
-            } catch (coding_exception $e) {
-                return [];
-            }
-
-            self::$images[$course->id] = [];
-
-            foreach ($files as $file) {
-                self::$images[$course->id][$file->get_itemid()] = $file;
-            }
-        }
-
-        return self::$images[$course->id];
-    }
-
-    /**
-     * Fetch the image file for a given section
-     *
-     * @param section_info $section
-     * @return stored_file|null
-     */
-    public function get_section_image(section_info $section): ?stored_file {
-        $images = $this->get_section_images();
-
-        if (array_key_exists($section->id, $images)) {
-            return $images[$section->id];
-        }
-
-        return null;
-=======
-     * Grabs the completion info for this section
-     *
-     * @return array
-     */
-    public function get_section_completion(): array {
-
-        // Can't do anything if completion is disabled, or we're a guest user.
-        if (isguestuser() || !$this->format->get_course()->enablecompletion) {
-            return [];
-        }
-
-        $completioninfo = new completion_info($this->format->get_course());
-        $modinfo = $this->section->modinfo;
-
-        if (!array_key_exists($this->section->section, $modinfo->sections)) {
-            return [];
-        }
-
-        // List of course module IDs for this section.
-        $sectioncmids = $modinfo->sections[$this->section->section];
-
-        $total = 0;
-        $completed = 0;
-
-        // Iterate through all the course module ID's that appear in this section.
-        foreach ($sectioncmids as $cmid) {
-            $cminfo = $modinfo->cms[$cmid];
-
-            // Don't include the course module if it's not visible, or about to be deleted.
-            if (!$cminfo->uservisible || $cminfo->deletioninprogress) {
-                continue;
-            }
-
-            // Don't include the course module if completion tracking is disabled.
-            if ($completioninfo->is_enabled($cminfo) == COMPLETION_TRACKING_NONE) {
-                continue;
-            }
-
-            $total++;
-
-            // Finally, figure out if the user has completed this course module.
-            $completiondata = $completioninfo->get_data($cminfo, true);
-
-            if (in_array(
-                $completiondata->completionstate,
-                [ COMPLETION_COMPLETE, COMPLETION_COMPLETE_PASS ]
-            )) {
-                $completed++;
-            }
-        }
-
-        // Don't show completion data if there's nothing completable in this section.
-        if ($total == 0) {
-            return [];
-        }
-
-        $iscomplete = $total == $completed;
-        $progressformat = $this->format->get_format_option('progressformat', $this->section);
-        $percentage = round(($completed / $total) * 100);
-
-        return [
-            'total' => $total,
-            'completed' => $completed,
-            'percentage' => $percentage,
-            'dashoffset' => 100 - $percentage,
-            'iscomplete' => $iscomplete,
-            'hasprogress' => $completed > 0,
-            'showpercentage' => !$iscomplete && $progressformat == FORMAT_CARDS_PROGRESSFORMAT_PERCENTAGE,
-            'showcount' => !$iscomplete && $progressformat == FORMAT_CARDS_PROGRESSFORMAT_COUNT
-        ];
->>>>>>> Stashed changes
     }
 
 }
