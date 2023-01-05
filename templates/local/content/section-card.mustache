@@ -46,9 +46,9 @@
 
     <div class="card-main-content">
         {{#header}}
-            {{^restrictionlock}}
+            {{#uservisible}}
             <a href="{{{url}}}" title="{{{name}}}">
-            {{/restrictionlock}}
+            {{/uservisible}}
                 <div class="card-img-top"
                      role="presentation"
                      {{#image}}style="background: url('{{{image}}}') center/cover"{{/image}}>
@@ -79,9 +79,9 @@
                         {{/summary}}
                     </div>
                 </div>
-            {{^restrictionlock}}
+            {{#uservisible}}
             </a>
-            {{/restrictionlock}}
+            {{/uservisible}}
         {{/header}}
     </div>
 

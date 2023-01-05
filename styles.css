@@ -3,6 +3,7 @@
     border: none;
 
     max-width: 325px;
+    border-radius: .5em;
 }
 .format-cards .course-content .card-deck .card.card-horizontal {
     aspect-ratio: 7 / 5;
@@ -30,7 +31,7 @@
     transition: transform .4s;
 }
 
-.format-cards .course-content .card-deck .card:not(.hiddenfromstudents):hover .card-main-content .card-img-top {
+.format-cards .course-content .card-deck .card:not(.hiddenfromme):hover .card-main-content .card-img-top {
     transform: scale(1.1);
     filter: brightness(110%);
 }
@@ -157,7 +158,8 @@
     transition: 0.4s filter ease-in-out;
 }
 
-.format-cards .course-content .card-deck .card.hiddenfromstudents .card-img-top {
+.format-cards .course-content .card-deck .card.hiddenfromstudents .card-img-top,
+.format-cards .course-content .card-deck .card.hiddenfromme .card-img-top {
     filter: blur(1px) grayscale(80%);
 }
 
