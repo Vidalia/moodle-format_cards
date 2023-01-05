@@ -38,8 +38,6 @@ export const init = (target) => {
     const main = document.getElementById(target);
     const availabilityBadges = Array.from(main.getElementsByClassName('section-availability'));
 
-    console.debug(availabilityBadges);
-
     availabilityBadges.forEach(function(element) {
         let parent = element.closest('a');
 
