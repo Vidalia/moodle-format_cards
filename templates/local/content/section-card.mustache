@@ -53,6 +53,9 @@
                 </div>
                 <div class="card-overlay">
                     <div class="card-header-fade">
+                        {{$ format_cards/local/content/availability }}
+                            {{> format_cards/local/content/availability }}
+                        {{/ format_cards/local/content/availability }}
                         {{$ format_cards/local/content/completion }}
                             {{> format_cards/local/content/completion }}
                         {{/ format_cards/local/content/completion }}
@@ -77,15 +80,5 @@
             </a>
         {{/header}}
     </div>
-
-    {{#availability}}
-        {{#hasavailability}}
-            <div class="card-footer small">
-                {{$ core_courseformat/local/content/section/availability }}
-                    {{> core_courseformat/local/content/section/availability }}
-                {{/ core_courseformat/local/content/section/availability }}
-            </div>
-        {{/hasavailability}}
-    {{/availability}}
 
 </div>
