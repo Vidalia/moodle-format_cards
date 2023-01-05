@@ -54,8 +54,10 @@ class section extends section_base {
         $data = parent::export_for_template($output);
         $data->classes = [];
 
-        if (object_property_exists($data, "hiddenfromstudents")
-            && $data->hiddenfromstudents) {
+        if ((object_property_exists($data, "hiddenfromstudents")
+            && $data->hiddenfromstudents)
+            || $data->restrictionlock
+        ) {
             $data->classes[] = "hiddenfromstudents";
         }
 

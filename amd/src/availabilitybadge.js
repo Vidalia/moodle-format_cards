@@ -42,6 +42,7 @@ export const init = (target) => {
         let parent = element.closest('a');
 
         if (parent === null) {
+            element.classList.remove('hidden');
             return;
         }
 
