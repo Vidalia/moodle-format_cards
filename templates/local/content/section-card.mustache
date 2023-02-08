@@ -44,48 +44,37 @@
      data-id="{{id}}"
      data-number="{{num}}">
 
-    <div class="card-main-content">
-        {{#header}}
-            <a href="{{{url}}}" title="{{{name}}}">
-                <div class="card-img-top"
-                     role="presentation"
-                     {{#image}}style="background: url('{{{image}}}') center/cover"{{/image}}>
-                </div>
-                <div class="card-overlay">
-                    <div class="card-header-fade">
-                        {{$ format_cards/local/content/completion }}
-                            {{> format_cards/local/content/completion }}
-                        {{/ format_cards/local/content/completion }}
-                    </div>
-                    <div class="card-header">
-                        {{$ core_courseformat/local/content/section/badges }}
-                            {{> core_courseformat/local/content/section/badges }}
-                        {{/ core_courseformat/local/content/section/badges }}
-                        <h3 id="section-{{num}}-title"
-                            class="card-title">
-                            {{{name}}}
-                        </h3>
-                        {{#summary}}
-                            {{#summarytext}}
-                                <div class="summary">
-                                    {{{summarytext}}}
-                                </div>
-                            {{/summarytext}}
-                        {{/summary}}
-                    </div>
-                </div>
-            </a>
-        {{/header}}
-    </div>
-
-    {{#availability}}
-        {{#hasavailability}}
-            <div class="card-footer small">
-                {{$ core_courseformat/local/content/section/availability }}
-                    {{> core_courseformat/local/content/section/availability }}
-                {{/ core_courseformat/local/content/section/availability }}
+    {{#header}}
+        <a class="card-main-content" href="{{{url}}}" title="{{{name}}}">
+            <div class="card-img-top"
+                 role="presentation"
+                 {{#image}}style="background: url('{{{image}}}') center/cover"{{/image}}>
             </div>
-        {{/hasavailability}}
-    {{/availability}}
+            <div class="card-overlay">
+                <div class="card-header-fade">
+                    {{> format_cards/local/content/availability }}
+                    {{$ format_cards/local/content/completion }}
+                        {{> format_cards/local/content/completion }}
+                    {{/ format_cards/local/content/completion }}
+                </div>
+                <div class="card-header">
+                    {{$ core_courseformat/local/content/section/badges }}
+                        {{> core_courseformat/local/content/section/badges }}
+                    {{/ core_courseformat/local/content/section/badges }}
+                    <h3 id="section-{{num}}-title"
+                        class="card-title">
+                        {{{name}}}
+                    </h3>
+                    {{#summary}}
+                        {{#summarytext}}
+                            <div class="summary">
+                                {{{summarytext}}}
+                            </div>
+                        {{/summarytext}}
+                    {{/summary}}
+                </div>
+            </div>
+        </a>
+    {{/header}}
 
 </div>

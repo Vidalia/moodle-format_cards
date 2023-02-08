@@ -219,7 +219,8 @@
     {{/numsections}}
 </div>
 {{#js}}
-require(['core_courseformat/local/content'], function(component) {
+require(['core_courseformat/local/content', 'format_cards/cards'], function(component, cards) {
     component.init('{{uniqid}}-course-format', {}, {{sectionreturn}});
+    cards.init('{{uniqid}}-course-format');
 });
 {{/js}}
