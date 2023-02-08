@@ -54,8 +54,10 @@ class section extends section_base {
         $data = parent::export_for_template($output);
         $data->classes = [];
 
-        if (object_property_exists($data, "hiddenfromstudents")
-            && $data->hiddenfromstudents) {
+        if ((object_property_exists($data, "hiddenfromstudents")
+            && $data->hiddenfromstudents)
+            || $data->restrictionlock
+        ) {
             $data->classes[] = "hiddenfromstudents";
         }
 
@@ -73,11 +75,6 @@ class section extends section_base {
         $data->highlighted = $course->marker == $this->section->section;
         if ($data->highlighted) {
             $data->classes[] = "highlighted";
-        }
-
-        $data->uservisible = $this->section->uservisible;
-        if (!$data->uservisible) {
-            $data->classes[] = "hiddenfromme";
         }
 
         // Don't show the "insert new topic" button after every section in editing mode.
