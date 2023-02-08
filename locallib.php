@@ -27,6 +27,7 @@
  * Removes any card images in the files table that are for sections in courses
  * that either no longer exist, or don't use the cards format
  *
+ * @param progress_bar|null $progress
  * @return void
  * @throws dml_exception
  * @throws moodle_exception

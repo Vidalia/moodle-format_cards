@@ -41,6 +41,10 @@ define('FORMAT_CARDS_ORIENTATION_VERTICAL', 1);
 define('FORMAT_CARDS_ORIENTATION_HORIZONTAL', 2);
 define('FORMAT_CARDS_SHOWSUMMARY_SHOW', 1);
 define('FORMAT_CARDS_SHOWSUMMARY_HIDE', 2);
+define('FORMAT_CARDS_SHOWPROGRESS_SHOW', 1);
+define('FORMAT_CARDS_SHOWPROGRESS_HIDE', 2);
+define('FORMAT_CARDS_PROGRESSFORMAT_COUNT', 1);
+define('FORMAT_CARDS_PROGRESSFORMAT_PERCENTAGE', 2);
 
 /**
  * Course format main class
@@ -81,77 +85,67 @@ class format_cards extends format_topics {
         // We always show one section per page.
         $options['coursedisplay']['default'] = COURSE_DISPLAY_MULTIPAGE;
 
+        $createselect = function (string $name, array $options, int $default, bool $hashelp = false): array {
+            $option = [
+                'default' => FORMAT_CARDS_USEDEFAULT,
+                'type' => PARAM_INT,
+                'label' => new lang_string("form:course:$name", 'format_cards'),
+                'element_type' => 'select',
+                'element_attributes' => [
+                    array_merge(
+                        [
+                            FORMAT_CARDS_USEDEFAULT => new lang_string(
+                                'form:course:usedefault',
+                                'format_cards',
+                                $options[$default])
+                        ],
+                        $options
+                    )
+                ],
+            ];
+
+            if ($hashelp) {
+                $option['help'] = "form:course:$name";
+                $option['help_component'] = 'format_cards';
+            }
+
+            return $option;
+        };
+
         $section0options = [
             FORMAT_CARDS_SECTION0_COURSEPAGE => new lang_string('form:course:section0:coursepage', 'format_cards'),
             FORMAT_CARDS_SECTION0_ALLPAGES => new lang_string('form:course:section0:allpages', 'format_cards')
         ];
 
-        $options['section0'] = [
-            'default' => FORMAT_CARDS_USEDEFAULT,
-            'type' => PARAM_INT,
-            'label' => new lang_string('form:course:section0', 'format_cards'),
-            'help' => 'form:course:section0',
-            'help_component' => 'format_cards',
-            'element_type' => 'select',
-            'element_attributes' => [
-                array_merge(
-                    [
-                        FORMAT_CARDS_USEDEFAULT => new lang_string(
-                            'form:course:usedefault',
-                            'format_cards',
-                            $section0options[$defaults->section0])
-                    ],
-                    $section0options
-                )
-            ],
-        ];
+        $options['section0'] = $createselect('section0', $section0options, $defaults->section0, true);
 
         $orientationoptions = [
             FORMAT_CARDS_ORIENTATION_VERTICAL => new lang_string('form:course:cardorientation:vertical', 'format_cards'),
             FORMAT_CARDS_ORIENTATION_HORIZONTAL => new lang_string('form:course:cardorientation:horizontal', 'format_cards')
         ];
 
-        $options['cardorientation'] = [
-            'default' => FORMAT_CARDS_USEDEFAULT,
-            'type' => PARAM_INT,
-            'label' => new lang_string('form:course:cardorientation', 'format_cards'),
-            'element_type' => 'select',
-            'element_attributes' => [
-                array_merge(
-                    [
-                        FORMAT_CARDS_USEDEFAULT => new lang_string(
-                            'form:course:usedefault',
-                            'format_cards',
-                            $orientationoptions[$defaults->cardorientation])
-                    ],
-                    $orientationoptions
-                )
-            ]
-        ];
+        $options['cardorientation'] = $createselect('cardorientation', $orientationoptions, $defaults->cardorientation);
 
         $summaryoptions = [
             FORMAT_CARDS_SHOWSUMMARY_SHOW => new lang_string('form:course:showsummary:show', 'format_cards'),
             FORMAT_CARDS_SHOWSUMMARY_HIDE => new lang_string('form:course:showsummary:hide', 'format_cards')
         ];
 
-        $options['showsummary'] = [
-            'default' => FORMAT_CARDS_USEDEFAULT,
-            'type' => PARAM_INT,
-            'label' => new lang_string('form:course:showsummary', 'format_cards'),
-            'element_type' => 'select',
-            'element_attributes' => [
-                array_merge(
-                    [
-                        FORMAT_CARDS_USEDEFAULT => new lang_string(
-                            'form:course:usedefault',
-                            'format_cards',
-                            $summaryoptions[$defaults->showsummary]
-                        )
-                    ],
-                    $summaryoptions
-                )
-            ]
+        $options['showsummary'] = $createselect('showsummary', $summaryoptions, $defaults->showsummary);
+
+        $showprogressoptions = [
+            FORMAT_CARDS_SHOWPROGRESS_SHOW => new lang_string('form:course:showprogress:show', 'format_cards'),
+            FORMAT_CARDS_SHOWPROGRESS_HIDE => new lang_string('form:course:showprogress:hide', 'format_cards')
         ];
+
+        $options['showprogress'] = $createselect('showprogress', $showprogressoptions, $defaults->showprogress);
+
+        $progressformatoptions = [
+            FORMAT_CARDS_PROGRESSFORMAT_COUNT => new lang_string('form:course:progressformat:count', 'format_cards'),
+            FORMAT_CARDS_PROGRESSFORMAT_PERCENTAGE => new lang_string('form:course:progressformat:percentage', 'format_cards')
+        ];
+
+        $options['progressformat'] = $createselect('progressformat', $progressformatoptions, $defaults->progressformat);
 
         return $options;
     }
@@ -159,7 +153,7 @@ class format_cards extends format_topics {
     /**
      * Users should be able to specify per-section whether the summary is visible or not
      *
-     * @param $foreditform
+     * @param bool $foreditform
      * @return array
      * @throws dml_exception
      */
@@ -234,6 +228,12 @@ class format_cards extends format_topics {
     public function update_section_format_options($data) {
         $changes = parent::update_section_format_options($data);
 
+        // Make sure we don't accidentally clobber any existing saved images if we get here
+        // from inplace_editable.
+        if (!array_key_exists('image', $data)) {
+            return $changes;
+        }
+
         file_save_draft_area_files(
             $data['image'],
             context_course::instance($this->get_courseid())->id,
@@ -260,30 +260,21 @@ class format_cards extends format_topics {
      * When a section is deleted successfully, make sure we also delete
      * the card image
      *
-     * @param $section
+     * @param int|stdClass|section_info $section
      * @param bool $forcedeleteifnotempty
      * @return bool
      * @throws coding_exception
      * @throws dml_exception
      */
     public function delete_section($section, $forcedeleteifnotempty = false) {
-        if (!parent::delete_section($section, $forcedeleteifnotempty)) {
-            return false;
-        }
-
         global $DB;
 
-        $sectionid = $DB->get_field('course_sections',
-            'id',
-            [
-                'courseid' => $this->get_courseid(),
-                'section' => $section
-            ],
-            IGNORE_MISSING
-        );
-
-        if (!$sectionid) {
-            return true;
+        if (!is_object($section)) {
+            $section = $DB->get_record('course_sections',
+                [
+                    'course' => $this->get_courseid(),
+                    'section' => $section
+                ]);
         }
 
         $filestorage = get_file_storage();
@@ -292,14 +283,14 @@ class format_cards extends format_topics {
             $context->id,
             'format_cards',
             FORMAT_CARDS_FILEAREA_IMAGE,
-            $sectionid
+            $section->id
         );
 
         foreach ($images as $image) {
             $image->delete();
         }
 
-        return true;
+        return parent::delete_section($section, $forcedeleteifnotempty);
     }
 
 
@@ -326,6 +317,16 @@ class format_cards extends format_topics {
             $mform->addHelpButton('importgridimages', 'form:course:importgridimages', 'format_cards');
         }
 
+        $defaultshowprogress = get_config('format_cards', 'showprogress');
+        $hiddenvalues = [
+            FORMAT_CARDS_SHOWPROGRESS_HIDE
+        ];
+
+        if ($defaultshowprogress == FORMAT_CARDS_SHOWPROGRESS_HIDE) {
+            $hiddenvalues[] = FORMAT_CARDS_USEDEFAULT;
+        }
+        $mform->hideIf('progressformat', 'showprogress', 'in', $hiddenvalues);
+
         return $elements;
     }
 
@@ -346,7 +347,7 @@ class format_cards extends format_topics {
 
         $changes = parent::update_course_format_options($data, $oldcourse);
 
-        if (!$data->importgridimages || !$this->course_has_grid_images()) {
+        if (empty($data->importgridimages) || !$this->course_has_grid_images()) {
             return $changes;
         }
 
@@ -472,7 +473,11 @@ class format_cards extends format_topics {
         $options = $this->get_format_options($section);
         $defaults = get_config('format_cards');
 
-        $value = $options[$name];
+        if (array_key_exists($name, $options)) {
+            $value = $options[$name];
+        } else {
+            $value = $defaults->$name;
+        }
 
         if (!object_property_exists($defaults, $name)) {
             return $value;
@@ -526,10 +531,6 @@ class format_cards extends format_topics {
      * @throws moodle_exception
      */
     public function get_view_url($section, $options = []) {
-
-        if (!empty($options['navigation'])) {
-            return null;
-        }
 
         $base = new moodle_url("/course/view.php", [ 'id' => $this->get_course()->id ]);
 
@@ -672,9 +673,9 @@ class format_cards extends format_topics {
 /**
  * Allow for the section name to be edited in-place
  *
- * @param $itemtype
- * @param $itemid
- * @param $newvalue
+ * @param string $itemtype
+ * @param int $itemid
+ * @param mixed $newvalue
  * @return inplace_editable|void
  * @throws dml_exception
  */
@@ -693,17 +694,23 @@ function format_cards_inplace_editable($itemtype, $itemid, $newvalue) {
 /**
  * Serves files for format_cards
  *
- * @param $course
- * @param $coursemodule
- * @param $context
- * @param $filearea
- * @param $args
- * @param $forcedownload
+ * @param stdClass $course
+ * @param stdClass|null $coursemodule
+ * @param context $context
+ * @param string $filearea
+ * @param array $args
+ * @param bool $forcedownload
  * @param array $options
  * @return void
  * @throws coding_exception
  */
-function format_cards_pluginfile($course, $coursemodule, $context, $filearea, $args, $forcedownload, array $options = []) {
+function format_cards_pluginfile(stdClass $course,
+                                 ?stdClass $coursemodule,
+                                 context $context,
+                                 string $filearea,
+                                 array $args,
+                                 $forcedownload,
+                                 array $options = []) {
     if ($context->contextlevel != CONTEXT_COURSE && $context->contextlevel != CONTEXT_SYSTEM) {
         send_file_not_found();
     }
