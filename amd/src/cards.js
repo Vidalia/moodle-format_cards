@@ -24,7 +24,6 @@
  */
 
 // The jQuery module is only used for interacting with Boostrap 4. It can we removed when MDL-71979 is integrated.
-import jQuery from 'jquery';
 
 export default class Component {
 
@@ -45,7 +44,7 @@ export default class Component {
         const availabilityBadges = this.root.querySelectorAll(".section-availability");
 
         for (let badge of availabilityBadges) {
-            badge.addEventListener('click', function (event) {
+            badge.addEventListener('click', function(event) {
                 event.preventDefault();
                 event.stopPropagation();
             });
@@ -60,7 +59,7 @@ export default class Component {
      */
     static init(target) {
         const component = new Component(document.getElementById(target));
-        
+
         component.setup();
 
         return component;
