@@ -39,6 +39,7 @@ define('FORMAT_CARDS_SECTION0_COURSEPAGE', 1);
 define('FORMAT_CARDS_SECTION0_ALLPAGES', 2);
 define('FORMAT_CARDS_ORIENTATION_VERTICAL', 1);
 define('FORMAT_CARDS_ORIENTATION_HORIZONTAL', 2);
+define('FORMAT_CARDS_ORIENTATION_SQUARE', 3);
 define('FORMAT_CARDS_SHOWSUMMARY_SHOW', 1);
 define('FORMAT_CARDS_SHOWSUMMARY_HIDE', 2);
 define('FORMAT_CARDS_SHOWPROGRESS_SHOW', 1);
@@ -121,7 +122,8 @@ class format_cards extends format_topics {
 
         $orientationoptions = [
             FORMAT_CARDS_ORIENTATION_VERTICAL => new lang_string('form:course:cardorientation:vertical', 'format_cards'),
-            FORMAT_CARDS_ORIENTATION_HORIZONTAL => new lang_string('form:course:cardorientation:horizontal', 'format_cards')
+            FORMAT_CARDS_ORIENTATION_HORIZONTAL => new lang_string('form:course:cardorientation:horizontal', 'format_cards'),
+            FORMAT_CARDS_ORIENTATION_SQUARE => new lang_string('form:course:cardorientation:square', 'format_cards')
         ];
 
         $options['cardorientation'] = $createselect('cardorientation', $orientationoptions, $defaults->cardorientation);

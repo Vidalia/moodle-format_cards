@@ -56,6 +56,7 @@ $string['form:course:section0:allpages'] = 'Show on all pages, including individ
 $string['form:course:cardorientation'] = 'Card orientation';
 $string['form:course:cardorientation:vertical'] = 'Vertical';
 $string['form:course:cardorientation:horizontal'] = 'Horizontal';
+$string['form:course:cardorientation:square'] = 'Square';
 $string['form:course:importgridimages'] = 'Import images from grid format';
 $string['form:course:importgridimages_help'] = 'Copy across the images used for grid tiles and use them as images for each card';
 $string['form:course:showsummary'] = 'Section summary';

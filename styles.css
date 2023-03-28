@@ -9,6 +9,10 @@
 
     max-width: 450px;
 }
+.format-cards .course-content .card-deck .card.card-square {
+    aspect-ratio: 1 / 1;
+    max-width: 400px;
+}
 
 .format-cards .course-content .card-deck .card.highlighted {
     box-shadow: 0 0 5px var(--primary, #0f6cbf);

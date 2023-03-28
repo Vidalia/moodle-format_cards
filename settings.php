@@ -56,7 +56,8 @@ if ($hassiteconfig) {
         FORMAT_CARDS_ORIENTATION_VERTICAL,
         [
             FORMAT_CARDS_ORIENTATION_VERTICAL => get_string('form:course:cardorientation:vertical', 'format_cards'),
-            FORMAT_CARDS_ORIENTATION_HORIZONTAL => get_string('form:course:cardorientation:horizontal', 'format_cards')
+            FORMAT_CARDS_ORIENTATION_HORIZONTAL => get_string('form:course:cardorientation:horizontal', 'format_cards'),
+            FORMAT_CARDS_ORIENTATION_SQUARE => get_string('form:course:cardorientation:square', 'format_cards')
         ]
     ));
 

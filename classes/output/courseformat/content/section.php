@@ -85,8 +85,13 @@ class section extends section_base {
             return $data;
         }
 
-        if ($this->format->get_format_option('cardorientation') == FORMAT_CARDS_ORIENTATION_HORIZONTAL) {
-            $data->classes[] = "card-horizontal";
+        switch ($this->format->get_format_option('cardorientation')) {
+            case FORMAT_CARDS_ORIENTATION_HORIZONTAL:
+                $data->classes[] = "card-horizontal";
+                break;
+            case FORMAT_CARDS_ORIENTATION_SQUARE:
+                $data->classes[] = "card-square";
+                break;
         }
 
         // Add completion data.
