@@ -133,6 +133,11 @@ class section extends section_base {
             return [];
         }
 
+        // Don't do anything if we don't want to view completion data.
+        if ($this->format->get_format_option('showprogress') == FORMAT_CARDS_SHOWPROGRESS_HIDE) {
+            return [];
+        }
+
         $completioninfo = new completion_info($this->format->get_course());
         $modinfo = $this->section->modinfo;
 
@@ -179,7 +184,7 @@ class section extends section_base {
         }
 
         $iscomplete = $total == $completed;
-        $progressformat = $this->format->get_format_option('progressformat', $this->section);
+        $progressformat = $this->format->get_format_option('progressformat');
         $percentage = round(($completed / $total) * 100);
 
         return [
