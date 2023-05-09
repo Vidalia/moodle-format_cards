@@ -65,6 +65,10 @@ class format_cards extends format_topics {
     public function get_course() {
         $course = parent::get_course();
 
+        if (is_null($course)) {
+            return null;
+        }
+
         $course->coursedisplay = COURSE_DISPLAY_MULTIPAGE;
 
         return $course;
