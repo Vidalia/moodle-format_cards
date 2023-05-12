@@ -45,10 +45,10 @@ use section_info;
 class sectionbreak extends inplace_editable implements named_templatable, renderable {
 
     /** @var course_format the course format */
-    protected course_format $format;
+    protected $format;
 
     /** @var section_info the section object */
-    private section_info $section;
+    private $section;
 
     /** @var bool editable if the title is editable */
     protected $editable;

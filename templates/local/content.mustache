@@ -75,7 +75,16 @@
                 },
                 "sectionbreak": {
                     "id": 35,
-                    "title": "Card section"
+                    "displayvalue" : "<a href=\"#\">Moodle</a>",
+                    "value" : "Moodle",
+                    "itemid" : 35,
+                    "component" : "core_unknown",
+                    "itemtype" : "unknown",
+                    "edithint" : "Edit this",
+                    "editlabel" : "New name for this",
+                    "type" : "text",
+                    "options" : "",
+                    "linkeverything": 0
                 },
                 "addsectionbreak": false
             },
@@ -175,7 +184,6 @@
         {{/initialsection}}
     </ul>
     <ul class="card-deck dashboard-card-deck {{format}}"
-         role="list"
          data-for="course_sectionlist">
         {{#sections}}
             {{#sectionbreak}}

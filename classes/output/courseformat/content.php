@@ -50,12 +50,6 @@ class content extends content_base {
      * @throws coding_exception
      */
     public function get_template_name(renderer_base $renderer): string {
-        global $PAGE;
-
-        /*if ($PAGE->user_is_editing()) {
-            return parent::get_template_name($renderer);
-        }*/
-
         return "format_cards/local/content";
     }
 
