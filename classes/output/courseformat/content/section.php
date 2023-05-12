@@ -49,6 +49,10 @@ class section extends section_base {
      */
     protected $sectionbreak;
 
+    /**
+     * @param course_format $format
+     * @param section_info $section
+     */
     public function __construct(course_format $format, section_info $section) {
         parent::__construct($format, $section);
 

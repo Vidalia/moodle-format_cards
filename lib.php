@@ -280,10 +280,14 @@ class format_cards extends format_topics {
     /**
      * Updates a section break title
      *
-     * @param $section stdClass Section to update
+     * @param $section  stdClass Section to update
      * @param $itemtype string The item type
      * @param $newvalue string New item value
      * @return inplace_editable
+     * @throws \core_external\restricted_context_exception
+     * @throws dml_exception
+     * @throws invalid_parameter_exception
+     * @throws required_capability_exception
      */
     public function inplace_editable_update_section_name($section, $itemtype, $newvalue) {
         if ($itemtype === 'sectionbreak') {
@@ -310,8 +314,8 @@ class format_cards extends format_topics {
     /**
      * Renders a section break as an inplace editable
      *
-     * @param $section
-     * @param bool $editable
+     * @param stdClass $section Section to update break in
+     * @param bool $editable Whether the break should be editable
      * @return inplace_editable
      * @throws dml_exception
      */

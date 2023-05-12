@@ -29,6 +29,7 @@ use core\output\inplace_editable;
 use core\output\named_templatable;
 use core_courseformat\base as course_format;
 use lang_string;
+use moodle_exception;
 use moodle_url;
 use renderable;
 use renderer_base;
@@ -44,13 +45,19 @@ use section_info;
  */
 class sectionbreak extends inplace_editable implements named_templatable, renderable {
 
-    /** @var course_format the course format */
+    /**
+     * @var course_format The course format
+     */
     protected $format;
 
-    /** @var section_info the section object */
+    /**
+     * @var section_info Section info
+     */
     private $section;
 
-    /** @var bool editable if the title is editable */
+    /**
+     * @var bool|null If the break is editable
+     */
     protected $editable;
 
     /**
@@ -64,6 +71,8 @@ class sectionbreak extends inplace_editable implements named_templatable, render
     protected string $breaktitle;
 
     /**
+     * Constructor.
+     *
      * @param course_format $format the course format
      * @param section_info $section the section info
      * @param bool|null $editable force editable value
@@ -100,6 +109,8 @@ class sectionbreak extends inplace_editable implements named_templatable, render
     }
 
     /**
+     * Renderable template name
+     *
      * @param renderer_base $renderer
      * @return string
      */
@@ -112,6 +123,7 @@ class sectionbreak extends inplace_editable implements named_templatable, render
      *
      * @param renderer_base $output
      * @return array|boolean
+     * @throws moodle_exception
      */
     public function export_for_template(renderer_base $output) {
         if (!$this->hasbreak) {
