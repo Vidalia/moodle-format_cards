@@ -72,7 +72,12 @@
                 "iscurrent": true,
                 "summary": {
                     "summarytext": "Summary text!"
-                }
+                },
+                "sectionbreak": {
+                    "id": 35,
+                    "title": "Card section"
+                },
+                "addsectionbreak": false
             },
             {
                 "num": 4,
@@ -100,7 +105,8 @@
                 "iscurrent": true,
                 "summary": {
                     "summarytext": "Summary text!"
-                }
+                },
+                "addsectionbreak": true
             }
         ],
         "format": "topics",
@@ -168,10 +174,20 @@
             {{/core_courseformat/local/content/section}}
         {{/initialsection}}
     </ul>
-    <div class="card-deck dashboard-card-deck {{format}}"
+    <ul class="card-deck dashboard-card-deck {{format}}"
          role="list"
          data-for="course_sectionlist">
         {{#sections}}
+            {{#sectionbreak}}
+                {{$ format_cards/local/content/section-break }}
+                    {{> format_cards/local/content/section-break }}
+                {{/format_cards/local/content/section-break}}
+            {{/sectionbreak}}
+            {{#addsectionbreak}}
+                {{$ format_cards/local/content/add-section-break }}
+                    {{> format_cards/local/content/add-section-break }}
+                {{/format_cards/local/content/add-section-break}}
+            {{/addsectionbreak}}
             {{#showascard}}
                 {{$ format_cards/local/content/section-card }}
                     {{> format_cards/local/content/section-card }}
@@ -183,7 +199,7 @@
                 {{/core_courseformat/local/content/section}}
             {{/showascard}}
         {{/sections}}
-    </div>
+    </ul>
     {{#hasnavigation}}
     <div class="single-section">
         {{#sectionnavigation}}

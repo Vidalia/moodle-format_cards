@@ -43,6 +43,9 @@ $string['noactivities'] = 'No activities';
 $string['section:default'] = 'Card {$a}';
 $string['section:completion:percentage'] = '{$a->percentage}%';
 $string['section:completion:count'] = '{$a->completed}/{$a->total}';
+$string['section:break'] = 'Section break';
+$string['section:break:add'] = 'Add section break here';
+$string['section:break:edit'] = 'Edit section break';
 
 $string['settings:name'] = 'Cards format settings';
 $string['settings:defaults'] = 'Defaults';

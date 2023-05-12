@@ -23,8 +23,6 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-// The jQuery module is only used for interacting with Boostrap 4. It can we removed when MDL-71979 is integrated.
-
 export default class Component {
 
     /**

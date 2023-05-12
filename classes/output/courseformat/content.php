@@ -25,6 +25,7 @@
 
 namespace format_cards\output\courseformat;
 
+use AllowDynamicProperties;
 use coding_exception;
 use format_topics\output\courseformat\content as content_base;
 use renderer_base;
@@ -51,9 +52,9 @@ class content extends content_base {
     public function get_template_name(renderer_base $renderer): string {
         global $PAGE;
 
-        if ($PAGE->user_is_editing()) {
+        /*if ($PAGE->user_is_editing()) {
             return parent::get_template_name($renderer);
-        }
+        }*/
 
         return "format_cards/local/content";
     }
@@ -65,6 +66,7 @@ class content extends content_base {
      * @return stdClass|object
      */
     public function export_for_template(renderer_base $output) {
+        global $PAGE;
 
         // Is this a single section page?
         $singlesection = $this->format->get_section_number();
@@ -76,6 +78,8 @@ class content extends content_base {
         // Rather than rolling our own empty placeholder, we can just re-use the "no courses" template
         // from block_myoverview and change the text to be "No activities" instead.
         $data->nocoursesimg = $output->image_url('courses', 'block_myoverview')->out();
+
+        $data->userisediting = $PAGE->user_is_editing();
 
         if (!$singlesection) {
             return $data;

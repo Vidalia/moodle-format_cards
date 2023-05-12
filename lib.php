@@ -29,6 +29,7 @@ global $CFG;
 
 use core\notification;
 use core\output\inplace_editable;
+use core_external\external_api;
 use format_cards\forms\editcard_form;
 
 require_once("$CFG->dirroot/course/format/topics/lib.php");
@@ -191,6 +192,20 @@ class format_cards extends format_topics {
             ]
         ];
 
+        $options['sectionbreak'] = [
+            'default' => false,
+            'type' => PARAM_BOOL,
+            'label' => new lang_string('section:break', 'format_cards'),
+            'element_type' => 'hidden'
+        ];
+
+        $options['sectionbreaktitle'] = [
+            'default' => '',
+            'type' => PARAM_TEXT,
+            'label' => new lang_string('section:break', 'format_cards'),
+            'element_type' => 'hidden'
+        ];
+
         return $options;
     }
 
@@ -260,6 +275,64 @@ class format_cards extends format_topics {
         }
 
         return $changes;
+    }
+
+    /**
+     * Updates a section break title
+     *
+     * @param $section stdClass Section to update
+     * @param $itemtype string The item type
+     * @param $newvalue string New item value
+     * @return inplace_editable
+     */
+    public function inplace_editable_update_section_name($section, $itemtype, $newvalue) {
+        if ($itemtype === 'sectionbreak') {
+            $context = context_course::instance($section->course);
+            external_api::validate_context($context);
+            require_capability('moodle/course:update', $context);
+
+            $newtitle = clean_param($newvalue, PARAM_TEXT);
+            $currentbreak = $this->get_format_option('sectionbreaktitle', $section);
+            if (strval($currentbreak) !== strval($newtitle)) {
+                $this->update_section_format_options([
+                    'id' => $section->id,
+                    'sectionbreak' => true,
+                    'sectionbreaktitle' => $newtitle
+                ]);
+            }
+
+            return $this->inplace_editable_render_section_break($section, true);
+        }
+
+        return parent::inplace_editable_update_section_name($section, $itemtype, $newvalue);
+    }
+
+    /**
+     * Renders a section break as an inplace editable
+     *
+     * @param $section
+     * @param bool $editable
+     * @return inplace_editable
+     * @throws dml_exception
+     */
+    public function inplace_editable_render_section_break($section, bool $editable = null): inplace_editable {
+
+        if ($editable === null) {
+            $editable = $this->show_editor([ 'moodle/course:update' ]);
+        }
+
+        $break = $this->get_format_option('sectionbreaktitle', $section);
+
+        return new inplace_editable(
+            'format_cards',
+            'sectionbreak',
+            $section->id,
+            $editable,
+            $break,
+            $break,
+            new lang_string('section:break:edit'),
+            new lang_string('section:break')
+        );
     }
 
     /**
@@ -689,12 +762,14 @@ function format_cards_inplace_editable($itemtype, $itemid, $newvalue) {
     global $DB, $CFG;
     require_once("$CFG->dirroot/course/lib.php");
 
-    if (in_array($itemtype, [ 'sectionname', 'sectionnamenl' ])) {
-        $section = $DB->get_record_sql(
-            'SELECT s.* FROM {course_sections} s JOIN {course} c ON s.course = c.id WHERE s.id = ? AND c.format = ?',
-            [$itemid, 'cards'], MUST_EXIST);
-        return course_get_format($section->course)->inplace_editable_update_section_name($section, $itemtype, $newvalue);
+    if (!in_array($itemtype, ['sectionname', 'sectionnamenl', 'sectionbreak'])) {
+        return;
     }
+
+    $section = $DB->get_record_sql(
+        'SELECT s.* FROM {course_sections} s JOIN {course} c ON s.course = c.id WHERE s.id = ? AND c.format = ?',
+        [$itemid, 'cards'], MUST_EXIST);
+    return course_get_format($section->course)->inplace_editable_update_section_name($section, $itemtype, $newvalue);
 }
 
 /**
