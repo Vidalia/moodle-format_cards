@@ -2,6 +2,10 @@
     justify-content: center;
 }
 
+.format-cards .course-content ul.cards {
+    padding: 0;
+}
+
 .format-cards .course-content .card-deck .card {
     aspect-ratio: 5 / 7;
     border: none;
