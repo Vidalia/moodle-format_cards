@@ -25,7 +25,7 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-global $ADMIN, $CFG;
+global $ADMIN, $CFG, $PAGE;
 
 require_once("$CFG->dirroot/course/format/cards/lib.php");
 
@@ -47,6 +47,18 @@ if ($hassiteconfig) {
         [
             FORMAT_CARDS_SECTION0_COURSEPAGE => get_string('form:course:section0:coursepage', 'format_cards'),
             FORMAT_CARDS_SECTION0_ALLPAGES => get_string('form:course:section0:allpages', 'format_cards')
+        ]
+    ));
+
+    $settings->add(new admin_setting_configselect('format_cards/sectionnavigation',
+        get_string('form:course:sectionnavigation', 'format_cards'),
+        get_string('form:course:sectionnavigation_help', 'format_cards'),
+        $PAGE->theme->usescourseindex ? FORMAT_CARDS_SECTIONNAVIGATION_NONE : FORMAT_CARDS_SECTIONNAVIGATION_BOTH,
+        [
+            FORMAT_CARDS_SECTIONNAVIGATION_NONE => get_string('form:course:sectionnavigation:none', 'format_cards'),
+            FORMAT_CARDS_SECTIONNAVIGATION_TOP => get_string('form:course:sectionnavigation:top', 'format_cards'),
+            FORMAT_CARDS_SECTIONNAVIGATION_BOTTOM => get_string('form:course:sectionnavigation:bottom', 'format_cards'),
+            FORMAT_CARDS_SECTIONNAVIGATION_BOTH => get_string('form:course:sectionnavigation:both', 'format_cards')
         ]
     ));
 

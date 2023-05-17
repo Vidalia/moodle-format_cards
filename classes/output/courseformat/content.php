@@ -25,7 +25,6 @@
 
 namespace format_cards\output\courseformat;
 
-use AllowDynamicProperties;
 use coding_exception;
 use format_topics\output\courseformat\content as content_base;
 use renderer_base;
@@ -83,7 +82,59 @@ class content extends content_base {
             $data->initialsection = '';
         }
 
+        $this->add_section_navigation($data, $output);
+
         return $data;
+    }
+
+    /**
+     * Adds section navigation data to the template
+     *
+     * @param stdClass|object $data Current template context
+     * @param renderer_base $output Output renderer
+     * @return void $data is modified directly
+     */
+    private function add_section_navigation(&$data, renderer_base $output) {
+        $singlesection = $this->format->get_section_number();
+
+        if (!$singlesection) {
+            return;
+        }
+
+        $navigationoption = $this->format->get_format_option('sectionnavigation');
+
+        // Remove section navigation if it's set in the options.
+        if ($navigationoption === FORMAT_CARDS_SECTIONNAVIGATION_NONE) {
+            $data->sectionnavigation = false;
+            $data->sectionselector = false;
+
+            return;
+        }
+
+        $sectionnavigation = new $this->sectionnavigationclass($this->format, $singlesection);
+        $sectionselector = new $this->sectionselectorclass($this->format, $sectionnavigation);
+
+        // Add top navigation.
+        switch ($navigationoption) {
+            case FORMAT_CARDS_SECTIONNAVIGATION_TOP:
+                $data->sectionnavigation = $sectionnavigation->export_for_template($output);
+                $data->sectionselector = false;
+                break;
+            case FORMAT_CARDS_SECTIONNAVIGATION_BOTTOM:
+                $data->sectionselector = $sectionselector->export_for_template($output);
+                $data->sectionnavigation = false;
+                break;
+            default:
+            case FORMAT_CARDS_SECTIONNAVIGATION_BOTH:
+                $data->sectionnavigation = $sectionnavigation->export_for_template($output);
+                $data->sectionselector = $sectionselector->export_for_template($output);
+                break;
+        }
+
+        if ($data->sectionselector || $data->sectionnavigation) {
+            $data->hasnavigation = true;
+            $data->sectionreturn = $singlesection;
+        }
     }
 
 }

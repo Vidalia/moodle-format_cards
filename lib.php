@@ -47,6 +47,10 @@ define('FORMAT_CARDS_SHOWPROGRESS_SHOW', 1);
 define('FORMAT_CARDS_SHOWPROGRESS_HIDE', 2);
 define('FORMAT_CARDS_PROGRESSFORMAT_COUNT', 1);
 define('FORMAT_CARDS_PROGRESSFORMAT_PERCENTAGE', 2);
+define('FORMAT_CARDS_SECTIONNAVIGATION_NONE', 1);
+define('FORMAT_CARDS_SECTIONNAVIGATION_TOP', 2);
+define('FORMAT_CARDS_SECTIONNAVIGATION_BOTTOM', 3);
+define('FORMAT_CARDS_SECTIONNAVIGATION_BOTH', 4);
 
 /**
  * Course format main class
@@ -57,6 +61,15 @@ define('FORMAT_CARDS_PROGRESSFORMAT_PERCENTAGE', 2);
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class format_cards extends format_topics {
+
+    /**
+     * Cards format allows you to indent course modules
+     *
+     * @return bool
+     */
+    public function uses_indentation(): bool {
+        return true;
+    }
 
     /**
      * Always force the course to display on multiple pages
@@ -89,6 +102,7 @@ class format_cards extends format_topics {
         $defaults = get_config('format_cards');
 
         // We always show one section per page.
+        $options['coursedisplay']['element_type'] = 'hidden';
         $options['coursedisplay']['default'] = COURSE_DISPLAY_MULTIPAGE;
 
         $createselect = function (string $name, array $options, int $default, bool $hashelp = false): array {
@@ -124,6 +138,15 @@ class format_cards extends format_topics {
         ];
 
         $options['section0'] = $createselect('section0', $section0options, $defaults->section0, true);
+
+        $sectionnavigationoptions = [
+            FORMAT_CARDS_SECTIONNAVIGATION_NONE => new lang_string('form:course:sectionnavigation:none', 'format_cards'),
+            FORMAT_CARDS_SECTIONNAVIGATION_TOP => new lang_string('form:course:sectionnavigation:top', 'format_cards'),
+            FORMAT_CARDS_SECTIONNAVIGATION_BOTTOM => new lang_string('form:course:sectionnavigation:bottom', 'format_cards'),
+            FORMAT_CARDS_SECTIONNAVIGATION_BOTH => new lang_string('form:course:sectionnavigation:both', 'format_cards')
+        ];
+
+        $options['sectionnavigation'] = $createselect('sectionnavigation', $sectionnavigationoptions, $defaults->sectionnavigation);
 
         $orientationoptions = [
             FORMAT_CARDS_ORIENTATION_VERTICAL => new lang_string('form:course:cardorientation:vertical', 'format_cards'),
