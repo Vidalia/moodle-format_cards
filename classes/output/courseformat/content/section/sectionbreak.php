@@ -94,6 +94,11 @@ class sectionbreak extends inplace_editable implements named_templatable, render
 
         $this->hasbreak = $options['sectionbreak'];
         $this->breaktitle = $options['sectionbreaktitle'];
+        $displayvalue = $this->breaktitle;
+
+        if ($this->editable && empty($this->breaktitle)) {
+            $displayvalue = get_string('section:break:marker', 'format_cards');
+        }
 
         // Setup inplace editable.
         parent::__construct(
@@ -101,7 +106,7 @@ class sectionbreak extends inplace_editable implements named_templatable, render
             'sectionbreak',
             $section->id,
             $this->editable,
-            $this->breaktitle,
+            $displayvalue,
             $this->breaktitle,
             new lang_string('section:break:edit', 'format_cards'),
             new lang_string('section:break', 'format_cards')

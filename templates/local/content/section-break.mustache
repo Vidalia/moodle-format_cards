@@ -42,7 +42,9 @@
         {{/ core/inplace_editable }}
         {{#component}}
             <span class="inplaceeditable inplaceeditable-{{type}}">
-                <a href="{{deletebreakurl}}" class="quickeditlink aalink">
+                <a href="{{deletebreakurl}}"
+                   class="quickeditlink aalink"
+                   title="{{#str}}section:break:remove,format_cards{{/str}}">
                     <span class="quickediticon visibleifjs">
                         {{#pix}}i/trash{{/pix}}
                     </span>

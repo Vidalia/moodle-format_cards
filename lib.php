@@ -349,16 +349,20 @@ class format_cards extends format_topics {
         }
 
         $break = $this->get_format_option('sectionbreaktitle', $section);
+        $display = $break;
+        if (empty($break) && $editable) {
+            $display = get_string('section:break:marker', 'format_cards');
+        }
 
         return new inplace_editable(
             'format_cards',
             'sectionbreak',
             $section->id,
             $editable,
+            $display,
             $break,
-            $break,
-            new lang_string('section:break:edit'),
-            new lang_string('section:break')
+            new lang_string('section:break:edit', 'format_cards'),
+            new lang_string('section:break', 'format_cards')
         );
     }
 
