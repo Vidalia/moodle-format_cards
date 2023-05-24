@@ -31,6 +31,7 @@ use core\notification;
 use core\output\inplace_editable;
 use core_external\external_api;
 use format_cards\forms\editcard_form;
+use format_cards\output\renderer;
 
 require_once("$CFG->dirroot/course/format/topics/lib.php");
 

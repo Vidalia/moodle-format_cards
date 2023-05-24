@@ -16,7 +16,9 @@
 
 namespace format_cards\output;
 
+use core_courseformat\base as course_format;
 use core_courseformat\output\section_renderer;
+use format_cards\output\courseformat\content\section;
 use section_info;
 use stdClass;
 
@@ -50,5 +52,17 @@ class renderer extends section_renderer {
      */
     public function section_title_without_link($section, $course) {
         return $this->render(course_get_format($course)->inplace_editable_render_section_name($section, false));
+    }
+
+    /**
+     * Override the course_section_updated renderer to ensure that we re-render sections with breaks
+     *
+     * @param course_format $format
+     * @param section_info $section
+     * @return string
+     */
+    public function course_section_updated(course_format $format, section_info $section): string {
+        $output = new section($format, $section);
+        return $this->render($output);
     }
 }

@@ -186,26 +186,9 @@
     <ul class="card-deck dashboard-card-deck {{format}}"
          data-for="course_sectionlist">
         {{#sections}}
-            {{#sectionbreak}}
-                {{$ format_cards/local/content/section-break }}
-                    {{> format_cards/local/content/section-break }}
-                {{/format_cards/local/content/section-break}}
-            {{/sectionbreak}}
-            {{#addsectionbreak}}
-                {{$ format_cards/local/content/add-section-break }}
-                    {{> format_cards/local/content/add-section-break }}
-                {{/format_cards/local/content/add-section-break}}
-            {{/addsectionbreak}}
-            {{#showascard}}
-                {{$ format_cards/local/content/section-card }}
-                    {{> format_cards/local/content/section-card }}
-                {{/format_cards/local/content/section-card}}
-            {{/showascard}}
-            {{^showascard}}
-                {{$ core_courseformat/local/content/section }}
-                    {{> core_courseformat/local/content/section}}
-                {{/core_courseformat/local/content/section}}
-            {{/showascard}}
+            {{$ format_cards/local/content/section }}
+                {{> format_cards/local/content/section}}
+            {{/format_cards/local/content/section}}
         {{/sections}}
     </ul>
     {{#hasnavigation}}
