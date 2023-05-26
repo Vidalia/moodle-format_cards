@@ -305,7 +305,7 @@ class format_cards extends format_topics {
     /**
      * Updates a section break title
      *
-     * @param $section  stdClass Section to update
+     * @param $section stdClass Section to update
      * @param $itemtype string The item type
      * @param $newvalue string New item value
      * @return inplace_editable
