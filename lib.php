@@ -32,6 +32,7 @@ use core\output\inplace_editable;
 use core_external\external_api;
 use format_cards\forms\editcard_form;
 use format_cards\output\renderer;
+use format_cards\section_break;
 
 require_once("$CFG->dirroot/course/format/topics/lib.php");
 
@@ -309,7 +310,6 @@ class format_cards extends format_topics {
      * @param $newvalue string New item value
      * @return inplace_editable
      * @throws \core_external\restricted_context_exception
-     * @throws dml_exception
      * @throws invalid_parameter_exception
      * @throws required_capability_exception
      */
@@ -320,13 +320,19 @@ class format_cards extends format_topics {
             require_capability('moodle/course:update', $context);
 
             $newtitle = clean_param($newvalue, PARAM_TEXT);
-            $currentbreak = $this->get_format_option('sectionbreaktitle', $section);
-            if (strval($currentbreak) !== strval($newtitle)) {
-                $this->update_section_format_options([
-                    'id' => $section->id,
-                    'sectionbreak' => true,
-                    'sectionbreaktitle' => $newtitle
-                ]);
+
+            $break = section_break::get_break_for_section($section);
+            if (strval($break->get('name')) !== strval($newtitle)) {
+                $break->set('name', $newtitle);
+                $break->save();
+
+                // Reset the break cache if the name changes.
+                $cache = cache::make_from_params(
+                    cache_store::MODE_APPLICATION,
+                    'format_cards',
+                    'section_breaks'
+                );
+                $cache->delete($section->course);
             }
 
             return $this->inplace_editable_render_section_break($section, true);
@@ -341,7 +347,6 @@ class format_cards extends format_topics {
      * @param stdClass $section Section to update break in
      * @param bool $editable Whether the break should be editable
      * @return inplace_editable
-     * @throws dml_exception
      */
     public function inplace_editable_render_section_break($section, bool $editable = null): inplace_editable {
 
@@ -349,7 +354,8 @@ class format_cards extends format_topics {
             $editable = $this->show_editor([ 'moodle/course:update' ]);
         }
 
-        $break = $this->get_format_option('sectionbreaktitle', $section);
+        $sectionbreak = section_break::get_break_for_section($section);
+        $break = $sectionbreak->get('name');
         $display = $break;
         if (empty($break) && $editable) {
             $display = get_string('section:break:marker', 'format_cards');

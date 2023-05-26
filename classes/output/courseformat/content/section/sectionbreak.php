@@ -25,9 +25,12 @@
 
 namespace format_cards\output\courseformat\content\section;
 
+use cache;
+use cache_store;
 use core\output\inplace_editable;
 use core\output\named_templatable;
 use core_courseformat\base as course_format;
+use format_cards\section_break;
 use lang_string;
 use moodle_exception;
 use moodle_url;
@@ -90,10 +93,10 @@ class sectionbreak extends inplace_editable implements named_templatable, render
         }
         $this->editable = $editable;
 
-        $options = $format->get_format_options($this->section);
+        $break = self::get_section_break($section);
 
-        $this->hasbreak = $options['sectionbreak'];
-        $this->breaktitle = $options['sectionbreaktitle'];
+        $this->hasbreak = !is_null($break);
+        $this->breaktitle = is_null($break) ? '' : $break->get('name');
         $displayvalue = $this->breaktitle;
 
         if ($this->editable && empty($this->breaktitle)) {
@@ -146,6 +149,33 @@ class sectionbreak extends inplace_editable implements named_templatable, render
             ]
         ))->out(false);
         return $data;
+    }
+
+    /**
+     * Get information about the section break for a given section, or null if not available
+     *
+     * @param section_info $info Section info
+     * @return section_break|null
+     */
+    private static function get_section_break(section_info $info): ?section_break {
+        $cache = cache::make_from_params(
+            cache_store::MODE_APPLICATION,
+            'format_cards',
+            'section_breaks'
+        );
+
+        if (($breaks = $cache->get($info->course)) === false) {
+            $breaks = section_break::get_breaks_for_course($info->course);
+            $cache->set($info->course, $breaks);
+        }
+
+        foreach ($breaks as $break) {
+            if ($break->get('section') === $info->section) {
+                return $break;
+            }
+        }
+
+        return null;
     }
 
 }

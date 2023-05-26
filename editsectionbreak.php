@@ -23,6 +23,8 @@
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+use format_cards\section_break;
+
 require_once(__DIR__ . "/../../../config.php");
 
 $courseid = required_param('courseid', PARAM_INT);
@@ -34,28 +36,42 @@ require_login($courseid, false);
 $context = context_course::instance($courseid);
 require_capability('moodle/course:update', $context);
 
+global $DB;
+
 $format = course_get_format($courseid);
-
-// If we're removing a section break, we want to also delete the title key so if the break
-// gets re-added it doesn't retain its old name.
-if ($action == 'remove') {
-    global $DB;
-
-    $DB->delete_records('course_format_options',
-        [
-            'courseid' => $courseid,
-            'sectionid' => $sectionid,
-            'format' => 'cards',
-            'name' => 'sectionbreaktitle'
-        ]
-    );
-}
-
-$format->update_section_format_options([
-    'id' => $sectionid,
-    'sectionbreak' => $action === 'add'
-]);
+$modinfo = get_fast_modinfo($courseid);
+$section = $modinfo->get_section_info_by_id($sectionid);
 
 $redirect = new moodle_url(course_get_url($courseid), null, "sectionid-$sectionid-title");
+
+$cache = cache::make_from_params(
+    cache_store::MODE_APPLICATION,
+    'format_cards',
+    'section_breaks'
+);
+
+// Remove the section break at this section ID.
+if ($action === 'remove') {
+    $sectionbreak = section_break::get_break_for_section_id($sectionid);
+
+    if (is_null($sectionbreak)) {
+        redirect($redirect);
+    }
+
+    $sectionbreak->delete();
+
+    $cache->delete($courseid);
+}
+
+// Add a new section break at this section.
+if ($action === 'add') {
+    $sectionbreak = new section_break();
+    $sectionbreak->set('courseid', $courseid);
+    $sectionbreak->set('section', $section->section);
+
+    $sectionbreak->save();
+
+    $cache->delete($courseid);
+}
 
 redirect($redirect);
