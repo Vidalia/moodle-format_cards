@@ -50,6 +50,8 @@ class section extends section_base {
     protected $sectionbreak;
 
     /**
+     * Section output constructor.
+     *
      * @param course_format $format
      * @param section_info $section
      */
@@ -59,13 +61,24 @@ class section extends section_base {
         $this->sectionbreak = new sectionbreak($format, $section);
     }
 
+    /**
+     * Fetch the template name to use when rendering this section.
+     *
+     * @param renderer_base $renderer
+     * @return string
+     */
     public function get_template_name(\renderer_base $renderer): string {
         return $this->show_as_card()
             ? 'format_cards/local/content/section/card'
             : 'format_cards/local/content/section';
     }
 
-    private function show_as_card() {
+    /**
+     * Whether this section should be displayed as a card or not
+     *
+     * @return bool
+     */
+    private function show_as_card(): bool {
         $issinglesectionpage = $this->format->get_section_number() != 0;
         return !$issinglesectionpage
             && !$this->format->show_editor()

@@ -15,14 +15,24 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Cards format DB upgrades.
+ * Plugin upgrade manager.
  *
  * @package     format_cards
  * @copyright   2023 University of Essex
  * @author      John Maydew <jdmayd@essex.ac.uk>
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-function xmldb_format_cards_upgrade($oldversion = 0) {
+
+/**
+ * Perform an upgrade
+ *
+ * @param int $oldversion Old plugin version to upgrade from
+ * @return bool
+ * @throws ddl_exception
+ * @throws downgrade_exception
+ * @throws upgrade_exception
+ */
+function xmldb_format_cards_upgrade($oldversion = 0): bool {
     global $DB;
 
     $dbman = $DB->get_manager();
