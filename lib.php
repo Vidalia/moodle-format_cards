@@ -29,7 +29,10 @@ global $CFG;
 
 use core\notification;
 use core\output\inplace_editable;
+use core_external\external_api;
 use format_cards\forms\editcard_form;
+use format_cards\output\renderer;
+use format_cards\section_break;
 
 require_once("$CFG->dirroot/course/format/topics/lib.php");
 
@@ -46,6 +49,10 @@ define('FORMAT_CARDS_SHOWPROGRESS_SHOW', 1);
 define('FORMAT_CARDS_SHOWPROGRESS_HIDE', 2);
 define('FORMAT_CARDS_PROGRESSFORMAT_COUNT', 1);
 define('FORMAT_CARDS_PROGRESSFORMAT_PERCENTAGE', 2);
+define('FORMAT_CARDS_SECTIONNAVIGATION_NONE', 1);
+define('FORMAT_CARDS_SECTIONNAVIGATION_TOP', 2);
+define('FORMAT_CARDS_SECTIONNAVIGATION_BOTTOM', 3);
+define('FORMAT_CARDS_SECTIONNAVIGATION_BOTH', 4);
 
 /**
  * Course format main class
@@ -58,12 +65,25 @@ define('FORMAT_CARDS_PROGRESSFORMAT_PERCENTAGE', 2);
 class format_cards extends format_topics {
 
     /**
+     * Cards format allows you to indent course modules
+     *
+     * @return bool
+     */
+    public function uses_indentation(): bool {
+        return true;
+    }
+
+    /**
      * Always force the course to display on multiple pages
      *
      * @return bool|stdClass|null
      */
     public function get_course() {
         $course = parent::get_course();
+
+        if (is_null($course)) {
+            return null;
+        }
 
         $course->coursedisplay = COURSE_DISPLAY_MULTIPAGE;
 
@@ -84,6 +104,7 @@ class format_cards extends format_topics {
         $defaults = get_config('format_cards');
 
         // We always show one section per page.
+        $options['coursedisplay']['element_type'] = 'hidden';
         $options['coursedisplay']['default'] = COURSE_DISPLAY_MULTIPAGE;
 
         $createselect = function (string $name, array $options, int $default, bool $hashelp = false): array {
@@ -119,6 +140,15 @@ class format_cards extends format_topics {
         ];
 
         $options['section0'] = $createselect('section0', $section0options, $defaults->section0, true);
+
+        $sectionnavigationoptions = [
+            FORMAT_CARDS_SECTIONNAVIGATION_NONE => new lang_string('form:course:sectionnavigation:none', 'format_cards'),
+            FORMAT_CARDS_SECTIONNAVIGATION_TOP => new lang_string('form:course:sectionnavigation:top', 'format_cards'),
+            FORMAT_CARDS_SECTIONNAVIGATION_BOTTOM => new lang_string('form:course:sectionnavigation:bottom', 'format_cards'),
+            FORMAT_CARDS_SECTIONNAVIGATION_BOTH => new lang_string('form:course:sectionnavigation:both', 'format_cards')
+        ];
+
+        $options['sectionnavigation'] = $createselect('sectionnavigation', $sectionnavigationoptions, $defaults->sectionnavigation);
 
         $orientationoptions = [
             FORMAT_CARDS_ORIENTATION_VERTICAL => new lang_string('form:course:cardorientation:vertical', 'format_cards'),
@@ -185,6 +215,20 @@ class format_cards extends format_topics {
                     $summaryoptions
                 )
             ]
+        ];
+
+        $options['sectionbreak'] = [
+            'default' => false,
+            'type' => PARAM_BOOL,
+            'label' => new lang_string('section:break', 'format_cards'),
+            'element_type' => 'hidden'
+        ];
+
+        $options['sectionbreaktitle'] = [
+            'default' => '',
+            'type' => PARAM_TEXT,
+            'label' => new lang_string('section:break', 'format_cards'),
+            'element_type' => 'hidden'
         ];
 
         return $options;
@@ -256,6 +300,77 @@ class format_cards extends format_topics {
         }
 
         return $changes;
+    }
+
+    /**
+     * Updates a section break title
+     *
+     * @param stdClass $section Section to update
+     * @param string $itemtype The item type
+     * @param string $newvalue New item value
+     * @return inplace_editable
+     * @throws \core_external\restricted_context_exception
+     * @throws invalid_parameter_exception
+     * @throws required_capability_exception
+     */
+    public function inplace_editable_update_section_name($section, $itemtype, $newvalue) {
+        if ($itemtype === 'sectionbreak') {
+            $context = context_course::instance($section->course);
+            external_api::validate_context($context);
+            require_capability('moodle/course:update', $context);
+
+            $newtitle = clean_param($newvalue, PARAM_TEXT);
+
+            $break = section_break::get_break_for_section($section);
+            if (strval($break->get('name')) !== strval($newtitle)) {
+                $break->set('name', $newtitle);
+                $break->save();
+
+                // Reset the break cache if the name changes.
+                $cache = cache::make_from_params(
+                    cache_store::MODE_APPLICATION,
+                    'format_cards',
+                    'section_breaks'
+                );
+                $cache->delete($section->course);
+            }
+
+            return $this->inplace_editable_render_section_break($section, true);
+        }
+
+        return parent::inplace_editable_update_section_name($section, $itemtype, $newvalue);
+    }
+
+    /**
+     * Renders a section break as an inplace editable
+     *
+     * @param stdClass $section Section to update break in
+     * @param bool $editable Whether the break should be editable
+     * @return inplace_editable
+     */
+    public function inplace_editable_render_section_break($section, bool $editable = null): inplace_editable {
+
+        if ($editable === null) {
+            $editable = $this->show_editor([ 'moodle/course:update' ]);
+        }
+
+        $sectionbreak = section_break::get_break_for_section($section);
+        $break = $sectionbreak->get('name');
+        $display = $break;
+        if (empty($break) && $editable) {
+            $display = get_string('section:break:marker', 'format_cards');
+        }
+
+        return new inplace_editable(
+            'format_cards',
+            'sectionbreak',
+            $section->id,
+            $editable,
+            $display,
+            $break,
+            new lang_string('section:break:edit', 'format_cards'),
+            new lang_string('section:break', 'format_cards')
+        );
     }
 
     /**
@@ -685,12 +800,14 @@ function format_cards_inplace_editable($itemtype, $itemid, $newvalue) {
     global $DB, $CFG;
     require_once("$CFG->dirroot/course/lib.php");
 
-    if (in_array($itemtype, [ 'sectionname', 'sectionnamenl' ])) {
-        $section = $DB->get_record_sql(
-            'SELECT s.* FROM {course_sections} s JOIN {course} c ON s.course = c.id WHERE s.id = ? AND c.format = ?',
-            [$itemid, 'cards'], MUST_EXIST);
-        return course_get_format($section->course)->inplace_editable_update_section_name($section, $itemtype, $newvalue);
+    if (!in_array($itemtype, ['sectionname', 'sectionnamenl', 'sectionbreak'])) {
+        return;
     }
+
+    $section = $DB->get_record_sql(
+        'SELECT s.* FROM {course_sections} s JOIN {course} c ON s.course = c.id WHERE s.id = ? AND c.format = ?',
+        [$itemid, 'cards'], MUST_EXIST);
+    return course_get_format($section->course)->inplace_editable_update_section_name($section, $itemtype, $newvalue);
 }
 
 /**

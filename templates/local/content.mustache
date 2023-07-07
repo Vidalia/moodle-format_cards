@@ -72,7 +72,21 @@
                 "iscurrent": true,
                 "summary": {
                     "summarytext": "Summary text!"
-                }
+                },
+                "sectionbreak": {
+                    "id": 35,
+                    "displayvalue" : "<a href=\"#\">Moodle</a>",
+                    "value" : "Moodle",
+                    "itemid" : 35,
+                    "component" : "core_unknown",
+                    "itemtype" : "unknown",
+                    "edithint" : "Edit this",
+                    "editlabel" : "New name for this",
+                    "type" : "text",
+                    "options" : "",
+                    "linkeverything": 0
+                },
+                "addsectionbreak": false
             },
             {
                 "num": 4,
@@ -100,7 +114,8 @@
                 "iscurrent": true,
                 "summary": {
                     "summarytext": "Summary text!"
-                }
+                },
+                "addsectionbreak": true
             }
         ],
         "format": "topics",
@@ -168,22 +183,14 @@
             {{/core_courseformat/local/content/section}}
         {{/initialsection}}
     </ul>
-    <div class="card-deck dashboard-card-deck {{format}}"
-         role="list"
+    <ul class="card-deck dashboard-card-deck {{format}}"
          data-for="course_sectionlist">
         {{#sections}}
-            {{#showascard}}
-                {{$ format_cards/local/content/section-card }}
-                    {{> format_cards/local/content/section-card }}
-                {{/format_cards/local/content/section-card}}
-            {{/showascard}}
-            {{^showascard}}
-                {{$ core_courseformat/local/content/section }}
-                    {{> core_courseformat/local/content/section}}
-                {{/core_courseformat/local/content/section}}
-            {{/showascard}}
+            {{$ format_cards/local/content/section }}
+                {{> format_cards/local/content/section}}
+            {{/format_cards/local/content/section}}
         {{/sections}}
-    </div>
+    </ul>
     {{#hasnavigation}}
     <div class="single-section">
         {{#sectionnavigation}}

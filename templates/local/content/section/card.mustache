@@ -35,7 +35,14 @@
         }
     }
 }}
-<div class="card dashboard-card{{#classes}} {{.}}{{/classes}}"
+{{#sectionbreak}}
+    <li class="section-break">
+        {{$ format_cards/local/content/section/break }}
+            {{> format_cards/local/content/section/break }}
+        {{/format_cards/local/content/section/break}}
+    </li>
+{{/sectionbreak}}
+<li class="card dashboard-card{{#classes}} {{.}}{{/classes}}"
      role="listitem"
      aria-labelledby="section-{{num}}-title"
      data-sectionid="{{num}}"
@@ -77,4 +84,4 @@
         </a>
     {{/header}}
 
-</div>
+</li>
