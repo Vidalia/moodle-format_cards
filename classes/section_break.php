@@ -88,10 +88,11 @@ class section_break extends persistent {
     public static function get_break_for_section_id(int $sectionid): ?section_break {
         global $DB;
 
-        $records = $DB->get_records_sql('SELECT break.*
-FROM {format_cards_break} break
+        $records = $DB->get_records_sql('SELECT section_break.*
+FROM {format_cards_break} section_break
 JOIN {course_sections} section
-    ON break.courseid = section.course AND break.section = section.section
+    ON section_break.courseid = section.course
+    AND section_break.section = section.section
 WHERE section.id = ?',
         [ $sectionid ]);
 
