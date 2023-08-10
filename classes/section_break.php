@@ -94,13 +94,16 @@ JOIN {course_sections} section
     ON section_break.courseid = section.course
     AND section_break.section = section.section
 WHERE section.id = ?',
-        [ $sectionid ]);
+        [ $sectionid ],
+        0, 1);
 
         if (empty($records)) {
             return null;
         }
 
-        return new section_break(0, $records[0]);
+        $record = reset($records);
+
+        return new section_break(0, $record);
     }
 
     /**
