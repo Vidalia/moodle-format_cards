@@ -23,7 +23,11 @@
 }
 
 .format-cards .course-content .card-deck .card.highlighted {
-    box-shadow: 0 0 5px var(--primary, #0f6cbf);
+    box-shadow: 0 0 10px var(--primary, #0f6cbf);
+}
+
+.format-cards .course-content .card-deck .card.highlighted .card-overlay {
+    box-shadow: 0 0 20px var(--primary, #0f6cbf) inset;
 }
 
 .format-cards .course-content .card-deck .card .card-main-content {
