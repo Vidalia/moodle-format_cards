@@ -25,10 +25,10 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version   = 2023081600;        // The current plugin version (Date: YYYYMMDDXX).
+$plugin->version   = 2023090600;        // The current plugin version (Date: YYYYMMDDXX).
 $plugin->requires  = 2022041200;        // Requires this Moodle version.
 $plugin->component = 'format_cards';    // Full name of the plugin (used for diagnostics).
-$plugin->release = "v1.3.2";
+$plugin->release = "v1.3.3";
 $plugin->maturity = MATURITY_STABLE;
 $plugin->dependencies = [
   "format_topics" => 2022041900
