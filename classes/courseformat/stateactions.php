@@ -21,7 +21,7 @@ use format_topics\courseformat\stateactions as stateactions_topics;
 /**
  * Contains the core course state actions specific to topics format.
  *
- * @package    format_topics
+ * @package    format_cards
  * @copyright  2022 Ferran Recio <ferran@moodle.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
