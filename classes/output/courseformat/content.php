@@ -104,7 +104,7 @@ class content extends content_base {
         $navigationoption = $this->format->get_format_option('sectionnavigation');
 
         // Remove section navigation if it's set in the options.
-        if ($navigationoption === FORMAT_CARDS_SECTIONNAVIGATION_NONE) {
+        if ($navigationoption == FORMAT_CARDS_SECTIONNAVIGATION_NONE) {
             $data->sectionnavigation = false;
             $data->sectionselector = false;
 
