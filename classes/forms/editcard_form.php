@@ -67,7 +67,8 @@ class editcard_form extends editsection_form {
             null,
             [
                 'subdirs' => 0,
-                'accepted_types' => ['.png', '.jpg', '.jpeg', '.webp']
+                'maxfiles' => 1,
+                'accepted_types' => [ 'web_image' ]
             ]
         );
 
