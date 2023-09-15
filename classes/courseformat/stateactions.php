@@ -18,27 +18,35 @@ namespace format_cards\courseformat;
 
 use core_courseformat\stateupdates;
 use core_courseformat\stateactions as stateactions_base;
+use dml_exception;
+use moodle_exception;
+use required_capability_exception;
 use stdClass;
 use context_course;
 
 /**
  * Contains the core course state actions specific to cards format.
- * Duplicate of format_topics\courseformat\stateactions.
  *
  * @package    format_cards
- * @copyright  2022 Ferran Recio <ferran@moodle.com>
+ * @copyright  2023 University of Essex
+ * @author     Ferran Recio <ferran@moodle.com>
+ * @author     John Maydew <jdmayd@essex.ac.uk>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @see        \format_topics\courseformat\stateactions
  */
 class stateactions extends stateactions_base {
 
     /**
      * Highlight course section.
      *
-     * @param stateupdates $updates the affected course elements track
-     * @param stdClass $course the course object
-     * @param int[] $ids section ids (only ther first one will be highlighted)
-     * @param int $targetsectionid not used
-     * @param int $targetcmid not used
+     * @param stateupdates $updates     the affected course elements track
+     * @param stdClass $course          the course object
+     * @param int[] $ids                section ids (only ther first one will be highlighted)
+     * @param int|null $targetsectionid not used
+     * @param int|null $targetcmid      not used
+     * @throws dml_exception
+     * @throws moodle_exception
+     * @throws required_capability_exception
      */
     public function section_highlight(
         stateupdates $updates,
@@ -74,11 +82,14 @@ class stateactions extends stateactions_base {
     /**
      * Remove highlight from a course sections.
      *
-     * @param stateupdates $updates the affected course elements track
-     * @param stdClass $course the course object
-     * @param int[] $ids optional extra section ids to refresh
-     * @param int $targetsectionid not used
-     * @param int $targetcmid not used
+     * @param stateupdates $updates     the affected course elements track
+     * @param stdClass $course          the course object
+     * @param int[] $ids                optional extra section ids to refresh
+     * @param int|null $targetsectionid not used
+     * @param int|null $targetcmid      not used
+     * @throws dml_exception
+     * @throws moodle_exception
+     * @throws required_capability_exception
      */
     public function section_unhighlight(
         stateupdates $updates,
