@@ -24,7 +24,7 @@
  */
 namespace format_cards\output\courseformat\content\section;
 
-use core_courseformat\output\local\content\section\controlmenu as base_controlmenu;
+use format_topics\output\courseformat\content\section\controlmenu as base_controlmenu;
 
 /**
  * Section control menu class
