@@ -6,10 +6,48 @@
     padding: 0;
 }
 
+.format-cards .course-content .card-deck {
+    display: grid;
+    grid: auto / 1fr;
+    grid-gap: 0.5rem;
+    grid-auto-flow: row;
+
+    justify-items: center;
+    align-items: center;
+}
+
+@media (min-width: 576px) {
+    .format-cards .course-content .card-deck {
+        grid: auto / 1fr 1fr;
+    }
+    .format-cards .course-content #section-0 {
+        grid-column: span 2;
+    }
+}
+
+@media (min-width: 768px) {
+    .format-cards .course-content .card-deck {
+        grid: auto / 1fr 1fr 1fr;
+    }
+    .format-cards .course-content #section-0 {
+        grid-column: span 3;
+    }
+}
+
+@media (min-width: 992px) {
+    .format-cards .course-content .card-deck {
+        grid: auto / 1fr 1fr 1fr 1fr;
+    }
+    .format-cards .course-content #section-0 {
+        grid-column: span 4;
+    }
+}
+
 .format-cards .course-content .card-deck .card {
     aspect-ratio: 5 / 7;
     border: none;
 
+    width: 100%;
     max-width: 325px;
 }
 .format-cards .course-content .card-deck .card.card-horizontal {
@@ -195,11 +233,6 @@
 }
 
 @media (max-width: 576px) {
-    .format-cards .course-content .card-deck.cards {
-        display: flex;
-        flex-flow: column;
-        align-items: center;
-    }
 
     .format-cards .course-content .card-deck .card .card-header .card-title {
         /** Try to make card titles responsive on smaller devices */
