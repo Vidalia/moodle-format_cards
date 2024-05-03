@@ -55,11 +55,17 @@ course_create_sections_if_missing($course, 0);
 $renderer = $PAGE->get_renderer('format_cards');
 
 if (!empty($displaysection)) {
-    $format->set_section_number($displaysection);
+    if ($CFG->version < 2024042200) {
+        $format->set_section_number($displaysection);
+    } else {
+        $format->set_sectionnum($displaysection);
+    }
 }
 $outputclass = $format->get_output_classname('content');
 $widget = new $outputclass($format);
 echo $renderer->render($widget);
 
-// Include course format js module.
-$PAGE->requires->js('/course/format/topics/format.js');
+// Include course format js module for Moodle < 4.4.
+if ($CFG->version < 2024042200) {
+    $PAGE->requires->js('/course/format/topics/format.js');
+}
