@@ -29,9 +29,7 @@ global $CFG;
 
 use core\notification;
 use core\output\inplace_editable;
-use core_external\external_api;
 use format_cards\forms\editcard_form;
-use format_cards\output\renderer;
 use format_cards\section_break;
 
 require_once("$CFG->dirroot/course/format/topics/lib.php");
@@ -314,9 +312,20 @@ class format_cards extends format_topics {
      * @throws required_capability_exception
      */
     public function inplace_editable_update_section_name($section, $itemtype, $newvalue) {
+        global $CFG;
+
         if ($itemtype === 'sectionbreak') {
+
             $context = context_course::instance($section->course);
-            external_api::validate_context($context);
+
+            // The external_api class is in a different place in Moodle 4.1.
+            if ($CFG->version < 2023042400) {
+                require_once("$CFG->libdir/externallib.php");
+                \external_api::validate_context($context);
+            } else {
+                \core_external\external_api::validate_context($context);
+            }
+
             require_capability('moodle/course:update', $context);
 
             $newtitle = clean_param($newvalue, PARAM_TEXT);
