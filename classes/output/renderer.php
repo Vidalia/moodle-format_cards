@@ -26,7 +26,7 @@ use stdClass;
  * Course format renderer
  *
  * @package     format_cards
- * @copyright   2022 University of Essex
+ * @copyright   2024 University of Essex
  * @author      John Maydew <jdmayd@essex.ac.uk>
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -39,7 +39,7 @@ class renderer extends section_renderer {
      * @param stdClass $course The course entry from DB
      * @return string HTML to output.
      */
-    public function section_title($section, $course) {
+    public function section_title($section, $course): string {
         return $this->render(course_get_format($course)->inplace_editable_render_section_name($section));
     }
 
@@ -50,7 +50,7 @@ class renderer extends section_renderer {
      * @param int|stdClass $course The course entry from DB
      * @return string HTML to output.
      */
-    public function section_title_without_link($section, $course) {
+    public function section_title_without_link($section, $course): string {
         return $this->render(course_get_format($course)->inplace_editable_render_section_name($section, false));
     }
 

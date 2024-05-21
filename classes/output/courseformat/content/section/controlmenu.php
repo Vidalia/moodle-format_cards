@@ -18,7 +18,7 @@
  * Overrides default control menu to modify the permalink
  *
  * @package   format_cards
- * @copyright 2023 University of Essex
+ * @copyright 2024 University of Essex
  * @author    John Maydew <jdmayd@essex.ac.uk>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -30,7 +30,7 @@ use format_topics\output\courseformat\content\section\controlmenu as base_contro
  * Section control menu class
  *
  * @package     format_cards
- * @copyright   2023 University of Essex
+ * @copyright   2024 University of Essex
  * @author      John Maydew <jdmayd@essex.ac.uk>
  */
 class controlmenu extends base_controlmenu {
@@ -53,9 +53,8 @@ class controlmenu extends base_controlmenu {
         }
 
         // Format base class already has a function to get the correct section URL.
-        $sectionlink = $this->format->get_view_url(
-            $this->section->section
-        );
+        $sectionlink = $this->format->get_view_url($this->section->section);
+
         $controls['permalink'] = [
             'url' => $sectionlink,
             'icon' => 'i/link',

@@ -16,6 +16,8 @@
 
 namespace format_cards;
 
+use cache;
+use cache_store;
 use core\persistent;
 use dml_exception;
 use section_info;
@@ -25,7 +27,7 @@ use stdClass;
  * Section break db persistence object.
  *
  * @package     format_cards
- * @copyright   2023 University of Essex
+ * @copyright   2024 University of Essex
  * @author      John Maydew <jdmayd@essex.ac.uk>
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -43,18 +45,62 @@ class section_break extends persistent {
      */
     protected static function define_properties() {
         return [
-            'courseid' => [
-                'type' => PARAM_INT
-            ],
-            'section' => [
-                'type' => PARAM_INT
-            ],
+            'courseid' => [ 'type' => PARAM_INT ],
+            'section' => [ 'type' => PARAM_INT ],
             'name' => [
                 'type' => PARAM_TEXT,
                 'null' => NULL_ALLOWED,
-                'default' => ''
-            ]
+                'default' => '',
+            ],
         ];
+    }
+
+    /**
+     * Reset the course section break cache after a new one is created
+     *
+     * @return void
+     */
+    public function after_create(): void {
+        parent::after_create();
+        self::purge_break_cache($this->get('courseid'));
+    }
+
+    /**
+     * Reset the course section break cache after one is deleted
+     *
+     * @param bool $result
+     * @return void
+     */
+    public function after_delete($result): void {
+        parent::after_delete($result);
+        self::purge_break_cache($this->get('courseid'));
+    }
+
+    /**
+     * Reset the course section break cache after one is updated
+     *
+     * @param bool $result
+     * @return void
+     */
+    public function after_update($result): void {
+        parent::after_update($result);
+        self::purge_break_cache($this->get('courseid'));
+    }
+
+    /**
+     * Purge the section break cache for a given course
+     *
+     * @param int $courseid
+     * @return void
+     */
+    private static function purge_break_cache(int $courseid): void {
+        $cache = cache::make_from_params(
+            cache_store::MODE_APPLICATION,
+            'format_cards',
+            'section_breaks'
+        );
+
+        $cache->delete($courseid);
     }
 
     /**
@@ -110,7 +156,7 @@ WHERE section.id = ?',
      * Get the section break for a given section, if available
      *
      * @param section_info|stdClass $section
-     * @return void
+     * @return section_break|null
      */
     public static function get_break_for_section($section): ?section_break {
         $record = self::get_record(

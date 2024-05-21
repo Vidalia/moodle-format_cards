@@ -18,7 +18,7 @@
  * Class for rendering a course module within the format
  *
  * @package     format_cards
- * @copyright   2022 University of Essex
+ * @copyright   2024 University of Essex
  * @author      John Maydew <jdmayd@essex.ac.uk>
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -33,7 +33,7 @@ use stdClass;
  * Extended class for rendering a course module within the course
  *
  * @package     format_cards
- * @copyright   2022 University of Essex
+ * @copyright   2024 University of Essex
  * @author      John Maydew <jdmayd@essex.ac.uk>
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -46,7 +46,7 @@ class cm extends cm_base {
      * @param array $haspartials
      * @param renderer_base $output
      * @return bool
-     * @see \core_courseformat\output\local\content\cm::add_format_data
+     * @see cm_base::add_format_data
      */
     protected function add_format_data(stdClass &$data, array $haspartials, renderer_base $output): bool {
         $result = parent::add_format_data($data, $haspartials, $output);

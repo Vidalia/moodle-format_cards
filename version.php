@@ -18,19 +18,19 @@
  * Version details
  *
  * @package     format_cards
- * @copyright   2022 University of Essex
+ * @copyright   2024 University of Essex
  * @author      John Maydew <jdmayd@essex.ac.uk>
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version   = 2023090601;        // The current plugin version (Date: YYYYMMDDXX).
-$plugin->requires  = 2022041200;        // Requires this Moodle version.
+$plugin->version   = 2024052100;        // The current plugin version (Date: YYYYMMDDXX).
+$plugin->requires  = 2022112800;        // Requires this Moodle version.
 $plugin->component = 'format_cards';    // Full name of the plugin (used for diagnostics).
-$plugin->release = "v1.3.3";
+$plugin->release = "v1.4.0";
 $plugin->maturity = MATURITY_STABLE;
 $plugin->dependencies = [
-  "format_topics" => 2022041900
+    "format_topics" => 2022112800,
 ];
 

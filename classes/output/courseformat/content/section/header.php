@@ -18,7 +18,7 @@
  * Renders a course section header
  *
  * @package     format_cards
- * @copyright   2023 University of Essex
+ * @copyright   2024 University of Essex
  * @author      John Maydew <jdmayd@essex.ac.uk>
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -39,7 +39,7 @@ use stored_file;
  * Renders a course section header
  *
  * @package     format_cards
- * @copyright   2023 University of Essex
+ * @copyright   2024 University of Essex
  * @author      John Maydew <jdmayd@essex.ac.uk>
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -50,7 +50,7 @@ class header extends header_base {
      *
      * @var stored_file[]
      */
-    private static $images = [];
+    private static array $images = [];
 
     /**
      * We don't want section titles to have clickable links
@@ -59,7 +59,7 @@ class header extends header_base {
      * @return stdClass
      */
     public function export_for_template(renderer_base $output): stdClass {
-        global $PAGE;
+        global $PAGE, $CFG;
 
         $data = parent::export_for_template($output);
 
@@ -70,7 +70,7 @@ class header extends header_base {
         // On the course main page, display this section as a card unless the
         // user is currently editing the page. Section #0 should never be
         // displayed as a card.
-        $issinglesectionpage = $this->format->get_section_number() != 0;
+        $issinglesectionpage = $this->format->get_sectionnum() != 0;
         $showascard = !$issinglesectionpage
             && !$PAGE->user_is_editing()
             && !$this->section->section == 0;
@@ -82,7 +82,10 @@ class header extends header_base {
             [ 'sr' => true ]
         );
 
-        $data->headerdisplaymultipage = !$showascard;
+        // We want to hide the "go to section" link on Moodle 4.4+.
+        if ($CFG->version >= 2024042200 && !$data->controlmenu) {
+            $data->controlmenu = true;
+        }
 
         // Try and fetch the image.
         $image = $this->get_section_image($this->section);
@@ -116,7 +119,7 @@ class header extends header_base {
         // The colour palette is hardcoded for now. It would make sense to combine it with theme settings.
         $basecolours = [
             '#81ecec', '#74b9ff', '#a29bfe', '#dfe6e9', '#00b894',
-            '#0984e3', '#b2bec3', '#fdcb6e', '#fd79a8', '#6c5ce7'
+            '#0984e3', '#b2bec3', '#fdcb6e', '#fd79a8', '#6c5ce7',
         ];
 
         return $basecolours[$this->format->get_course()->id % 10];

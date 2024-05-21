@@ -18,7 +18,7 @@
  * Displays a course same as format_topics, but summarises each section as a Bootstrap card at the top of the page
  *
  * @package     format_cards
- * @copyright   2022 University of Essex
+ * @copyright   2024 University of Essex
  * @author      John Maydew <jdmayd@essex.ac.uk>
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */

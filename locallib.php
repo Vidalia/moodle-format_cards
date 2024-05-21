@@ -18,7 +18,7 @@
  * Cards format local plugin functions
  *
  * @package     format_cards
- * @copyright   2022 University of Essex
+ * @copyright   2024 University of Essex
  * @author      John Maydew <jdmayd@essex.ac.uk>
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -43,7 +43,7 @@ function format_cards_tidy_orphaned_images(?progress_bar $progress = null): void
         'files',
         [
             'component' => 'format_cards',
-            'filearea' => FORMAT_CARDS_FILEAREA_IMAGE
+            'filearea' => FORMAT_CARDS_FILEAREA_IMAGE,
         ]
     );
 

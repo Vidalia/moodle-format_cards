@@ -18,7 +18,7 @@
  * Moodle form for editing a section
  *
  * @package     format_cards
- * @copyright   2022 University of Essex
+ * @copyright   2024 University of Essex
  * @author      John Maydew <jdmayd@essex.ac.uk>
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -40,7 +40,7 @@ require_once("$CFG->dirroot/course/editsection_form.php");
  * Moodle form for editing a section
  *
  * @package     format_cards
- * @copyright   2022 University of Essex
+ * @copyright   2024 University of Essex
  * @author      John Maydew <jdmayd@essex.ac.uk>
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -52,7 +52,7 @@ class editcard_form extends editsection_form {
      * @return void
      * @throws coding_exception
      */
-    public function definition() {
+    public function definition(): void {
         parent::definition();
 
         $form = $this->_form;
@@ -68,7 +68,7 @@ class editcard_form extends editsection_form {
             [
                 'subdirs' => 0,
                 'maxfiles' => 1,
-                'accepted_types' => [ 'web_image' ]
+                'accepted_types' => [ 'web_image' ],
             ]
         );
 

@@ -18,7 +18,7 @@
  * Course content renderer
  *
  * @package     format_cards
- * @copyright   2022 University of Essex
+ * @copyright   2024 University of Essex
  * @author      John Maydew <jdmayd@essex.ac.uk>
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -27,14 +27,14 @@ namespace format_cards\output\courseformat;
 
 use coding_exception;
 use format_topics\output\courseformat\content as content_base;
+use moodle_exception;
 use renderer_base;
-use stdClass;
 
 /**
  * Course content renderer
  *
  * @package     format_cards
- * @copyright   2022 University of Essex
+ * @copyright   2024 University of Essex
  * @author      John Maydew <jdmayd@essex.ac.uk>
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -56,13 +56,14 @@ class content extends content_base {
      * Export template data
      *
      * @param renderer_base $output
-     * @return stdClass|object
+     * @return object
+     * @throws moodle_exception
      */
     public function export_for_template(renderer_base $output) {
         global $PAGE;
 
         // Is this a single section page?
-        $singlesection = $this->format->get_section_number();
+        $singlesection = $this->format->get_sectionnum();
 
         $this->hasaddsection = !$singlesection;
 
@@ -78,8 +79,13 @@ class content extends content_base {
             return $data;
         }
 
-        if ($this->format->get_format_option('section0') == FORMAT_CARDS_SECTION0_COURSEPAGE) {
+        if ($PAGE->user_is_editing()) {
             $data->initialsection = '';
+        } else if ($this->format->get_format_option('section0') == FORMAT_CARDS_SECTION0_COURSEPAGE) {
+            $data->initialsection = '';
+        } else if (empty($data->initialsection)) {
+            $section0 = new $this->sectionclass($this->format, $this->format->get_section(0));
+            $data->initialsection = $section0->export_for_template($output);
         }
 
         $this->add_section_navigation($data, $output);
@@ -90,12 +96,12 @@ class content extends content_base {
     /**
      * Adds section navigation data to the template
      *
-     * @param stdClass|object $data Current template context
+     * @param object $data Current template context
      * @param renderer_base $output Output renderer
      * @return void $data is modified directly
      */
-    private function add_section_navigation(&$data, renderer_base $output) {
-        $singlesection = $this->format->get_section_number();
+    private function add_section_navigation(&$data, renderer_base $output): void {
+        $singlesection = $this->format->get_sectionnum();
 
         if (!$singlesection) {
             return;

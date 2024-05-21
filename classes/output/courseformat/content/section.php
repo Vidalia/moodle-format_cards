@@ -18,7 +18,7 @@
  * Renders a course section
  *
  * @package     format_cards
- * @copyright   2022 University of Essex
+ * @copyright   2024 University of Essex
  * @author      John Maydew <jdmayd@essex.ac.uk>
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -29,6 +29,7 @@ use completion_info;
 use core_courseformat\base as course_format;
 use format_cards\output\courseformat\content\section\sectionbreak;
 use format_topics\output\courseformat\content\section as section_base;
+use moodle_exception;
 use moodle_url;
 use renderer_base;
 use section_info;
@@ -38,7 +39,7 @@ use stdClass;
  * Renders a course section
  *
  * @package     format_cards
- * @copyright   2022 University of Essex
+ * @copyright   2024 University of Essex
  * @author      John Maydew <jdmayd@essex.ac.uk>
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -47,7 +48,7 @@ class section extends section_base {
     /**
      * @var sectionbreak Section break renderer
      */
-    protected $sectionbreak;
+    protected sectionbreak $sectionbreak;
 
     /**
      * Section output constructor.
@@ -67,7 +68,7 @@ class section extends section_base {
      * @param renderer_base $renderer
      * @return string
      */
-    public function get_template_name(\renderer_base $renderer): string {
+    public function get_template_name(renderer_base $renderer): string {
         return $this->show_as_card()
             ? 'format_cards/local/content/section/card'
             : 'format_cards/local/content/section';
@@ -79,7 +80,7 @@ class section extends section_base {
      * @return bool
      */
     private function show_as_card(): bool {
-        $issinglesectionpage = $this->format->get_section_number() != 0;
+        $issinglesectionpage = $this->format->get_sectionnum() != 0;
         return !$issinglesectionpage
             && !$this->format->show_editor()
             && !$this->section->section == 0;
@@ -106,7 +107,7 @@ class section extends section_base {
         // On the course main page, display this section as a card unless the
         // user is currently editing the page. Section #0 should never be
         // displayed as a card.
-        $issinglesectionpage = $this->format->get_section_number() != 0;
+        $issinglesectionpage = $this->format->get_sectionnum() != 0;
         $showascard = $this->show_as_card();
 
         $data->showascard = $showascard;
@@ -239,7 +240,7 @@ class section extends section_base {
             'iscomplete' => $iscomplete,
             'hasprogress' => $completed > 0,
             'showpercentage' => !$iscomplete && $progressformat == FORMAT_CARDS_PROGRESSFORMAT_PERCENTAGE,
-            'showcount' => !$iscomplete && $progressformat == FORMAT_CARDS_PROGRESSFORMAT_COUNT
+            'showcount' => !$iscomplete && $progressformat == FORMAT_CARDS_PROGRESSFORMAT_COUNT,
         ];
     }
 
@@ -249,6 +250,7 @@ class section extends section_base {
      * @param stdClass $data
      * @param renderer_base $output
      * @return void
+     * @throws moodle_exception
      */
     private function add_section_break(stdClass $data, renderer_base $output): void {
 
@@ -264,9 +266,9 @@ class section extends section_base {
                     [
                         'courseid' => $this->section->course,
                         'sectionid' => $this->section->id,
-                        'action' => 'add'
+                        'action' => 'add',
                     ]
-                ))->out(false)
+                ))->out(false),
             ];
         }
     }

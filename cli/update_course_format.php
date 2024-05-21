@@ -18,7 +18,7 @@
  * CLI script to update the format for multiple courses to format_cards
  *
  * @package     format_cards
- * @copyright   2022 University of Essex
+ * @copyright   2024 University of Essex
  * @author      John Maydew <jdmayd@essex.ac.uk>
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -37,9 +37,9 @@ list($options, $unrecognized) = cli_get_params(
     [
         'help' => false,
         'course' => '',
-        'course-format' => ''
+        'course-format' => '',
     ], [
-        'h' => 'help'
+        'h' => 'help',
     ]
 );
 
@@ -65,11 +65,11 @@ help;
 $courses = [];
 $select = [
     'format != :cards_format',
-    'id != :site_id'
+    'id != :site_id',
 ];
 $params = [
     'cards_format' => 'cards',
-    'site_id' => SITEID
+    'site_id' => SITEID,
 ];
 
 if ($options['course']) {

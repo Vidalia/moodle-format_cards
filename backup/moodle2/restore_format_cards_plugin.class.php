@@ -14,6 +14,8 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+use format_cards\section_break;
+
 defined('MOODLE_INTERNAL') || die();
 
 require_once(__DIR__ . "/../../lib.php");
@@ -22,7 +24,7 @@ require_once(__DIR__ . "/../../lib.php");
  * Specialised restore logic for format_cards. Handles restoring images used for each card
  *
  * @package     format_cards
- * @copyright   2022 University of Essex
+ * @copyright   2024 University of Essex
  * @author      John Maydew <jdmayd@essex.ac.uk>
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -34,19 +36,71 @@ class restore_format_cards_plugin extends restore_format_plugin {
      *
      * @return restore_path_element[]
      */
-    public function define_section_plugin_structure() {
+    public function define_section_plugin_structure(): array {
+
+        $target = $this->step->get_task()->get_target();
+
+        // If we're backing up into an existing course, but want to empty it out first,
+        // make sure we delete all the section breaks before continuing.
+        if ($target == backup::TARGET_CURRENT_DELETING
+            || $target == backup::TARGET_EXISTING_DELETING) {
+
+            $breaks = section_break::get_breaks_for_course($this->step->get_task()->get_courseid());
+
+            foreach ($breaks as $break) {
+                $break->delete();
+            }
+        }
 
         $this->add_related_files('format_cards', FORMAT_CARDS_FILEAREA_IMAGE, null);
-        return [ new restore_path_element('cards', $this->get_pathfor('/cards')) ];
+
+        return [
+            // Keep this for backwards compatibility with previous versions.
+            new restore_path_element('cards', $this->get_pathfor('/cards')),
+            new restore_path_element('cardimage', $this->get_pathfor('/cardimage')),
+            new restore_path_element('sectionbreak', $this->get_pathfor('/sectionbreak')),
+        ];
+    }
+
+    /**
+     * Process an individual section break.
+     *
+     * @param array $data
+     * @return void
+     */
+    public function process_sectionbreak(array $data): void {
+        $courseid = $this->step->get_task()->get_courseid();
+
+        $break = section_break::get_record([ 'courseid' => $courseid, 'section' => $data['section'] ], IGNORE_MISSING);
+
+        // Does this section already exist?
+        if ($break !== false) {
+            $break->set('name', $data['name']);
+        } else {
+            $break = new section_break(0, (object) $data);
+            $break->set('courseid', $courseid);
+        }
+
+        $break->save();
     }
 
     /**
      * Dummy method
      *
-     * @param mixed $data
+     * @param array $data
      * @return void
      */
-    public function process_cards($data) {
+    public function process_cardimage(array $data): void {
+        // No-op.
+    }
+
+    /**
+     * Dummy method
+     *
+     * @param array $data
+     * @return void
+     */
+    public function process_cards(array $data) {
         // No-op.
     }
 
@@ -61,7 +115,7 @@ class restore_format_cards_plugin extends restore_format_plugin {
      * @throws file_exception
      * @throws stored_file_creation_exception
      */
-    public function after_restore_section() {
+    public function after_restore_section(): void {
         global $DB;
         $data = $this->connectionpoint->get_data();
 
@@ -77,7 +131,7 @@ class restore_format_cards_plugin extends restore_format_plugin {
         $newcourseid = $this->step->get_task()->get_courseid();
         $newsectionid = $DB->get_field('course_sections', 'id', [
             'course' => $newcourseid,
-            'section' => $oldsectionnum
+            'section' => $oldsectionnum,
         ]);
 
         if (!$newsectionid) {
@@ -98,7 +152,7 @@ class restore_format_cards_plugin extends restore_format_plugin {
      * @throws file_exception
      * @throws stored_file_creation_exception
      */
-    private static function move_section_image(int $newcourseid, int $oldsectionid, int $newsectionid) {
+    private static function move_section_image(int $newcourseid, int $oldsectionid, int $newsectionid): void {
         $filestorage = get_file_storage();
         $context = context_course::instance($newcourseid);
 
@@ -160,9 +214,7 @@ class restore_format_cards_plugin extends restore_format_plugin {
         }
 
         $movedimage = $filestorage->create_file_from_storedfile(
-            [
-                'itemid' => $newsectionid
-            ],
+            [ 'itemid' => $newsectionid ],
             $restoredimage
         );
 
@@ -178,5 +230,14 @@ class restore_format_cards_plugin extends restore_format_plugin {
                 $oldsectionid
             );
         }
+    }
+
+    /**
+     * All the other cool format plugins have this.
+     *
+     * @return void
+     */
+    protected function after_execute_structure(): void {
+        // No-op.
     }
 }

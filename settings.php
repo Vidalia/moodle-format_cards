@@ -18,7 +18,7 @@
  * Administrative settings
  *
  * @package     format_cards
- * @copyright   2022 University of Essex
+ * @copyright   2024 University of Essex
  * @author      John Maydew <jdmayd@essex.ac.uk>
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -46,7 +46,7 @@ if ($hassiteconfig) {
         FORMAT_CARDS_SECTION0_COURSEPAGE,
         [
             FORMAT_CARDS_SECTION0_COURSEPAGE => get_string('form:course:section0:coursepage', 'format_cards'),
-            FORMAT_CARDS_SECTION0_ALLPAGES => get_string('form:course:section0:allpages', 'format_cards')
+            FORMAT_CARDS_SECTION0_ALLPAGES => get_string('form:course:section0:allpages', 'format_cards'),
         ]
     ));
 
@@ -58,7 +58,17 @@ if ($hassiteconfig) {
             FORMAT_CARDS_SECTIONNAVIGATION_NONE => get_string('form:course:sectionnavigation:none', 'format_cards'),
             FORMAT_CARDS_SECTIONNAVIGATION_TOP => get_string('form:course:sectionnavigation:top', 'format_cards'),
             FORMAT_CARDS_SECTIONNAVIGATION_BOTTOM => get_string('form:course:sectionnavigation:bottom', 'format_cards'),
-            FORMAT_CARDS_SECTIONNAVIGATION_BOTH => get_string('form:course:sectionnavigation:both', 'format_cards')
+            FORMAT_CARDS_SECTIONNAVIGATION_BOTH => get_string('form:course:sectionnavigation:both', 'format_cards'),
+        ]
+    ));
+
+    $settings->add(new admin_setting_configselect('format_cards/sectionnavigationhome',
+        get_string('form:course:sectionnavigationhome', 'format_cards'),
+        get_string('form:course:sectionnavigationhome_help', 'format_cards'),
+        FORMAT_CARDS_SECTIONNAVIGATIONHOME_HIDE,
+        [
+            FORMAT_CARDS_SECTIONNAVIGATIONHOME_HIDE => get_string('form:course:sectionnavigationhome:hide', 'format_cards'),
+            FORMAT_CARDS_SECTIONNAVIGATIONHOME_SHOW => get_string('form:course:sectionnavigationhome:show', 'format_cards'),
         ]
     ));
 
@@ -69,7 +79,7 @@ if ($hassiteconfig) {
         [
             FORMAT_CARDS_ORIENTATION_VERTICAL => get_string('form:course:cardorientation:vertical', 'format_cards'),
             FORMAT_CARDS_ORIENTATION_HORIZONTAL => get_string('form:course:cardorientation:horizontal', 'format_cards'),
-            FORMAT_CARDS_ORIENTATION_SQUARE => get_string('form:course:cardorientation:square', 'format_cards')
+            FORMAT_CARDS_ORIENTATION_SQUARE => get_string('form:course:cardorientation:square', 'format_cards'),
         ]
     ));
 
@@ -79,7 +89,7 @@ if ($hassiteconfig) {
         FORMAT_CARDS_SHOWSUMMARY_SHOW,
         [
             FORMAT_CARDS_SHOWSUMMARY_SHOW => get_string('form:course:showsummary:show', 'format_cards'),
-            FORMAT_CARDS_SHOWSUMMARY_HIDE => get_string('form:course:showsummary:hide', 'format_cards')
+            FORMAT_CARDS_SHOWSUMMARY_HIDE => get_string('form:course:showsummary:hide', 'format_cards'),
         ]
     ));
 
@@ -89,7 +99,7 @@ if ($hassiteconfig) {
         FORMAT_CARDS_SHOWPROGRESS_SHOW,
         [
             FORMAT_CARDS_SHOWPROGRESS_SHOW => get_string('form:course:showprogress:show', 'format_cards'),
-            FORMAT_CARDS_SHOWPROGRESS_HIDE => get_string('form:course:showprogress:hide', 'format_cards')
+            FORMAT_CARDS_SHOWPROGRESS_HIDE => get_string('form:course:showprogress:hide', 'format_cards'),
         ]
     ));
 
@@ -99,7 +109,7 @@ if ($hassiteconfig) {
         FORMAT_CARDS_PROGRESSFORMAT_PERCENTAGE,
         [
             FORMAT_CARDS_PROGRESSFORMAT_COUNT => get_string('form:course:progressformat:count', 'format_cards'),
-            FORMAT_CARDS_PROGRESSFORMAT_PERCENTAGE => get_string('form:course:progressformat:percentage', 'format_cards')
+            FORMAT_CARDS_PROGRESSFORMAT_PERCENTAGE => get_string('form:course:progressformat:percentage', 'format_cards'),
         ]
     ));
 }

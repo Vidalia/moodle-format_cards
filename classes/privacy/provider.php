@@ -22,7 +22,7 @@ use core_privacy\local\metadata\null_provider;
  * Privacy subsystem implementation for format_cards
  *
  * @package     format_cards
- * @copyright   2022 University of Essex
+ * @copyright   2024 University of Essex
  * @author      John Maydew <jdmayd@essex.ac.uk>
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */

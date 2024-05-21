@@ -18,7 +18,7 @@
  * Renders a section break.
  *
  * @package     format_cards
- * @copyright   2022 University of Essex
+ * @copyright   2024 University of Essex
  * @author      John Maydew <jdmayd@essex.ac.uk>
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -42,7 +42,7 @@ use section_info;
  * Renders a section break.
  *
  * @package     format_cards
- * @copyright   2022 University of Essex
+ * @copyright   2024 University of Essex
  * @author      John Maydew <jdmayd@essex.ac.uk>
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -145,7 +145,7 @@ class sectionbreak extends inplace_editable implements named_templatable, render
             [
                 'courseid' => $this->section->course,
                 'sectionid' => $this->section->id,
-                'action' => 'remove'
+                'action' => 'remove',
             ]
         ))->out(false);
         return $data;
