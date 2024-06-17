@@ -31,12 +31,12 @@
         "nextname": "Section 5"
     }
 }}
-<div class="section-navigation navigationtitle d-flex justify-content-between">
+<div id="sectionnavigation-top" class="section-navigation navigationtitle d-flex justify-content-between">
     <div class="prevsection d-flex">
         {{#hasprevious}}
             <a href="{{{previousurl}}}"
                class="btn btn-icon d-flex align-items-center justify-content-center icon-no-margin{{#previoushidden}} text-muted{{/previoushidden}}"
-               title="{{#str}}gotosection, course, {{name}}{{/str}}">
+               title="{{#str}}gotosection, format_cards, {{name}}{{/str}}">
                 <span class="dir-ltr-hide">
                     {{#pix}}t/right, moodle, {{#str}}gotosection, format_cards, {{previousname}}{{/str}}{{/pix}}
                 </span>
@@ -60,7 +60,7 @@
         {{#hasnext}}
             <a href="{{{nexturl}}}"
                class="btn btn-icon d-flex align-items-center justify-content-center icon-no-margin{{#previoushidden}} text-muted{{/previoushidden}}"
-               title="{{#str}}gotosection, course, {{name}}{{/str}}">
+               title="{{#str}}gotosection, format_cards, {{name}}{{/str}}">
                 <span class="dir-rtl-hide">
                     {{#pix}}t/right, moodle, {{#str}}gotosection, format_cards, {{nextname}}{{/str}}{{/pix}}
                 </span>

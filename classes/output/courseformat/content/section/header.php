@@ -83,7 +83,7 @@ class header extends header_base {
         );
 
         // We want to hide the "go to section" link on Moodle 4.4+.
-        if ($CFG->version >= 2024042200 && !$data->controlmenu) {
+        if ($CFG->version >= 2024042200 && (!isset($data->controlmenu) || !$data->controlmenu)) {
             $data->controlmenu = true;
         }
 

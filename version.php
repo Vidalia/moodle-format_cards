@@ -33,4 +33,3 @@ $plugin->maturity = MATURITY_STABLE;
 $plugin->dependencies = [
     "format_topics" => 2022112800,
 ];
-

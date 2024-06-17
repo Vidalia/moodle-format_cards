@@ -259,8 +259,6 @@ class format_cards extends format_topics {
             $customdata['course'] = $this->get_course();
         }
 
-        $form = new editcard_form($action, $customdata);
-
         $draftimageid = file_get_submitted_draft_itemid('image');
         file_prepare_draft_area(
             $draftimageid,
@@ -270,9 +268,9 @@ class format_cards extends format_topics {
             $customdata['cs']->id
         );
 
-        $form->set_data([ 'image' => $draftimageid ]);
+        $customdata['image'] = $draftimageid;
 
-        return $form;
+        return new editcard_form($action, $customdata);
     }
 
     /**

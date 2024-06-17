@@ -43,10 +43,12 @@
         {{#component}}
             <span class="inplaceeditable inplaceeditable-{{type}}">
                 <a href="{{deletebreakurl}}"
-                   class="quickeditlink aalink"
-                   title="{{#str}}section:break:remove,format_cards{{/str}}">
+                   class="quickeditlink aalink">
                     <span class="quickediticon visibleifjs">
-                        {{#pix}}i/trash{{/pix}}
+                        {{#pix}} i/trash, core, {{#str}}section:break:remove,format_cards{{/str}}{{/pix}}
+                    </span>
+                    <span class="sr-only">
+                        {{#str}} section:break:remove,format_cards {{/str}}
                     </span>
                 </a>
             </span>

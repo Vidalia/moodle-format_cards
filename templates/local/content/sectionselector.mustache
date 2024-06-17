@@ -32,12 +32,12 @@
         "selector": "<select><option>Section 4</option></select>"
     }
 }}
-<div class="section-navigation mdl-bottom d-flex justify-content-between">
+<div id="sectionnavigation-bottom" class="section-navigation mdl-bottom d-flex justify-content-between">
     <div class="prevsection">
         {{#hasprevious}}
             <a href="{{{previousurl}}}"
                class="btn btn-icon d-flex align-items-center justify-content-center icon-no-margin{{#previoushidden}} text-muted{{/previoushidden}}"
-               title="{{#str}}gotosection, course, {{name}}{{/str}}">
+               title="{{#str}}gotosection, format_cards, {{name}}{{/str}}">
                 <span class="dir-ltr-hide">
                     {{#pix}}t/right, moodle, {{#str}}gotosection, format_cards, {{previousname}}{{/str}}{{/pix}}
                 </span>
@@ -64,7 +64,7 @@
         {{#hasnext}}
             <a href="{{{nexturl}}}"
                class="btn btn-icon d-flex align-items-center justify-content-center icon-no-margin{{#previoushidden}} text-muted{{/previoushidden}}"
-               title="{{#str}}gotosection, course, {{name}}{{/str}}">
+               title="{{#str}}gotosection, format_cards, {{name}}{{/str}}">
                 <span class="dir-rtl-hide">
                     {{#pix}}t/right, moodle, {{#str}}gotosection, format_cards, {{nextname}}{{/str}}{{/pix}}
                 </span>
