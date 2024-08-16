@@ -19,7 +19,7 @@ Feature: Cards can have images
     And I am on "C1" course homepage with editing mode off
     Then "//div[contains(@style, 'test_image.png')]" "xpath_element" should exist in the "1" "format_cards > card"
 
-  @_file_upload @javscript @regression
+  @_file_upload @javascript @regression
   Scenario: Images don't disappear when section is edited
     Given the following "user preferences" exist:
       | user  | preference  | value     |
