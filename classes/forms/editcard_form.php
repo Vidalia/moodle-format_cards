@@ -72,5 +72,8 @@ class editcard_form extends editsection_form {
             ]
         );
 
+        if (array_key_exists('image', $this->_customdata)) {
+            $form->setDefault('image', $this->_customdata['image']);
+        }
     }
 }
