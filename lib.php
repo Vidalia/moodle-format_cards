@@ -669,32 +669,39 @@ class format_cards extends format_topics {
     public function get_view_url($section, $options = []): moodle_url {
         global $CFG;
 
-        // If there's no section defined, just return the base course URL.
-        $base = new moodle_url("/course/view.php", [ 'id' => $this->get_course()->id ]);
-
-        if (!$section) {
-            return $base;
-        }
-
-        if (is_object($section) || $section instanceof section_info) {
-            $sectionnum = $section->section;
+        // Try and get the section's position in the course.
+        if (array_key_exists('sr', $options) && is_int($options['sr'])) {
+            $sectionno = $options['sr'];
+        } else if (is_object($section)) {
+            $sectionno = $section->section;
         } else {
-            $sectionnum = $section;
+            $sectionno = $section;
         }
 
-        // How sections are displayed has changed in Moodle 4.4+. Sections should use the /section.php
-        // URL instead of adding a ?section= parameter to the course view.
-        if ($CFG->version < 2024042200) {
-            $base->param('section', $sectionnum);
-
-            return $base;
-        } else {
-            $sectioninfo = ($section instanceof section_info)
-                ? $section
-                : $this->get_section($sectionnum);
-
-            return new moodle_url("/course/section.php", [ 'id' => $sectioninfo->id ]);
+        // If there's no section number, the URL can only be the base course URL.
+        if (empty($sectionno)) {
+            return new moodle_url('/course/view.php', [ 'id' => $this->get_course()->id ]);
         }
+
+        // We've followed this link from a navigation menu, so display the individual section page.
+        if (!empty($options['navigation']) || array_key_exists('sr', $options)) {
+
+            // Moodle < 4.4 doesn't use the /course/section.php URL's.
+            if ($CFG->version < 2024042200) {
+                return new moodle_url(
+                    '/course/view.php',
+                    [ 'id' => $this->get_course()->id, 'section' => $sectionno ]
+                );
+            }
+
+            $sectioninfo = $this->get_section($sectionno);
+            return new moodle_url('/course/section.php', [ 'id' => $sectioninfo->id ]);
+        }
+
+        return new moodle_url(
+            '/course/view.php',
+            [ 'id' => $this->get_course()->id, 'section' => $sectionno ]
+        );
     }
 
     /**
