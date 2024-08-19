@@ -7,7 +7,7 @@ Feature: Cards can have images
   Background:
     Given the following "courses" exist:
       | fullname | shortname | format  | numsections |
-      | Course 1 | C1        | cards   | 1           |
+      | Course 1 | C1        | cards   | 2           |
     And I am logged in as "admin"
 
   @_file_upload @javascript
@@ -28,6 +28,7 @@ Feature: Cards can have images
     When I edit the section "1"
     And I upload "course/format/cards/tests/fixtures/test_image.png" file to "Image" filemanager
     And I press "Save changes"
+    And I am on "Course 1" course homepage
     And I edit the section "1"
     And I set the section description to "This section has a summary!"
     And I press "Save changes"
