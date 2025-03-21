@@ -94,13 +94,15 @@
 {{^showascard}}
     <li id="section-{{num}}"
         class="section course-section main {{#onlysummary}} section-summary {{/onlysummary}} clearfix
-            {{#ishidden}} hidden {{/ishidden}} {{#iscurrent}} current {{/iscurrent}}
+            {{#ishidden}} hidden {{/ishidden}} {{#iscurrent}}{{^displayonesection}} current {{/displayonesection}}{{/iscurrent}}
             {{#isstealth}} orphaned {{/isstealth}}"
         data-sectionid="{{num}}"
-        data-sectionreturnid="{{sectionreturnid}}"
+        data-sectionreturnnum="{{sectionreturnnum}}"
         data-for="section"
         data-id="{{id}}"
         data-number="{{num}}"
+        data-sectionname="{{sectionname}}"
+        {{#isstealth}} data-orphan="true" {{/isstealth}}
     >
         {{#addsectionbreak}}
             {{$ format_cards/local/content/section/add-break }}
@@ -112,11 +114,7 @@
                 {{> format_cards/local/content/section/break }}
             {{/format_cards/local/content/section/break}}
         {{/sectionbreak}}
-        <div class="course-section-header d-flex"
-             data-for="section_title"
-             data-id="{{id}}"
-             data-number="{{num}}"
-        >
+        <div class="section-item">
             {{$ core_courseformat/local/content/section/content }}
                 {{> core_courseformat/local/content/section/content }}
             {{/ core_courseformat/local/content/section/content }}
