@@ -28,6 +28,7 @@ namespace format_cards\output\courseformat\content;
 use completion_info;
 use core_courseformat\base as course_format;
 use format_cards\output\courseformat\content\section\sectionbreak;
+use format_cards\versionable_template;
 use format_topics\output\courseformat\content\section as section_base;
 use moodle_exception;
 use moodle_url;
@@ -44,6 +45,7 @@ use stdClass;
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class section extends section_base {
+    use versionable_template;
 
     /**
      * @var sectionbreak Section break renderer
@@ -98,6 +100,8 @@ class section extends section_base {
         $course = $this->format->get_course();
         $data = parent::export_for_template($output);
         $data->classes = [];
+
+        $this->add_version_variables($data);
 
         if (object_property_exists($data, "hiddenfromstudents")
             && $data->hiddenfromstudents) {

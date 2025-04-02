@@ -79,11 +79,13 @@
         "cmcontrols": "[Add an activity or resource]",
         "iscoursedisplaymultipage": true,
         "sectionreturnid": 0,
+        "sectionreturnnum": 0,
         "contentcollapsed": false,
         "insertafter": true,
         "numsections": 42,
         "sitehome": false,
-        "highlightedlabel" : "Highlighted"
+        "highlightedlabel": "Highlighted",
+        "moodle405orlater": true
     }
 }}
 {{#showascard}}
@@ -94,13 +96,16 @@
 {{^showascard}}
     <li id="section-{{num}}"
         class="section course-section main {{#onlysummary}} section-summary {{/onlysummary}} clearfix
-            {{#ishidden}} hidden {{/ishidden}} {{#iscurrent}} current {{/iscurrent}}
+            {{#ishidden}} hidden {{/ishidden}} {{#iscurrent}}{{^displayonesection}} current {{/displayonesection}}{{/iscurrent}}
             {{#isstealth}} orphaned {{/isstealth}}"
         data-sectionid="{{num}}"
         data-sectionreturnid="{{sectionreturnid}}"
+        data-sectionreturnnum="{{sectionreturnnum}}"
         data-for="section"
         data-id="{{id}}"
         data-number="{{num}}"
+        data-sectionname="{{sectionname}}"
+        {{#isstealth}} data-orphan="true" {{/isstealth}}
     >
         {{#addsectionbreak}}
             {{$ format_cards/local/content/section/add-break }}
@@ -112,11 +117,17 @@
                 {{> format_cards/local/content/section/break }}
             {{/format_cards/local/content/section/break}}
         {{/sectionbreak}}
+
+        {{#moodle405orlater}}
+        <div class="section-item mb-4">
+        {{/moodle405orlater}}
+        {{^moodle405orlater}}
         <div class="course-section-header d-flex"
              data-for="section_title"
              data-id="{{id}}"
              data-number="{{num}}"
         >
+        {{/moodle405orlater}}
             {{$ core_courseformat/local/content/section/content }}
                 {{> core_courseformat/local/content/section/content }}
             {{/ core_courseformat/local/content/section/content }}
