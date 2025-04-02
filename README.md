@@ -10,14 +10,21 @@ The cards format is an extension of the default Topics format to make it easier 
 - Easily import images used in the grid format
 
 ## Installation
-The cards format requires Moodle 4.0 or later, and for the default topics format to be present on your site.
-There's no special installation steps or instructions, just install it as you would any other plugin
+The cards format only requires a version of Moodle still receiving general or security support. You can check whether
+your version of Moodle is supported by looking at the release calendar https://moodledev.io/general/releases
+
+You must still have the default topics format installed on your site. There are no special installation steps, just
+install as you would any other plugin.
 
 ### Install from Moodle.org
 - Download .zip file from https://moodle.org/plugins/format_cards
 - Navigate to `/moodle/root/course/format`
 - Extract the .zip to the current directory
 - Go to your Moodle admin control panel, or `php /moodle/root/admin/cli/upgrade.php`
+
+### Install with Composer
+- Navigate to `/moodle/root/`
+- `composer require vidalia/moodle-format_cards`
 
 ### Install from git
 - Navigate to your Moodle root folder
