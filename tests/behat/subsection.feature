@@ -38,7 +38,7 @@ Feature: Subsection support
     When I click on "Subsection1" "link" in the "Subsection1" "activity"
     Then I should see "Page1 in Subsection1" in the "region-main" "region"
 
-  @javscript @moodle_405_and_after
+  @javascript @moodle_405_and_after
   Scenario: The section navigation region for a subsection contains a button to go to the parent section
     Given the following config values are set as admin:
       | sectionnavigation | 4 | format_cards |
@@ -54,7 +54,7 @@ Feature: Subsection support
     And I click on "Go to Section 1" "icon" in the "sectionnavigation-bottom" "region"
     Then "Subsection1" "activity" should exist
 
-  @javscript @moodle_405_and_after
+  @javascript @moodle_405_and_after
   Scenario Outline: I can navigate between subsections
     Given the following config values are set as admin:
       | sectionnavigation | 4 | format_cards |
