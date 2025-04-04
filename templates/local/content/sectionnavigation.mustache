@@ -22,6 +22,7 @@
     Example context (json):
     {
         "hasprevious": true,
+        "hasparent": false,
         "previousurl": "#",
         "larrow": "&#x25C4;",
         "previousname": "Section 3",
@@ -36,7 +37,8 @@
         {{#hasprevious}}
             <a href="{{{previousurl}}}"
                class="btn btn-icon d-flex align-items-center justify-content-center icon-no-margin{{#previoushidden}} text-muted{{/previoushidden}}"
-               title="{{#str}}gotosection, format_cards, {{name}}{{/str}}">
+               data-action="previoussection"
+               title="{{#str}}gotosection, format_cards, {{previousname}}{{/str}}">
                 <span class="dir-ltr-hide">
                     {{#pix}}t/right, moodle, {{#str}}gotosection, format_cards, {{previousname}}{{/str}}{{/pix}}
                 </span>
@@ -48,9 +50,21 @@
                 </span>
             </a>
         {{/hasprevious}}
+        {{#hasparent}}
+            <a href="{{{parenturl}}}"
+               class="btn btn-icon d-flex align-items-center justify-content-center icon-no-margin{{#parenthidden}} text-muted{{/parenthidden}}"
+               data-action="parentsection"
+               title="{{#str}}gotosection, format_cards, {{parentname}}{{/str}}">
+                {{#pix}}t/up, moodle, {{#str}}gotosection, format_cards, {{parentname}}{{/str}}{{/pix}}
+                <span class="sr-only">
+                    {{#str}}gotosection, format_cards, {{parentname}}{{/str}}
+                </span>
+            </a>
+        {{/hasparent}}
         {{#showcoursehome}}
             <a href="{{{courseurl}}}"
                class="btn btn-icon d-flex align-items-center justify-content-center icon-no-margin"
+               data-action="coursehomebutton"
                title="{{#str}} course {{/str}}">
                 {{#pix}} i/home, core, {{#str}} maincoursepage {{/str}} {{/pix}}
             </a>
@@ -59,8 +73,9 @@
     <div class="nextsection">
         {{#hasnext}}
             <a href="{{{nexturl}}}"
-               class="btn btn-icon d-flex align-items-center justify-content-center icon-no-margin{{#previoushidden}} text-muted{{/previoushidden}}"
-               title="{{#str}}gotosection, format_cards, {{name}}{{/str}}">
+               class="btn btn-icon d-flex align-items-center justify-content-center icon-no-margin{{#nexthidden}} text-muted{{/nexthidden}}"
+               data-action="nextsection"
+               title="{{#str}}gotosection, format_cards, {{nextname}}{{/str}}">
                 <span class="dir-rtl-hide">
                     {{#pix}}t/right, moodle, {{#str}}gotosection, format_cards, {{nextname}}{{/str}}{{/pix}}
                 </span>
