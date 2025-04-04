@@ -125,7 +125,7 @@ jobs:
         id: behat
         if: ${{ !cancelled() }}
         run: |
-          exclude_tags=$([ $(echo ${{ matrix.moodle-branch }} | cut -d '_' -f 2) -lt 405 ] && echo "&&~@moodle_405_and_after")
+          exclude_tags=$([ $(echo ${{ matrix.moodle-branch }} | cut -d '_' -f 2) -lt 405 ] && echo "&&~@moodle_405_and_after" || echo "")
           moodle-plugin-ci behat --profile chrome --tags "@format_cards$exclude_tags"
 
       - name: Upload Behat Faildump
