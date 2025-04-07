@@ -18,15 +18,15 @@ Feature: Subsection support
       | teacher1 | C1     | editingteacher |
       | student1 | C1     | student        |
     And the following "activities" exist:
-      | activity   | name                 | course | idnumber | section | visible |
-      | subsection | Subsection1          | C1     | sub1     | 1       | 1       |
-      | page       | Page1 in Subsection1 | C1     | page11   | 4       | 1       |
-      | subsection | Subsection2          | C1     | sub2     | 1       | 0       |
-      | page       | Page in Subsection2  | C1     | page22   | 5       | 1       |
-      | subsection | Subsection3          | C1     | sub3     | 1       | 1       |
-      | page       | Page in Subsection3  | C1     | page33   | 6       | 1       |
-      | data       | New database         | C1     | data1    | 3       | 1       |
-      | page       | New page             | C1     | page1    | 3       | 1       |
+      | activity   | name                | course | idnumber | section | visible |
+      | subsection | Subsection1         | C1     | sub1     | 1       | 1       |
+      | page       | Page in Subsection1 | C1     | page11   | 4       | 1       |
+      | subsection | Subsection2         | C1     | sub2     | 1       | 0       |
+      | page       | Page in Subsection2 | C1     | page22   | 5       | 1       |
+      | subsection | Subsection3         | C1     | sub3     | 1       | 1       |
+      | page       | Page in Subsection3 | C1     | page33   | 6       | 1       |
+      | data       | New database        | C1     | data1    | 3       | 1       |
+      | page       | New page            | C1     | page1    | 3       | 1       |
 
   @javascript @moodle_405_and_after
   Scenario: A user can view and navigate to a subsection displayed on a course page
@@ -36,7 +36,7 @@ Feature: Subsection support
     When I am on the "Course 1 > Section 1" "format_cards > section" page
     Then I should see "Subsection1" in the "region-main" "region"
     When I click on "Subsection1" "link" in the "Subsection1" "activity"
-    Then I should see "Page1 in Subsection1" in the "region-main" "region"
+    Then I should see "Page in Subsection1" in the "region-main" "region"
 
   @javascript @moodle_405_and_after
   Scenario: The section navigation region for a subsection contains a button to go to the parent section
@@ -64,23 +64,23 @@ Feature: Subsection support
 
     When I click on "Subsection1" "link" in the "Subsection1" "activity"
     Then ".prevsection [data-action=previoussection]" "css_element" should not exist
-    And I click on "Go to section <subsection after subsection1>" "icon" in the "sectionnavigation-top" "region"
+    And I click on "Go to section <subsection after subsection1>" "link" in the "sectionnavigation-top" "region"
     Then "Page in <subsection after subsection1>" "activity" should exist in the "region-main" "region"
 
     When I am on the "Course 1 > Section 1" "format_cards > section" page
     And I click on "Subsection1" "link" in the "Subsection1" "activity"
-    And I click on "Go to section <subsection after subsection1>" "icon" in the "sectionnavigation-bottom" "region"
+    And I click on "Go to section <subsection after subsection1>" "link" in the "sectionnavigation-bottom" "region"
     Then "Page in <subsection after subsection1>" "activity" should exist in the "region-main" "region"
 
     When I am on the "Course 1 > Section 1" "format_cards > section" page
     And I click on "Subsection3" "link" in the "Subsection3" "activity"
     Then ".nextsection [data-action=nextsection]" "css_element" should not exist
-    And I click on "Go to section <subsection before subsection3>" "icon" in the "sectionnavigation-top" "region"
+    And I click on "Go to section <subsection before subsection3>" "link" in the "sectionnavigation-top" "region"
     Then "Page in <subsection before subsection3>" "activity" should exist in the "region-main" "region"
 
     When I am on the "Course 1 > Section 1" "format_cards > section" page
     And I click on "Subsection3" "link" in the "Subsection3" "activity"
-    And I click on "Go to section <subsection before subsection3>" "icon" in the "sectionnavigation-bottom" "region"
+    And I click on "Go to section <subsection before subsection3>" "link" in the "sectionnavigation-bottom" "region"
     Then "Page in <subsection before subsection3>" "activity" should exist in the "region-main" "region"
 
     Examples:
