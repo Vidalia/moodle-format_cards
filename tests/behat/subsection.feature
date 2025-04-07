@@ -47,11 +47,11 @@ Feature: Subsection support
     Then "[data-action=parentsection]" "css_element" should not exist in the "sectionnavigation-top" "region"
     And "[data-action=parentsection]" "css_element" should not exist in the "sectionnavigation-bottom" "region"
     When I click on "Subsection1" "link" in the "Subsection1" "activity"
-    Then "Go to Section 1" "icon" should exist in the "sectionnavigation-top" "region"
-    And "Go to Section 1" "icon" should exist in the "sectionnavigation-bottom" "region"
-    When I click on "Go to Section 1" "icon" in the "sectionnavigation-top" "region"
+    Then "Go to section Section 1" "icon" should exist in the "sectionnavigation-top" "region"
+    And "Go to section Section 1" "icon" should exist in the "sectionnavigation-bottom" "region"
+    When I click on "Go to section Section 1" "icon" in the "sectionnavigation-top" "region"
     And I click on "Subsection1" "link" in the "Subsection1" "activity"
-    And I click on "Go to Section 1" "icon" in the "sectionnavigation-bottom" "region"
+    And I click on "Go to section Section 1" "icon" in the "sectionnavigation-bottom" "region"
     Then "Subsection1" "activity" should exist
 
   @javascript @moodle_405_and_after
@@ -64,23 +64,23 @@ Feature: Subsection support
 
     When I click on "Subsection1" "link" in the "Subsection1" "activity"
     Then ".prevsection [data-action=previoussection]" "css_element" should not exist
-    And I click on "Go to <subsection after subsection1>" "icon" in the "sectionnavigation-top" "region"
+    And I click on "Go to section <subsection after subsection1>" "icon" in the "sectionnavigation-top" "region"
     Then "Page in <subsection after subsection1>" "activity" should exist in the "region-main" "region"
 
     When I am on the "Course 1 > Section 1" "format_cards > section" page
     And I click on "Subsection1" "link" in the "Subsection1" "activity"
-    And I click on "Go to <subsection after subsection1>" "icon" in the "sectionnavigation-bottom" "region"
+    And I click on "Go to section <subsection after subsection1>" "icon" in the "sectionnavigation-bottom" "region"
     Then "Page in <subsection after subsection1>" "activity" should exist in the "region-main" "region"
 
     When I am on the "Course 1 > Section 1" "format_cards > section" page
     And I click on "Subsection3" "link" in the "Subsection3" "activity"
     Then ".nextsection [data-action=nextsection]" "css_element" should not exist
-    And I click on "Go to <subsection before subsection3>" "icon" in the "sectionnavigation-top" "region"
+    And I click on "Go to section <subsection before subsection3>" "icon" in the "sectionnavigation-top" "region"
     Then "Page in <subsection before subsection3>" "activity" should exist in the "region-main" "region"
 
     When I am on the "Course 1 > Section 1" "format_cards > section" page
     And I click on "Subsection3" "link" in the "Subsection3" "activity"
-    And I click on "Go to <subsection before subsection3>" "icon" in the "sectionnavigation-bottom" "region"
+    And I click on "Go to section <subsection before subsection3>" "icon" in the "sectionnavigation-bottom" "region"
     Then "Page in <subsection before subsection3>" "activity" should exist in the "region-main" "region"
 
     Examples:
