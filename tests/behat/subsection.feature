@@ -87,3 +87,23 @@ Feature: Subsection support
       | user     | should or not | subsection after subsection1 | subsection before subsection3 |
       | teacher1 | should        | Subsection2                  | Subsection2                   |
       | student1 | should not    | Subsection3                  | Subsection1                   |
+
+  @moodle_405_and_after
+  Scenario Outline: I can choose for subsections to be rendered as cards instead
+    Given the following config values are set as admin:
+      | subsectionsascards | <adminvalue> | format_cards |
+    And I am on the "Course 1" "course editing" page logged in as "admin"
+    And I expand all fieldsets
+    And I set the field "Subsection style" to "<coursevalue>"
+    And I click on "Save and display" "button"
+    When I am on the "Course 1 > Section 1" "format_cards > section" page
+    Then "Subsection1" "format_cards > card" <should or not> exist
+
+    Examples:
+      | adminvalue | coursevalue              | should or not |
+      | 1          | Default (As cards)       | should        |
+      | 1          | As cards                 | should        |
+      | 1          | As an activity           | should not    |
+      | 2          | Default (As an activity) | should not    |
+      | 2          | As cards                 | should        |
+      | 2          | As an activity           | should not    |

@@ -53,6 +53,8 @@ define('FORMAT_CARDS_SECTIONNAVIGATION_BOTTOM', 3);
 define('FORMAT_CARDS_SECTIONNAVIGATION_BOTH', 4);
 define('FORMAT_CARDS_SECTIONNAVIGATIONHOME_HIDE', '1');
 define('FORMAT_CARDS_SECTIONNAVIGATIONHOME_SHOW', '2');
+define('FORMAT_CARDS_SUBSECTIONS_AS_CARDS', 1);
+define('FORMAT_CARDS_SUBSECTIONS_AS_ACTIVITIES', 2);
 
 /**
  * Course format main class
@@ -190,6 +192,13 @@ class format_cards extends format_topics {
         ];
 
         $options['progressformat'] = $createselect('progressformat', $progressformatoptions, $defaults->progressformat);
+
+        $subsectionoptions = [
+            FORMAT_CARDS_SUBSECTIONS_AS_CARDS => new lang_string('form:course:subsectionsascards:cards', 'format_cards'),
+            FORMAT_CARDS_SUBSECTIONS_AS_ACTIVITIES => new lang_string('form:course:subsectionsascards:activity', 'format_cards'),
+        ];
+
+        $options['subsectionsascards'] = $createselect('subsectionsascards', $subsectionoptions, $defaults->subsectionsascards);
 
         return $options;
     }

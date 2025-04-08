@@ -18,6 +18,7 @@ namespace format_cards\output\courseformat\content;
 
 use core_courseformat\base as course_format;
 use core_courseformat\output\local\content\delegatedsection as delegatedsection_base;
+use moodle_exception;
 use renderer_base;
 use section_info;
 use stdClass;
@@ -26,7 +27,7 @@ use stdClass;
  * Renders a delegated / nested section
  *
  * @package     format_cards
- * @copyright   2024 University of Essex
+ * @copyright   2025 University of Essex
  * @author      John Maydew <jdmayd@essex.ac.uk>
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -50,13 +51,26 @@ class delegatedsection extends delegatedsection_base {
     }
 
     /**
+     * If we're in edit mode, or the user has chosen to display subsections as activities, we
+     * want to just use the default renderer.
+     *
+     * @return bool
+     */
+    protected function use_default_renderer(): bool {
+        return $this->format->show_editor()
+            || $this->format->get_format_option('subsectionsascards') == FORMAT_CARDS_SUBSECTIONS_AS_ACTIVITIES;
+    }
+
+    /**
      * Is this considered a stealth section
      *
      * @return bool
      */
     #[\Override]
     public function is_stealth(): bool {
-        return $this->sectionoutput->is_stealth();
+        return $this->use_default_renderer()
+            ? parent::is_stealth()
+            : $this->sectionoutput->is_stealth();
     }
 
     /**
@@ -66,7 +80,9 @@ class delegatedsection extends delegatedsection_base {
      */
     #[\Override]
     public function hide_title(): void {
-        $this->sectionoutput->hide_title();
+        $this->use_default_renderer()
+            ? parent::hide_title()
+            : $this->sectionoutput->hide_title();
     }
 
     /**
@@ -76,7 +92,9 @@ class delegatedsection extends delegatedsection_base {
      */
     #[\Override]
     public function hide_controls(): void {
-        $this->sectionoutput->hide_controls();
+        $this->use_default_renderer()
+            ? parent::hide_controls()
+            : $this->sectionoutput->hide_controls();
     }
 
     /**
@@ -88,7 +106,9 @@ class delegatedsection extends delegatedsection_base {
      */
     #[\Override]
     protected function add_header_data(stdClass &$data, renderer_base $output): bool {
-        return $this->sectionoutput->add_header_data($data, $output);
+        return $this->use_default_renderer()
+            ? parent::add_header_data($data, $output)
+            : $this->sectionoutput->add_header_data($data, $output);
     }
 
     /**
@@ -100,7 +120,9 @@ class delegatedsection extends delegatedsection_base {
      */
     #[\Override]
     protected function add_cm_data(stdClass &$data, renderer_base $output): bool {
-        return $this->sectionoutput->add_cm_data($data, $output);
+        return $this->use_default_renderer()
+            ? parent::add_cm_data($data, $output)
+            : $this->sectionoutput->add_cm_data($data, $output);
     }
 
     /**
@@ -112,7 +134,9 @@ class delegatedsection extends delegatedsection_base {
      */
     #[\Override]
     protected function add_availability_data(stdClass &$data, renderer_base $output): bool {
-        return $this->sectionoutput->add_availability_data($data, $output);
+        return $this->use_default_renderer()
+            ? parent::add_availability_data($data, $output)
+            : $this->sectionoutput->add_availability_data($data, $output);
     }
 
     /**
@@ -124,7 +148,9 @@ class delegatedsection extends delegatedsection_base {
      */
     #[\Override]
     protected function add_visibility_data(stdClass &$data, renderer_base $output): bool {
-        return $this->sectionoutput->add_visibility_data($data, $output);
+        return $this->use_default_renderer()
+            ? parent::add_visibility_data($data, $output)
+            : $this->sectionoutput->add_visibility_data($data, $output);
     }
 
     /**
@@ -136,7 +162,9 @@ class delegatedsection extends delegatedsection_base {
      */
     #[\Override]
     protected function add_editor_data(stdClass &$data, renderer_base $output): bool {
-        return $this->sectionoutput->add_editor_data($data, $output);
+        return $this->use_default_renderer()
+            ? parent::add_editor_data($data, $output)
+            : $this->sectionoutput->add_editor_data($data, $output);
     }
 
     /**
@@ -149,7 +177,27 @@ class delegatedsection extends delegatedsection_base {
      */
     #[\Override]
     protected function add_format_data(stdClass &$data, array $haspartials, renderer_base $output): bool {
-        return $this->sectionoutput->add_format_data($data, $haspartials, $output);
+        return $this->use_default_renderer()
+            ? parent::add_format_data($data, $haspartials, $output)
+            : $this->sectionoutput->add_format_data($data, $haspartials, $output);
+    }
+
+    /**
+     * In editing mode, just use the default template. Otherwise we want to include some of the other context
+     * keys that we generate for a normal section.
+     *
+     * @param renderer_base $output
+     * @return stdClass
+     * @throws moodle_exception
+     */
+    public function export_for_template(renderer_base $output): stdClass {
+        return $this->use_default_renderer()
+            ? parent::export_for_template($output)
+            : (object) array_merge(
+                (array)parent::export_for_template($output),
+                (array)$this->sectionoutput->export_for_template($output)
+            );
+
     }
 
     /**
@@ -157,8 +205,23 @@ class delegatedsection extends delegatedsection_base {
      *
      * @return bool
      */
+    #[\Override]
     protected function is_section_collapsed(): bool {
-        return $this->sectionoutput->is_section_collapsed();
+        return $this->use_default_renderer()
+            ? parent::is_section_collapsed()
+            : $this->sectionoutput->is_section_collapsed();
+    }
+
+    /**
+     * Fetch the template name
+     *
+     * @param renderer_base $renderer
+     * @return string
+     */
+    public function get_template_name(renderer_base $renderer): string {
+        return $this->use_default_renderer()
+            ? parent::get_template_name($renderer)
+            : 'format_cards/local/content/delegatedsection';
     }
 
 }

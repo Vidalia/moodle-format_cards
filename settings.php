@@ -112,4 +112,14 @@ if ($hassiteconfig) {
             FORMAT_CARDS_PROGRESSFORMAT_PERCENTAGE => get_string('form:course:progressformat:percentage', 'format_cards'),
         ]
     ));
+
+    $settings->add(new admin_setting_configselect('format_cards/subsectionsascards',
+        get_string('form:course:subsectionsascards', 'format_cards'),
+        '',
+        FORMAT_CARDS_SUBSECTIONS_AS_ACTIVITIES,
+        [
+            FORMAT_CARDS_SUBSECTIONS_AS_CARDS => get_string('form:course:subsectionsascards:cards', 'format_cards'),
+            FORMAT_CARDS_SUBSECTIONS_AS_ACTIVITIES => get_string('form:course:subsectionsascards:activity', 'format_cards'),
+        ]
+    ));
 }

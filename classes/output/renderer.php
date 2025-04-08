@@ -65,4 +65,6 @@ class renderer extends section_renderer {
         $output = new section($format, $section);
         return $this->render($output);
     }
+
+
 }
