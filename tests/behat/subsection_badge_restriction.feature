@@ -6,6 +6,8 @@ Feature: Subsection cards have a section restriction badge
 
   Background:
     Given I enable "subsection" "mod" plugin
+    And the following config values are set as admin:
+      | subsectionsascards | 1 | format_cards |
     And the following "courses" exist:
       | fullname | shortname | format  | numsections |
       | Course 1 | C1        | cards   | 1           |
