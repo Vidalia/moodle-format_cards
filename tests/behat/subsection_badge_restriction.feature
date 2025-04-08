@@ -22,7 +22,7 @@ Feature: Subsection cards have a section restriction badge
       | subsection | C1     | 1       | sub1     | Subsection1 |
       | subsection | C1     | 1       | sub2     | Subsection2 |
 
-  @javascript
+  @javascript @moodle_405_and_after
   Scenario: Restriction badge is visible
     Given I log in as "teacher1"
     And I am on "Course 1" course homepage with editing mode on
