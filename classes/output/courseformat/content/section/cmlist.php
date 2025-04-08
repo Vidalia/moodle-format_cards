@@ -22,7 +22,7 @@ use html_writer;
 use stdClass;
 
 /**
- * Base class to render a section activity list.
+ * Renders a list of course modules within a section.
  *
  * @package   format_cards
  * @copyright 2025 University of Essex
@@ -50,13 +50,17 @@ class cmlist extends cmlist_base {
             return parent::export_for_template($output);
         }
 
-        // Outside of editing mode, for Moodles 4.5 and later, we want to aggregate all
-        // consecutive subsections into one meta-course module, and render them all together in the
-        // same card deck.
+        // If we're displaying subsections as cards we want to aggregate consecutive subsections together into a
+        // single cmitem. This way they can be rendered together in the same card deck, otherwise all the cards
+        // are rendered vertically.
+        // To do this, we can iterate through the exported cms, pick out any subsections, and then merge consecutive
+        // subsections together.
         $data = parent::export_for_template($output);
 
         $cmcount = count($data->cms);
         $subsectionindex = -1;
+
+        $foundsubsections = [];
 
         for ($i = 0; $i < $cmcount; $i++) {
 
@@ -70,38 +74,36 @@ class cmlist extends cmlist_base {
                 continue;
             }
 
-            // We've found a subsection, mark its index, and continue.
+            // We've found a new subsection. Make a note of it's position and continue to the next cm in the list.
             if ($subsectionindex === -1) {
                 $subsectionindex = $i;
-                $data->cms[$subsectionindex]->cmitem->extraclasses .= ' d-flex card-deck';
+                $foundsubsections[] = $i;
                 continue;
             }
 
-            // At this point, we're looking at a subsection, and we have an index for the first subsection
-            // in this consecutive group. Let's do something really dirty, and merge the altcontents together.
+            // At this point, we're looking at a subsection, and we have an index for another subsection that appears
+            // before it, Take the altcontent for this subsection, append it to the altcontent of the first subsection
+            // in this group, and then remove this item from the list.
             $data->cms[$subsectionindex]->cmitem->cmformat->altcontent .= $cm->cmitem->cmformat->altcontent;
             unset($data->cms[$i]);
         }
 
-        $data->cms = array_values($data->cms);
+        // Return early if there aren't any subsections.
+        if (empty($foundsubsections)) {
+            return $data;
+        }
 
-        $cmcount = count($data->cms);
-        for ($i = 0; $i < $cmcount; $i++) {
-            $cm = $data->cms[$i];
-
-            // We only care about subsection modules.
-            if (!object_property_exists($cm, 'cmitem')
-                || !object_property_exists($cm->cmitem, 'module')
-                || $cm->cmitem->module !== 'subsection') {
-                continue;
-            }
-
-            $data->cms[$i]->cmitem->cmformat->altcontent = html_writer::tag(
+        // For each of the subsection groups we've found, wrap the cards in a card-deck.
+        foreach ($foundsubsections as $index) {
+            $data->cms[$index]->cmitem->cmformat->altcontent = html_writer::tag(
                 'ul',
-                $data->cms[$i]->cmitem->cmformat->altcontent,
+                $data->cms[$index]->cmitem->cmformat->altcontent,
                 [ 'class' => 'card-deck dashboard-card-deck' ]
             );
         }
+
+        // Array indexes should be sequential.
+        $data->cms = array_values($data->cms);
 
         return $data;
     }
