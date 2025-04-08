@@ -33,7 +33,6 @@ Feature: Configurable section navigation
       | 1          | Both                  | should         | should            |
 
   Scenario Outline: Configuring home button visibility at admin and course level
-
     Given the following config values are set as admin:
       | sectionnavigation     | 2            | format_cards |
       | sectionnavigationhome | <adminvalue> | format_cards |

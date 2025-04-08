@@ -176,6 +176,7 @@ class section extends section_base {
      * @return array
      */
     private function get_section_completion(): array {
+        global $CFG;
 
         // Can't do anything if completion is disabled, or we're a guest user.
         if (isguestuser() || !$this->format->get_course()->enablecompletion) {
@@ -196,6 +197,27 @@ class section extends section_base {
 
         // List of course module IDs for this section.
         $sectioncmids = $modinfo->sections[$this->section->section];
+
+        // From Moodle 4.5, we also want to include modules that appear in subsections.
+        if ($CFG->version >= 2024100700) {
+            foreach ($sectioncmids as $cmid) {
+                $cminfo = $modinfo->cms[$cmid];
+
+                if ($cminfo->modname !== 'subsection') {
+                    continue;
+                }
+
+                $subsection = $modinfo->get_section_info_by_component('mod_subsection', $cminfo->instance);
+
+                $subsectioncmids = $modinfo->sections[$subsection->section];
+
+                if (empty($subsectioncmids)) {
+                    continue;
+                }
+
+                array_push($sectioncmids, ...$subsectioncmids);
+            }
+        }
 
         $total = 0;
         $completed = 0;

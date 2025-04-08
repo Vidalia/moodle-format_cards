@@ -77,7 +77,7 @@ final class behat_format_cards extends behat_base {
 
                 // Search for a card by its section title.
                 "//li[contains(@class, 'dashboard-card')][@data-for='section']".
-                "//h3[@class='card-title'][contains(., %locator%)]",
+                "[.//h3[@class='card-title'][contains(., %locator%)]]",
 
                 // Or search for a card by its position.
                 "//li[contains(@class, 'dashboard-card')][@data-for='section'][@data-sectionid=%locator%]",
