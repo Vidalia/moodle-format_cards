@@ -87,9 +87,23 @@ class format_cards extends format_topics {
             return null;
         }
 
-        $course->coursedisplay = COURSE_DISPLAY_MULTIPAGE;
-
         return $course;
+    }
+
+    /**
+     * Display the course in single page mode when we're on the course main page.
+     * Once we're viewing an individual section, display it
+     *
+     * @return int
+     */
+    public function get_course_display(): int {
+        global $PAGE;
+
+        if ($PAGE->pagetype === 'course-section' || $PAGE->pagetype === 'course-view-section-cards') {
+            return parent::get_course_display();
+        }
+
+        return COURSE_DISPLAY_MULTIPAGE;
     }
 
     /**
@@ -104,10 +118,6 @@ class format_cards extends format_topics {
         $options = parent::course_format_options($foreditform);
 
         $defaults = get_config('format_cards');
-
-        // We always show one section per page.
-        $options['coursedisplay']['element_type'] = 'hidden';
-        $options['coursedisplay']['default'] = COURSE_DISPLAY_MULTIPAGE;
 
         $createselect = function (string $name, array $options, int $default, bool $hashelp = false): array {
             $option = [
