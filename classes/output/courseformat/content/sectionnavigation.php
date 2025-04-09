@@ -23,10 +23,11 @@
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+declare(strict_types=1);
+
 namespace format_cards\output\courseformat\content;
 
 use cm_info;
-use context_course;
 use core\exception\coding_exception;
 use core_courseformat\output\local\content\sectionnavigation as sectionnavigation_base;
 use moodle_exception;
@@ -105,7 +106,7 @@ class sectionnavigation extends sectionnavigation_base {
         $modinfo = $this->format->get_modinfo();
 
         foreach ($modinfo->get_section_info_all() as $section) {
-            if ($section->component !== 'mod_subsection') {
+            if ($section->component !== 'mod_subsection' || !$section->uservisible) {
                 continue;
             }
 
@@ -130,37 +131,74 @@ class sectionnavigation extends sectionnavigation_base {
 
         $currentsection = $modinfo->get_section_info($this->sectionno, MUST_EXIST);
 
-        // Nothing to do if the current section isn't a delegated mod_subsection.
+        // If this section isn't a delegated section, all we have to do is make sure it's not the last 'top-level'
+        // section in the navigation tree.
         if (!$currentsection->is_delegated() || $currentsection->component !== 'mod_subsection') {
+            $lasttoplevelsectionnum = -1;
+
+            foreach ($modinfo->get_section_info_all() as $section) {
+                if ($section->is_delegated()) {
+                    continue;
+                }
+
+                if ($section->sectionnum > $lasttoplevelsectionnum) {
+                    $lasttoplevelsectionnum = $section->sectionnum;
+                }
+            }
+
+            // If it is the last top-level section, the "next section" button won't be correct, hierarchically,
+            // so we need to remove it.
+            if ($currentsection->sectionnum === $lasttoplevelsectionnum) {
+                $data->hasnext = false;
+            }
+
             return;
         }
 
         $parentsection = false;
         $ourposition = -1;
 
-        foreach ($modinfo->get_section_info_all() as $sectioninfo) {
+        // In a subsection, we need to find out all of this section's siblings and the parent section.
+        // The only valid navigation targets for the next and previous.
 
-            // Ignore section #0.
-            if ((int) $sectioninfo->sectionnum === 0) {
+        // We need to know the course_module for the current subsection we're viewing.
+        $currentsectioncm = null;
+        foreach ($modinfo->get_cms() as $cm) {
+            if ($cm->modname !== 'subsection') {
                 continue;
             }
 
-            // Does this section contain a mod_subsection where the instanceid matches the itemid of the
-            // subsection we're currently in?
-            foreach ($sectioninfo->get_sequence_cm_infos() as $index => $sibling) {
-                if ((int) $sibling->instance !== (int) $currentsection->itemid) {
+            if ((int) $cm->instance === (int) $currentsection->itemid) {
+                $currentsectioncm = $cm;
+                break;
+            }
+        }
+
+        if (is_null($currentsectioncm)) {
+            throw new coding_exception("No course_module record found for subsection $currentsection->id");
+        }
+
+        // Now we have the course module, we can find the parent section by querying course_sections for the
+        // section where the sequence contains the current section's cmid.
+        foreach ($modinfo->get_section_info_all() as $sectioninfo) {
+
+            $sequencecmids = explode(',', $sectioninfo->sequence);
+            foreach ($sequencecmids as $i => $cmid) {
+                if ((int) $cmid !== (int) $currentsectioncm->id) {
                     continue;
                 }
 
-                $ourposition = $index;
+                $ourposition = $i;
+                break;
             }
 
+            // We didn't find our subsection's CMID in this parent section.
             if ($ourposition === -1) {
                 continue;
             }
 
             $data->hasparent = $sectioninfo->uservisible;
-            $data->parenturl = $this->format->get_view_url($sectioninfo);
+            $data->parenturl = $this->format->get_view_url($sectioninfo,  [ 'navigation' => true ]);
             $data->parentname = $sectioninfo->name;
             $data->parenthidden = !$sectioninfo->visible;
 
@@ -169,7 +207,7 @@ class sectionnavigation extends sectionnavigation_base {
         }
 
         if ($parentsection === false || $ourposition === -1) {
-            throw new coding_exception("Section with ID $currentsection->id is an orphaned subsection");
+            throw new coding_exception("Section with ID $currentsection->id (itemid $currentsection->itemid, cmid $currentsectioncm->id) is an orphaned subsection");
         }
 
         // If we're in a subsection, the previous and next links only make sense if the current section's
@@ -191,7 +229,7 @@ class sectionnavigation extends sectionnavigation_base {
 
             if ($section->uservisible) {
                 $data->hasprevious = true;
-                $data->previousurl = $this->format->get_view_url($section);
+                $data->previousurl = $this->format->get_view_url($section, [ 'navigation' => true ]);
                 $data->previousname = $section->name;
                 $data->previoushidden = !$section->visible;
 
@@ -212,7 +250,7 @@ class sectionnavigation extends sectionnavigation_base {
 
             if ($section->uservisible) {
                 $data->hasnext = true;
-                $data->nexturl = $this->format->get_view_url($section);
+                $data->nexturl = $this->format->get_view_url($section, [ 'navigation' => true ]);
                 $data->nextname = $section->name;
                 $data->nexthidden = !$section->visible;
 

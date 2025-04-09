@@ -71,23 +71,9 @@ class format_cards extends format_topics {
      *
      * @return bool
      */
+    #[\Override]
     public function uses_indentation(): bool {
         return true;
-    }
-
-    /**
-     * Always force the course to display on multiple pages
-     *
-     * @return bool|stdClass|null
-     */
-    public function get_course() {
-        $course = parent::get_course();
-
-        if (is_null($course)) {
-            return null;
-        }
-
-        return $course;
     }
 
     /**
@@ -95,12 +81,24 @@ class format_cards extends format_topics {
      * Once we're viewing an individual section, display it
      *
      * @return int
+     * @throws dml_exception
      */
+    #[\Override]
     public function get_course_display(): int {
         global $PAGE;
 
+        // In editing mode we're displaying all sections anyway.
+        // If we return SINGLEPAGE then sections are also collapsible.
+        if ($this->show_editor()) {
+            return COURSE_DISPLAY_SINGLEPAGE;
+        }
+
+        // On the course section pages, whether we're displaying singlepage or multipage depends
+        // on whether subsections are rendered as cards or not.
         if ($PAGE->pagetype === 'course-section' || $PAGE->pagetype === 'course-view-section-cards') {
-            return parent::get_course_display();
+            return $this->get_format_option('subsectionsascards') === FORMAT_CARDS_SUBSECTIONS_AS_CARDS
+                ? COURSE_DISPLAY_MULTIPAGE
+                : COURSE_DISPLAY_SINGLEPAGE;
         }
 
         return COURSE_DISPLAY_MULTIPAGE;
@@ -114,10 +112,15 @@ class format_cards extends format_topics {
      * @throws coding_exception
      * @throws dml_exception
      */
+    #[\Override]
     public function course_format_options($foreditform = false) {
         $options = parent::course_format_options($foreditform);
 
         $defaults = get_config('format_cards');
+
+        // We always show one section per page.
+        $options['coursedisplay']['element_type'] = 'hidden';
+        $options['coursedisplay']['default'] = COURSE_DISPLAY_MULTIPAGE;
 
         $createselect = function (string $name, array $options, int $default, bool $hashelp = false): array {
             $option = [
@@ -220,6 +223,7 @@ class format_cards extends format_topics {
      * @return array
      * @throws dml_exception
      */
+    #[\Override]
     public function section_format_options($foreditform = false) {
         $options = parent::section_format_options($foreditform);
 
@@ -273,6 +277,7 @@ class format_cards extends format_topics {
      * @param array $customdata
      * @return editcard_form
      */
+    #[\Override]
     public function editsection_form($action, $customdata = []): editcard_form {
         if (!array_key_exists('course', $customdata)) {
             $customdata['course'] = $this->get_course();
@@ -300,6 +305,7 @@ class format_cards extends format_topics {
      * @return bool True if changes were made
      * @throws coding_exception
      */
+    #[\Override]
     public function update_section_format_options($data): bool {
         $changes = parent::update_section_format_options($data);
 
@@ -342,6 +348,7 @@ class format_cards extends format_topics {
      * @throws invalid_parameter_exception
      * @throws required_capability_exception
      */
+    #[\Override]
     public function inplace_editable_update_section_name($section, $itemtype, $newvalue): inplace_editable {
         global $CFG;
 
@@ -388,6 +395,7 @@ class format_cards extends format_topics {
      * @param bool|null $editable Whether the break should be editable
      * @return inplace_editable
      */
+    #[\Override]
     public function inplace_editable_render_section_break($section, ?bool $editable = null): inplace_editable {
 
         if ($editable === null) {
@@ -423,6 +431,7 @@ class format_cards extends format_topics {
      * @throws coding_exception
      * @throws dml_exception
      */
+    #[\Override]
     public function delete_section($section, $forcedeleteifnotempty = false): bool {
         global $DB;
 
@@ -462,6 +471,7 @@ class format_cards extends format_topics {
      * @throws coding_exception
      * @throws dml_exception
      */
+    #[\Override]
     public function create_edit_form_elements(&$mform, $forsection = false): array {
         $elements = parent::create_edit_form_elements($mform, $forsection);
 
@@ -497,6 +507,7 @@ class format_cards extends format_topics {
      * @throws dml_exception
      * @throws ddl_exception
      */
+    #[\Override]
     public function update_course_format_options($data, $oldcourse = null): bool {
         global $DB;
 
@@ -665,6 +676,7 @@ class format_cards extends format_topics {
      * @return lang_string|string A default name for the given section
      * @throws coding_exception
      */
+    #[\Override]
     public function get_default_section_name($section) {
         $default = parent::get_default_section_name($section);
 
@@ -685,6 +697,7 @@ class format_cards extends format_topics {
      * @return moodle_url
      * @throws moodle_exception
      */
+    #[\Override]
     public function get_view_url($section, $options = []): moodle_url {
         global $CFG;
 
