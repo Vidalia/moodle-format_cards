@@ -395,7 +395,6 @@ class format_cards extends format_topics {
      * @param bool|null $editable Whether the break should be editable
      * @return inplace_editable
      */
-    #[\Override]
     public function inplace_editable_render_section_break($section, ?bool $editable = null): inplace_editable {
 
         if ($editable === null) {
