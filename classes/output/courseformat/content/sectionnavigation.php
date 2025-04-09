@@ -207,7 +207,10 @@ class sectionnavigation extends sectionnavigation_base {
         }
 
         if ($parentsection === false || $ourposition === -1) {
-            throw new coding_exception("Section with ID $currentsection->id (itemid $currentsection->itemid, cmid $currentsectioncm->id) is an orphaned subsection");
+            throw new coding_exception(
+                "Section with ID $currentsection->id "
+                . "(itemid $currentsection->itemid, cmid $currentsectioncm->id) is an orphaned subsection"
+            );
         }
 
         // If we're in a subsection, the previous and next links only make sense if the current section's
