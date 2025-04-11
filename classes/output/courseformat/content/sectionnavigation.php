@@ -106,7 +106,7 @@ class sectionnavigation extends sectionnavigation_base {
         $modinfo = $this->format->get_modinfo();
 
         foreach ($modinfo->get_section_info_all() as $section) {
-            if ($section->component !== 'mod_subsection' || !$section->uservisible) {
+            if ($section->component !== 'mod_subsection') {
                 continue;
             }
 
