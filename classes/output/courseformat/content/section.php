@@ -14,15 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * Renders a course section
- *
- * @package     format_cards
- * @copyright   2024 University of Essex
- * @author      John Maydew <jdmayd@essex.ac.uk>
- * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-
 namespace format_cards\output\courseformat\content;
 
 use completion_info;
@@ -82,6 +73,14 @@ class section extends section_base {
      * @return bool
      */
     private function show_as_card(): bool {
+        global $CFG;
+
+        // Check if this section is actually a subsection. If it is, we only display it as a card if we're not in
+        // editing mode.
+        if ($CFG->version >= 2024100700 && $this->section->is_delegated() && $this->section->component == 'mod_subsection') {
+            return !$this->format->show_editor();
+        }
+
         $issinglesectionpage = $this->format->get_sectionnum() != 0;
         return !$issinglesectionpage
             && !$this->format->show_editor()
@@ -93,6 +92,7 @@ class section extends section_base {
      *
      * @param renderer_base $output
      * @return stdClass Template data
+     * @throws moodle_exception
      */
     public function export_for_template(renderer_base $output): stdClass {
 
@@ -176,6 +176,7 @@ class section extends section_base {
      * @return array
      */
     private function get_section_completion(): array {
+        global $CFG;
 
         // Can't do anything if completion is disabled, or we're a guest user.
         if (isguestuser() || !$this->format->get_course()->enablecompletion) {
@@ -196,6 +197,27 @@ class section extends section_base {
 
         // List of course module IDs for this section.
         $sectioncmids = $modinfo->sections[$this->section->section];
+
+        // From Moodle 4.5, we also want to include modules that appear in subsections.
+        if ($CFG->version >= 2024100700) {
+            foreach ($sectioncmids as $cmid) {
+                $cminfo = $modinfo->cms[$cmid];
+
+                if ($cminfo->modname !== 'subsection') {
+                    continue;
+                }
+
+                $subsection = $modinfo->get_section_info_by_component('mod_subsection', $cminfo->instance);
+
+                $subsectioncmids = $modinfo->sections[$subsection->section];
+
+                if (empty($subsectioncmids)) {
+                    continue;
+                }
+
+                array_push($sectioncmids, ...$subsectioncmids);
+            }
+        }
 
         $total = 0;
         $completed = 0;

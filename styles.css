@@ -23,6 +23,10 @@
     margin-left: -.25rem;
 }
 
+.format-cards .subsectionsascards .activity.subsection > .activity-item {
+    border: 0;
+}
+
 @media (min-width: 576px) {
     .format-cards .dashboard-card-deck:not(.fixed-width-cards) .dashboard-card {
         width: calc(50% - 0.5rem);

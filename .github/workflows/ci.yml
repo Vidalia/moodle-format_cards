@@ -2,6 +2,8 @@ name: Moodle Plugin CI
 
 on:
   push:
+    branches:
+      - '**'
     tags-ignore:
       - '**'
   pull_request:
@@ -26,7 +28,6 @@ jobs:
           MYSQL_ALLOW_EMPTY_PASSWORD: "true"
           MYSQL_CHARACTER_SET_SERVER: "utf8mb4"
           MYSQL_COLLATION_SERVER: "utf8mb4_unicode_ci"
-
         ports:
           - 3306:3306
         options: --health-cmd="mysqladmin ping" --health-interval 10s --health-timeout 5s --health-retries 3
@@ -80,8 +81,8 @@ jobs:
         env:
           DB: ${{ matrix.database }}
           MOODLE_BRANCH: ${{ matrix.moodle-branch }}
-          IGNORE_NAMES: 'styles.css,card.mustache,content.mustache,section.mustache'
-          MUSTACHE_IGNORE_NAMES: 'card.mustache,content.mustache,section.mustache'
+          IGNORE_NAMES: 'styles.css,card.mustache,content.mustache,section.mustache,delegatedsection.mustache'
+          MUSTACHE_IGNORE_NAMES: 'card.mustache,content.mustache,section.mustache,delegatedsection.mustache'
 
       - name: PHP Lint
         if: ${{ !cancelled() }}
@@ -123,7 +124,9 @@ jobs:
       - name: Behat features
         id: behat
         if: ${{ !cancelled() }}
-        run: moodle-plugin-ci behat --profile chrome
+        run: |
+          exclude_tags=$([ $(echo ${{ matrix.moodle-branch }} | cut -d '_' -f 2) -lt 405 ] && echo "&&~@moodle_405_and_after" || echo "")
+          moodle-plugin-ci behat --profile chrome --tags "@format_cards$exclude_tags"
 
       - name: Upload Behat Faildump
         if: ${{ failure() && steps.behat.outcome == 'failure' }}

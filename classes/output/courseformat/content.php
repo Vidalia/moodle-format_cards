@@ -75,6 +75,8 @@ class content extends content_base {
 
         $data->userisediting = $PAGE->user_is_editing();
 
+        $data->subsectionsascards = $this->format->get_format_option("subsectionsascards") == FORMAT_CARDS_SUBSECTIONS_AS_CARDS;
+
         if (!$singlesection) {
             return $data;
         }

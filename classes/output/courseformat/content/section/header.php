@@ -75,7 +75,14 @@ class header extends header_base {
             && !$PAGE->user_is_editing()
             && !$this->section->section == 0;
 
-        $data->title = $output->section_title_without_link($section, $course);
+        $issubsection = method_exists($this->section, 'is_delegated')
+            && $this->section->is_delegated()
+            && $this->section->component == 'mod_subsection';
+
+        $data->title = $issubsection
+            ? $output->section_title($section, $course)
+            : $output->section_title_without_link($section, $course);
+
         $data->url = course_get_url(
             $this->section->course,
             $this->section->section,
