@@ -173,7 +173,7 @@
         }
     }
 }}
-<div id="{{uniqid}}-course-format" {{#subsectionsascards}}class="subsectionsascards"{{/subsectionsascards}}>
+<div id="course-format-{{uniqid}}" {{#subsectionsascards}}class="subsectionsascards"{{/subsectionsascards}}>
     <h2 class="accesshide">{{{title}}}</h2>
     {{{completionhelp}}}
     <ul class="{{format}}">
@@ -232,7 +232,7 @@
 </div>
 {{#js}}
 require(['core_courseformat/local/content', 'format_cards/cards'], function(component, cards) {
-    component.init('{{uniqid}}-course-format', {}, {{sectionreturn}});
-    cards.init('{{uniqid}}-course-format');
+    component.init('#course-format-{{uniqid}}', {}, {{sectionreturn}});
+    cards.init('course-format-{{uniqid}}');
 });
 {{/js}}
