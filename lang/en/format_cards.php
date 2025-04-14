@@ -23,14 +23,10 @@
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-$string['addsections'] = 'Add card';
 $string['currentsection'] = 'This card';
-$string['deletesection'] = 'Delete card';
 $string['editcard'] = 'Edit card';
 $string['editimage:imported'] = 'Successfully imported {$a} image(s) from the grid format';
 $string['editimage:resizefailed'] = 'Failed to resize the selected image. The card will use the image at it\'s original size. You can try re-uploading the image later.';
-$string['editsection'] = 'Edit card';
-$string['editsectionname'] = 'Edit card name';
 $string['form:course:cardorientation'] = 'Card orientation';
 $string['form:course:cardorientation:horizontal'] = 'Horizontal';
 $string['form:course:cardorientation:square'] = 'Square';
@@ -67,7 +63,6 @@ $string['form:course:subsectionsascards:activity'] = 'Show as collapsible sectio
 $string['form:course:subsectionsascards:cards'] = 'Show as cards';
 $string['form:course:usedefault'] = 'Default ({$a})';
 $string['gotosection'] = 'Go to section {$a}';
-$string['hidefromothers'] = 'Hide card';
 $string['image'] = 'Image';
 $string['newsectionname'] = 'New name for card {$a}';
 $string['noactivities'] = 'No activities';
