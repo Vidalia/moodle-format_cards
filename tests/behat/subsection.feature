@@ -137,3 +137,11 @@ Feature: Subsection support
       | 2          | Default (Show as collapsible sections) | should not    |
       | 2          | Show as cards                          | should        |
       | 2          | Show as collapsible sections           | should not    |
+
+  @javascript @moodle_405_and_after
+  Scenario: I can create a new subsection
+    Given I log in as "teacher1"
+    And I am on "Course 1" course homepage with editing mode on
+    When I click on "Add content" "button" in the "Section 1" "section"
+    And I click on "Subsection" "link" in the ".dropdown-menu.show" "css_element"
+    Then I should see "New subsection" in the "Section 1" "section"
