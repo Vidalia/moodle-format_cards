@@ -142,7 +142,6 @@ Feature: Subsection support
   Scenario: I can create a new subsection
     Given I log in as "teacher1"
     And I am on "Course 1" course homepage with editing mode on
-    And I wait until the page is ready
-    When I click on "Add content" "button" in the "Section 1" "section"
+    When I click on "Add content" "button" in the "General" "section"
     And I click on "Subsection" "link" in the ".dropdown-menu.show" "css_element"
-    Then I should see "New subsection" in the "Section 1" "section"
+    Then I should see "New subsection" in the "General" "section"
