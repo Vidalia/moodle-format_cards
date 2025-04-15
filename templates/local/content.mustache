@@ -232,7 +232,7 @@
 </div>
 {{#js}}
 require(['core_courseformat/local/content', 'format_cards/cards'], function(component, cards) {
-    component.init('#course-format-{{uniqid}}', {}, {{sectionreturn}});
+    component.init('{{#moodle500orlater}}#{{/moodle500orlater}}course-format-{{uniqid}}', {}, {{sectionreturn}});
     cards.init('course-format-{{uniqid}}');
 });
 {{/js}}

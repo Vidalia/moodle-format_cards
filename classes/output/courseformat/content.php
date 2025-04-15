@@ -26,6 +26,7 @@
 namespace format_cards\output\courseformat;
 
 use coding_exception;
+use format_cards\versionable_template;
 use format_topics\output\courseformat\content as content_base;
 use moodle_exception;
 use renderer_base;
@@ -39,6 +40,7 @@ use renderer_base;
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class content extends content_base {
+    use versionable_template;
 
     /**
      * If the user is editing the page, just use the default renderer for format_topics
@@ -68,6 +70,9 @@ class content extends content_base {
         $this->hasaddsection = !$singlesection;
 
         $data = parent::export_for_template($output);
+
+        // Add version variables.
+        $this->add_version_variables($data);
 
         // Rather than rolling our own empty placeholder, we can just re-use the "no courses" template
         // from block_myoverview and change the text to be "No activities" instead.
