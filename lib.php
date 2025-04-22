@@ -67,6 +67,11 @@ define('FORMAT_CARDS_SUBSECTIONS_AS_ACTIVITIES', 2);
 class format_cards extends format_topics {
 
     /**
+     * @var null|int
+     */
+    protected ?int $forcecoursedisplay = null;
+
+    /**
      * Cards format allows you to indent course modules
      *
      * @return bool
@@ -93,6 +98,14 @@ class format_cards extends format_topics {
             return COURSE_DISPLAY_SINGLEPAGE;
         }
 
+        // So, this is gnarly, but in order to re-use existing code we need to be able to change the output of
+        // get_course_display based on the current section that's being rendered, not just the current section we're
+        // looking at. This way we can make sure section #0 renders properly -- with subsections displayed as collapsible sections
+        // but *without* section #0 itself being collapsible.
+        if (is_int($this->forcecoursedisplay)) {
+            return $this->forcecoursedisplay;
+        }
+
         // On the course section pages, whether we're displaying singlepage or multipage depends
         // on whether subsections are rendered as cards or not.
         if ($PAGE->pagetype === 'course-section' || $PAGE->pagetype === 'course-view-section-cards') {
@@ -102,6 +115,16 @@ class format_cards extends format_topics {
         }
 
         return COURSE_DISPLAY_MULTIPAGE;
+    }
+
+    /**
+     * Force the output of get_course_display
+     *
+     * @param int|null $value
+     * @return void
+     */
+    public function set_forced_course_display(?int $value): void {
+        $this->forcecoursedisplay = $value;
     }
 
     /**

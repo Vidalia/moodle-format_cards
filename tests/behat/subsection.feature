@@ -145,3 +145,27 @@ Feature: Subsection support
     When I click on "Add content" "button" in the "General" "section"
     And I click on "Subsection" "link" in the ".dropdown-menu.show" "css_element"
     Then I should see "New subsection" in the "General" "section"
+
+  @javascript @moodle_405_and_after
+  Scenario Outline: Subsections in the general section zero are rendered properly
+    Given the following "activities" exist:
+      | activity   | name                | course | idnumber | section | visible |
+      | subsection | Subsection0         | C1     | sub0     | 0       | 1       |
+      | page       | Page in Subsection0 | C1     | page01   | 9       | 1       |
+    And the following config values are set as admin:
+      | subsectionsascards | <adminvalue> | format_cards |
+    And I am on the "Course 1" "course editing" page logged in as "admin"
+    And I expand all fieldsets
+    And I set the field "Subsections" to "<coursevalue>"
+    And I click on "Save and display" "button"
+    And I am on "Course 1" course homepage
+    Then I <should or not> see "Page in Subsection0" in the "region-main" "region"
+
+    Examples:
+      | adminvalue | coursevalue                            | should or not |
+      | 1          | Default (Show as cards)                | should not    |
+      | 1          | Show as cards                          | should not    |
+      | 1          | Show as collapsible sections           | should        |
+      | 2          | Default (Show as collapsible sections) | should        |
+      | 2          | Show as cards                          | should not    |
+      | 2          | Show as collapsible sections           | should        |

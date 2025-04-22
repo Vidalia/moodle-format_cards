@@ -276,6 +276,27 @@ class section extends section_base {
     }
 
     /**
+     * For section #0, we want to make any rendered subsections believe that they're in a
+     * COURSE_DISPLAY_SINGLEPAGE course. This ensures that subsections are correctly rendered as
+     * collapsible or as cards, depending on the format settings.
+     *
+     * @param stdClass $data
+     * @param renderer_base $output
+     * @return bool
+     */
+    protected function add_cm_data(stdClass &$data, renderer_base $output): bool {
+        if ($this->section->section == 0) {
+            $this->format->set_forced_course_display(COURSE_DISPLAY_SINGLEPAGE);
+        }
+
+        try {
+            return parent::add_cm_data($data, $output);
+        } finally {
+            $this->format->set_forced_course_display(null);
+        }
+    }
+
+    /**
      * Adds section break data, if available
      *
      * @param stdClass $data
