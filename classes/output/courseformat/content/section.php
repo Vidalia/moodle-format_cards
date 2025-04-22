@@ -209,6 +209,11 @@ class section extends section_base {
 
                 $subsection = $modinfo->get_section_info_by_component('mod_subsection', $cminfo->instance);
 
+                // Ignore this subsection if it's empty.
+                if (!array_key_exists($subsection->section, $modinfo->sections)) {
+                    continue;
+                }
+
                 $subsectioncmids = $modinfo->sections[$subsection->section];
 
                 if (empty($subsectioncmids)) {
