@@ -143,21 +143,22 @@ class format_cards extends format_topics {
 
         // We always show one section per page.
         $options['coursedisplay']['element_type'] = 'hidden';
-        $options['coursedisplay']['default'] = COURSE_DISPLAY_MULTIPAGE;
+        $options['coursedisplay']['default']      = COURSE_DISPLAY_MULTIPAGE;
 
         $createselect = function (string $name, array $options, int $default, bool $hashelp = false): array {
             $option = [
-                'default' => FORMAT_CARDS_USEDEFAULT,
-                'type' => PARAM_INT,
-                'label' => new lang_string("form:course:$name", 'format_cards'),
-                'element_type' => 'select',
+                'default'            => FORMAT_CARDS_USEDEFAULT,
+                'type'               => PARAM_INT,
+                'label'              => new lang_string("form:course:$name", 'format_cards'),
+                'element_type'       => 'select',
                 'element_attributes' => [
                     array_merge(
                         [
                             FORMAT_CARDS_USEDEFAULT => new lang_string(
                                 'form:course:usedefault',
                                 'format_cards',
-                                $options[$default]),
+                                $options[$default]
+                            ),
                         ],
                         $options
                     ),
@@ -165,7 +166,7 @@ class format_cards extends format_topics {
             ];
 
             if ($hashelp) {
-                $option['help'] = "form:course:$name";
+                $option['help']           = "form:course:$name";
                 $option['help_component'] = 'format_cards';
             }
 
@@ -174,71 +175,74 @@ class format_cards extends format_topics {
 
         $section0options = [
             FORMAT_CARDS_SECTION0_COURSEPAGE => new lang_string('form:course:section0:coursepage', 'format_cards'),
-            FORMAT_CARDS_SECTION0_ALLPAGES => new lang_string('form:course:section0:allpages', 'format_cards'),
+            FORMAT_CARDS_SECTION0_ALLPAGES  => new lang_string('form:course:section0:allpages',   'format_cards'),
         ];
-
-        $options['section0'] = $createselect('section0', $section0options, $defaults->section0, true);
+        // cast default to int to avoid null
+        $def0 = isset($defaults->section0) ? (int)$defaults->section0 : FORMAT_CARDS_USEDEFAULT;
+        $options['section0'] = $createselect('section0', $section0options, $def0, true);
 
         $sectionnavigationoptions = [
-            FORMAT_CARDS_SECTIONNAVIGATION_NONE => new lang_string('form:course:sectionnavigation:none', 'format_cards'),
-            FORMAT_CARDS_SECTIONNAVIGATION_TOP => new lang_string('form:course:sectionnavigation:top', 'format_cards'),
-            FORMAT_CARDS_SECTIONNAVIGATION_BOTTOM => new lang_string('form:course:sectionnavigation:bottom', 'format_cards'),
-            FORMAT_CARDS_SECTIONNAVIGATION_BOTH => new lang_string('form:course:sectionnavigation:both', 'format_cards'),
+            FORMAT_CARDS_SECTIONNAVIGATION_NONE   => new lang_string('form:course:sectionnavigation:none',  'format_cards'),
+            FORMAT_CARDS_SECTIONNAVIGATION_TOP    => new lang_string('form:course:sectionnavigation:top',   'format_cards'),
+            FORMAT_CARDS_SECTIONNAVIGATION_BOTTOM => new lang_string('form:course:sectionnavigation:bottom','format_cards'),
+            FORMAT_CARDS_SECTIONNAVIGATION_BOTH   => new lang_string('form:course:sectionnavigation:both',  'format_cards'),
         ];
-
-        $options['sectionnavigation'] = $createselect('sectionnavigation', $sectionnavigationoptions, $defaults->sectionnavigation);
+        // cast default to int to avoid null
+        $defnav = isset($defaults->sectionnavigation) ? (int)$defaults->sectionnavigation : FORMAT_CARDS_USEDEFAULT;
+        $options['sectionnavigation'] = $createselect('sectionnavigation', $sectionnavigationoptions, $defnav);
 
         $sectionnavigationhomeoptions = [
-            FORMAT_CARDS_SECTIONNAVIGATIONHOME_HIDE =>
-                new lang_string('form:course:sectionnavigationhome:hide', 'format_cards'),
-            FORMAT_CARDS_SECTIONNAVIGATIONHOME_SHOW =>
-                new lang_string('form:course:sectionnavigationhome:show', 'format_cards'),
+            FORMAT_CARDS_SECTIONNAVIGATIONHOME_HIDE => new lang_string('form:course:sectionnavigationhome:hide', 'format_cards'),
+            FORMAT_CARDS_SECTIONNAVIGATIONHOME_SHOW => new lang_string('form:course:sectionnavigationhome:show', 'format_cards'),
         ];
-        $options['sectionnavigationhome'] = $createselect(
-            'sectionnavigationhome',
-            $sectionnavigationhomeoptions,
-            $defaults->sectionnavigationhome
-        );
+        // cast default to int to avoid null
+        $defnavhome = isset($defaults->sectionnavigationhome) ? (int)$defaults->sectionnavigationhome : FORMAT_CARDS_USEDEFAULT;
+        $options['sectionnavigationhome'] = $createselect('sectionnavigationhome', $sectionnavigationhomeoptions, $defnavhome);
 
         $orientationoptions = [
-            FORMAT_CARDS_ORIENTATION_VERTICAL => new lang_string('form:course:cardorientation:vertical', 'format_cards'),
+            FORMAT_CARDS_ORIENTATION_VERTICAL   => new lang_string('form:course:cardorientation:vertical',   'format_cards'),
             FORMAT_CARDS_ORIENTATION_HORIZONTAL => new lang_string('form:course:cardorientation:horizontal', 'format_cards'),
-            FORMAT_CARDS_ORIENTATION_SQUARE => new lang_string('form:course:cardorientation:square', 'format_cards'),
+            FORMAT_CARDS_ORIENTATION_SQUARE     => new lang_string('form:course:cardorientation:square',     'format_cards'),
         ];
-
-        $options['cardorientation'] = $createselect('cardorientation', $orientationoptions, $defaults->cardorientation);
+        // cast default to int to avoid null
+        $deforient = isset($defaults->cardorientation) ? (int)$defaults->cardorientation : FORMAT_CARDS_USEDEFAULT;
+        $options['cardorientation'] = $createselect('cardorientation', $orientationoptions, $deforient);
 
         $summaryoptions = [
             FORMAT_CARDS_SHOWSUMMARY_SHOW => new lang_string('form:course:showsummary:show', 'format_cards'),
             FORMAT_CARDS_SHOWSUMMARY_HIDE => new lang_string('form:course:showsummary:hide', 'format_cards'),
         ];
-
-        $options['showsummary'] = $createselect('showsummary', $summaryoptions, $defaults->showsummary);
+        // cast default to int to avoid null
+        $defsummary = isset($defaults->showsummary) ? (int)$defaults->showsummary : FORMAT_CARDS_USEDEFAULT;
+        $options['showsummary'] = $createselect('showsummary', $summaryoptions, $defsummary);
 
         $showprogressoptions = [
             FORMAT_CARDS_SHOWPROGRESS_SHOW => new lang_string('form:course:showprogress:show', 'format_cards'),
             FORMAT_CARDS_SHOWPROGRESS_HIDE => new lang_string('form:course:showprogress:hide', 'format_cards'),
         ];
-
-        $options['showprogress'] = $createselect('showprogress', $showprogressoptions, $defaults->showprogress);
+        // cast default to int to avoid null
+        $defshowprog = isset($defaults->showprogress) ? (int)$defaults->showprogress : FORMAT_CARDS_USEDEFAULT;
+        $options['showprogress'] = $createselect('showprogress', $showprogressoptions, $defshowprog);
 
         $progressformatoptions = [
-            FORMAT_CARDS_PROGRESSFORMAT_COUNT => new lang_string('form:course:progressformat:count', 'format_cards'),
-            FORMAT_CARDS_PROGRESSFORMAT_PERCENTAGE => new lang_string('form:course:progressformat:percentage', 'format_cards'),
+            FORMAT_CARDS_PROGRESSFORMAT_COUNT      => new lang_string('form:course:progressformat:count',      'format_cards'),
+            FORMAT_CARDS_PROGRESSFORMAT_PERCENTAGE => new lang_string('form:course:progressformat:percentage','format_cards'),
         ];
-
-        $options['progressformat'] = $createselect('progressformat', $progressformatoptions, $defaults->progressformat);
+        // cast default to int to avoid null
+        $defprogfmt = isset($defaults->progressformat) ? (int)$defaults->progressformat : FORMAT_CARDS_USEDEFAULT;
+        $options['progressformat'] = $createselect('progressformat', $progressformatoptions, $defprogfmt);
 
         $subsectionoptions = [
-            FORMAT_CARDS_SUBSECTIONS_AS_CARDS => new lang_string('form:course:subsectionsascards:cards', 'format_cards'),
-            FORMAT_CARDS_SUBSECTIONS_AS_ACTIVITIES => new lang_string('form:course:subsectionsascards:activity', 'format_cards'),
+            FORMAT_CARDS_SUBSECTIONS_AS_CARDS      => new lang_string('form:course:subsectionsascards:cards',    'format_cards'),
+            FORMAT_CARDS_SUBSECTIONS_AS_ACTIVITIES => new lang_string('form:course:subsectionsascards:activity','format_cards'),
         ];
-
-        $options['subsectionsascards'] = $createselect('subsectionsascards', $subsectionoptions, $defaults->subsectionsascards);
+        // cast default to int to avoid null
+        $defsub = isset($defaults->subsectionsascards) ? (int)$defaults->subsectionsascards : FORMAT_CARDS_USEDEFAULT;
+        $options['subsectionsascards'] = $createselect('subsectionsascards', $subsectionoptions, $defsub);
 
         return $options;
     }
-
+    
     /**
      * Users should be able to specify per-section whether the summary is visible or not
      *
