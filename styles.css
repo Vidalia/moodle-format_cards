@@ -3,21 +3,16 @@
 }
 
 .format-cards .course-content .card-section-deck {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr));
-    grid-gap: .5rem;
+    display: flex;
+    justify-content: center;
+    flex-flow: row wrap;
     padding: 0;
-    justify-items: center;
-}
-
-.format-cards .course-content .card-section-deck.card-horizontal {
-    grid-template-columns: repeat(auto-fill, minmax(18rem, 1fr));
 }
 
 .format-cards .course-content .card-section-deck #section-0,
 .format-cards .course-content .card-section-deck .section-break,
 .format-cards.editing .course-content .card-section-deck .section {
-    grid-column: 1 / -1;
+    flex: 100% 1 1;
 }
 
 .format-cards .subsectionsascards .activity.subsection > .activity-item {
@@ -27,12 +22,13 @@
 .format-cards .course-content .card-section-deck .card-section {
     aspect-ratio: 5 / 7;
     border: none;
-    width: 100%;
+    flex: 100% 1 1;
+    margin: .25rem;
     max-width: 20rem;
 }
 .format-cards .course-content .card-section-deck.card-horizontal .card-section {
     aspect-ratio: 7 / 5;
-    max-width: 24rem;
+    max-width: 22rem;
 }
 .format-cards .course-content .card-section-deck.card-square .card-section {
     aspect-ratio: 1 / 1;
@@ -212,4 +208,22 @@
 
 .format-cards .course-content .section-item .activity:first-of-type {
     border: none;
+}
+
+@container (min-width: 36rem) {
+    .format-cards .course-content .card-section-deck .card-section {
+        flex-basis: 50%;
+    }
+}
+
+@container (min-width: 54rem) {
+    .format-cards .course-content .card-section-deck .card-section {
+        flex-basis: 33.3%;
+    }
+}
+
+@container (min-width: 72rem) {
+    .format-cards .course-content .card-section-deck .card-section {
+        flex-basis: 25%;
+    }
 }
