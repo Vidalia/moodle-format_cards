@@ -93,12 +93,23 @@ class cmlist extends cmlist_base {
             return $data;
         }
 
+        $attributes = [ 'class' => 'card-section-deck' ];
+
+        switch ($this->format->get_format_option('cardorientation')) {
+            case FORMAT_CARDS_ORIENTATION_HORIZONTAL:
+                $attributes['class'] .= " card-horizontal";
+                break;
+            case FORMAT_CARDS_ORIENTATION_SQUARE:
+                $attributes['class'] .= " card-square";
+                break;
+        }
+
         // For each of the subsection groups we've found, wrap the cards in a card-deck.
         foreach ($foundsubsections as $index) {
             $data->cms[$index]->cmitem->cmformat->altcontent = html_writer::tag(
                 'ul',
                 $data->cms[$index]->cmitem->cmformat->altcontent,
-                [ 'class' => 'card-deck dashboard-card-deck' ]
+                $attributes
             );
         }
 
