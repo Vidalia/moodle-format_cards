@@ -183,7 +183,7 @@
             {{/core_courseformat/local/content/section}}
         {{/initialsection}}
     </ul>
-    <ul class="card-deck dashboard-card-deck {{format}}"
+    <ul class="card-section-deck {{format}}{{#classes}} {{.}}{{/classes}}"
          data-for="course_sectionlist">
         {{#sections}}
             {{$ format_cards/local/content/section }}
