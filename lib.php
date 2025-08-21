@@ -55,6 +55,8 @@ define('FORMAT_CARDS_SECTIONNAVIGATIONHOME_HIDE', '1');
 define('FORMAT_CARDS_SECTIONNAVIGATIONHOME_SHOW', '2');
 define('FORMAT_CARDS_SUBSECTIONS_AS_CARDS', 1);
 define('FORMAT_CARDS_SUBSECTIONS_AS_ACTIVITIES', 2);
+define('FORMAT_CARDS_SUBSECTIONS_COLLAPSED', 1);
+define('FORMAT_CARDS_SUBSECTIONS_EXPANDED', 2);
 
 /**
  * Course format main class
@@ -235,6 +237,16 @@ class format_cards extends format_topics {
         ];
 
         $options['subsectionsascards'] = $createselect('subsectionsascards', $subsectionoptions, $defaults->subsectionsascards);
+
+        $autocollapseoptions = [
+            FORMAT_CARDS_SUBSECTIONS_COLLAPSED => new lang_string('form:course:subsectionscollapsed:collapsed', 'format_cards'),
+            FORMAT_CARDS_SUBSECTIONS_EXPANDED => new lang_string('form:course:subsectionscollapsed:expanded', 'format_cards'),
+        ];
+
+        $options['subsectionscollapsed'] = $createselect('subsectionscollapsed',
+            $autocollapseoptions,
+            $defaults->subsectionscollapsed
+        );
 
         return $options;
     }
@@ -497,6 +509,8 @@ class format_cards extends format_topics {
     public function create_edit_form_elements(&$mform, $forsection = false): array {
         $elements = parent::create_edit_form_elements($mform, $forsection);
 
+        $defaults = get_config('format_cards');
+
         if ($this->course_has_grid_images() && !$forsection) {
             $elements[] = $mform->addElement(
                 'checkbox',
@@ -506,13 +520,27 @@ class format_cards extends format_topics {
             $mform->addHelpButton('importgridimages', 'form:course:importgridimages', 'format_cards');
         }
 
-        $defaultshowprogress = get_config('format_cards', 'showprogress');
+        // Dynamically hide the 'Home link' option.
+        $homehiddenvalues = [ FORMAT_CARDS_SECTIONNAVIGATION_NONE, FORMAT_CARDS_SECTIONNAVIGATION_BOTTOM ];
+        if (in_array($defaults->sectionnavigation, $homehiddenvalues)) {
+            $homehiddenvalues[] = FORMAT_CARDS_USEDEFAULT;
+        }
+        $mform->hideIf('sectionnavigationhome', 'sectionnavigation', 'in', $homehiddenvalues);
+
+        // Dynamically hide the 'display progress as' option.
         $hiddenvalues = [ FORMAT_CARDS_SHOWPROGRESS_HIDE ];
 
-        if ($defaultshowprogress == FORMAT_CARDS_SHOWPROGRESS_HIDE) {
+        if ($defaults->showprogress == FORMAT_CARDS_SHOWPROGRESS_HIDE) {
             $hiddenvalues[] = FORMAT_CARDS_USEDEFAULT;
         }
         $mform->hideIf('progressformat', 'showprogress', 'in', $hiddenvalues);
+
+        // Dynamically hide the 'autocollapse subsections' option.
+        $subsectionhiddenvalues = [ FORMAT_CARDS_SUBSECTIONS_AS_CARDS ];
+        if ($defaults->subsectionsascards == FORMAT_CARDS_SUBSECTIONS_AS_CARDS) {
+            $subsectionhiddenvalues[] = FORMAT_CARDS_USEDEFAULT;
+        }
+        $mform->hideIf('subsectionscollapsed', 'subsectionsascards', 'in', $subsectionhiddenvalues);
 
         return $elements;
     }

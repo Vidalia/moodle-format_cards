@@ -201,15 +201,30 @@ class delegatedsection extends delegatedsection_base {
     }
 
     /**
-     * Is this section collapsed?
+     * Returns true if the current section should be shown collapsed.
      *
      * @return bool
      */
     #[\Override]
     protected function is_section_collapsed(): bool {
-        return $this->use_default_renderer()
-            ? parent::is_section_collapsed()
-            : $this->sectionoutput->is_section_collapsed();
+        global $PAGE;
+
+        $contentcollapsed = (bool) $this->format->get_format_option('subsectionscollapsed');
+        $preferences = $this->format->get_sections_preferences();
+        if (isset($preferences[$this->section->id])) {
+            $sectionpreferences = $preferences[$this->section->id];
+            if (!empty($sectionpreferences->contentcollapsed)) {
+                $contentcollapsed = !$contentcollapsed;
+            }
+        }
+
+        // No matter if the user's preference was to collapse the section or not: If the
+        // 'expandsection' parameter has been specified, it will be shown uncollapsed.
+        $expandsection = $PAGE->url->get_param('expandsection');
+        if ($expandsection !== null && $this->section->section == $expandsection) {
+            $contentcollapsed = false;
+        }
+        return $contentcollapsed;
     }
 
     /**

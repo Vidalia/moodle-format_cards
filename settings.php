@@ -35,9 +35,9 @@ if ($hassiteconfig) {
         get_string('settings:name', 'format_cards')
     );
 
-    $settings->add(new admin_setting_heading('format_cards_defaults',
-        get_string('settings:defaults', 'format_cards'),
-        get_string('settings:defaults:description', 'format_cards')
+    $settings->add(new admin_setting_heading('format_cards_defaultsnavigation',
+        get_string('settings:defaultsnavigation', 'format_cards'),
+        get_string('settings:defaultsnavigation:description', 'format_cards')
     ));
 
     $settings->add(new admin_setting_configselect('format_cards/section0',
@@ -70,6 +70,11 @@ if ($hassiteconfig) {
             FORMAT_CARDS_SECTIONNAVIGATIONHOME_HIDE => get_string('form:course:sectionnavigationhome:hide', 'format_cards'),
             FORMAT_CARDS_SECTIONNAVIGATIONHOME_SHOW => get_string('form:course:sectionnavigationhome:show', 'format_cards'),
         ]
+    ));
+
+    $settings->add(new admin_setting_heading('format_cards_defaultscards',
+        get_string('settings:defaultscards', 'format_cards'),
+        get_string('settings:defaultscards:description', 'format_cards')
     ));
 
     $settings->add(new admin_setting_configselect('format_cards/cardorientation',
@@ -113,6 +118,11 @@ if ($hassiteconfig) {
         ]
     ));
 
+    $settings->add(new admin_setting_heading('format_cards_defaultssubsections',
+        get_string('settings:defaultssubsections', 'format_cards'),
+        get_string('settings:defaultssubsections:description', 'format_cards')
+    ));
+
     $settings->add(new admin_setting_configselect('format_cards/subsectionsascards',
         get_string('form:course:subsectionsascards', 'format_cards'),
         '',
@@ -120,6 +130,16 @@ if ($hassiteconfig) {
         [
             FORMAT_CARDS_SUBSECTIONS_AS_CARDS => get_string('form:course:subsectionsascards:cards', 'format_cards'),
             FORMAT_CARDS_SUBSECTIONS_AS_ACTIVITIES => get_string('form:course:subsectionsascards:activity', 'format_cards'),
+        ]
+    ));
+
+    $settings->add(new admin_setting_configselect('format_cards/subsectionscollapsed',
+        get_string('form:course:subsectionscollapsed', 'format_cards'),
+        '',
+        FORMAT_CARDS_SUBSECTIONS_EXPANDED,
+        [
+            FORMAT_CARDS_SUBSECTIONS_COLLAPSED => get_string('form:course:subsectionscollapsed:collapsed', 'format_cards'),
+            FORMAT_CARDS_SUBSECTIONS_EXPANDED => get_string('form:course:subsectionscollapsed:expanded', 'format_cards'),
         ]
     ));
 }
