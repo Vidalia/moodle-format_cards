@@ -82,6 +82,17 @@ class content extends content_base {
 
         $data->subsectionsascards = $this->format->get_format_option("subsectionsascards") == FORMAT_CARDS_SUBSECTIONS_AS_CARDS;
 
+        $data->classes = [];
+
+        switch ($this->format->get_format_option('cardorientation')) {
+            case FORMAT_CARDS_ORIENTATION_HORIZONTAL:
+                $data->classes[] = "card-horizontal";
+                break;
+            case FORMAT_CARDS_ORIENTATION_SQUARE:
+                $data->classes[] = "card-square";
+                break;
+        }
+
         if (!$singlesection) {
             return $data;
         }
