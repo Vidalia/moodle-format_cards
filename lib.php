@@ -145,23 +145,27 @@ class format_cards extends format_topics {
         $options['coursedisplay']['element_type'] = 'hidden';
         $options['coursedisplay']['default'] = COURSE_DISPLAY_MULTIPAGE;
 
-        $createselect = function (string $name, array $options, int $default, bool $hashelp = false): array {
+        $createselect = function (string $name, array $options, ?int $default, bool $hashelp = false): array {
+
+            $defaultoption = $default !== null
+                ? new lang_string(
+                    'form:course:usedefault',
+                    'format_cards',
+                    $options[$default]
+                )
+                : new lang_string('default');
+
+            $options = array_merge(
+                [ FORMAT_CARDS_USEDEFAULT => $defaultoption ],
+                $options
+            );
+
             $option = [
                 'default' => FORMAT_CARDS_USEDEFAULT,
                 'type' => PARAM_INT,
                 'label' => new lang_string("form:course:$name", 'format_cards'),
                 'element_type' => 'select',
-                'element_attributes' => [
-                    array_merge(
-                        [
-                            FORMAT_CARDS_USEDEFAULT => new lang_string(
-                                'form:course:usedefault',
-                                'format_cards',
-                                $options[$default]),
-                        ],
-                        $options
-                    ),
-                ],
+                'element_attributes' => [ $options ],
             ];
 
             if ($hashelp) {
